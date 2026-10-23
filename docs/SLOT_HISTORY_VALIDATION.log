@@ -1,0 +1,146 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttp.nonProxyHosts=localhost|127.* -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.2.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :createMinecraftArtifacts UP-TO-DATE
+> Task :core:compileJava UP-TO-DATE
+
+> Task :compileJava
+/workspace/Bad-Spell/src/main/java/com/badspell/content/ModItems.java:33: warning: [deprecation] appendHoverText(ItemStack,TooltipContext,TooltipDisplay,Consumer<Component>,TooltipFlag) in Item has been deprecated
+        @Override public void appendHoverText(ItemStack stack,Item.TooltipContext context,net.minecraft.world.item.component.TooltipDisplay display,java.util.function.Consumer<Component> text,TooltipFlag flag) {
+                              ^
+1 warning
+
+> Task :generateModMetadata UP-TO-DATE
+> Task :processResources
+> Task :classes
+> Task :jarJar NO-SOURCE
+> Task :core:processResources NO-SOURCE
+> Task :core:classes UP-TO-DATE
+> Task :jar
+> Task :assemble
+> Task :compileTestJava NO-SOURCE
+> Task :processTestResources NO-SOURCE
+> Task :testClasses UP-TO-DATE
+> Task :core:jar UP-TO-DATE
+> Task :test NO-SOURCE
+
+> Task :validateResources
+Validated 4 item definitions/models/textures and 51 bilingual keys
+
+> Task :core:compileCoreTestJava UP-TO-DATE
+> Task :core:processCoreTestResources NO-SOURCE
+> Task :core:coreTestClasses UP-TO-DATE
+
+> Task :core:coreTest
+Picked up JAVA_TOOL_OPTIONS:  -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttp.nonProxyHosts=localhost|127.* -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+PASS F-01 deterministic graph and Lichtfunke costs
+PASS F-02 typed edges reject position at effect input
+PASS F-03 cyclic graph rejected
+PASS missing required port rejected
+PASS duplicate node and input diagnosed
+PASS unknown rune, node and port rejected
+PASS graph node limit enforced before recursion
+PASS negative, excessive and missing parameters rejected
+PASS disconnected runes are invalid
+PASS F-05 insufficient FK leaves both resources intact
+PASS insufficient FL leaves FK intact
+PASS successful activation debits exact resources once
+PASS ST thresholds are deterministic and rounded up
+PASS F-09 denied world host consumes no energy
+PASS range and dimension validation before host action
+PASS formula budget cannot be exceeded
+PASS effect failure before mutation rolls back debit
+PASS concurrent resource debits cannot overdraw
+PASS conditional evaluates only selected effect branch
+PASS F-10 immutable snapshot independent of source revisions
+PASS canonical bounded codec roundtrip and corruption checks
+PASS disk save reload, ACL and optimistic revisions
+PASS parameterized reusable module snapshot expansion
+PASS F-04 module depth 9 and recursive calls rejected
+PASS C-03 full output leaves inputs and FL intact
+PASS machine commit is atomic and job IDs are idempotent in memory
+PASS production planner preserves batch leftovers and totals
+PASS C-07 unbootstrapped production cycle and missing material rejected
+PASS: 28 tests; no Minecraft integration tests executed.
+
+> Task :core:compileTestJava NO-SOURCE
+> Task :core:processTestResources NO-SOURCE
+> Task :core:testClasses UP-TO-DATE
+> Task :core:test NO-SOURCE
+> Task :core:check
+> Task :check
+> Task :build
+> Task :core:assemble UP-TO-DATE
+> Task :core:build
+> Task :downloadAssets UP-TO-DATE
+> Task :prepareGameTestServerRun UP-TO-DATE
+
+> Task :runGameTestServer
+Picked up JAVA_TOOL_OPTIONS:  -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttp.nonProxyHosts=localhost|127.* -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+2026-10-23T09:02:16.002897352Z main WARN Advanced terminal features are not available in this environment
+[09:02:16] [main/INFO] [ne.ne.fm.st.Entrypoint/]: JVM Uptime at startup: 117ms
+[09:02:16] [main/INFO] [ne.ne.fm.lo.FMLLoader/]: Starting FancyModLoader version 11.0.16 (DEDICATED_SERVER in DEV)
+[09:02:16] [main/INFO] [ne.ne.fm.lo.FMLLoader/]: Game directory: /workspace/Bad-Spell/run
+[09:02:16] [main/INFO] [ne.ne.fm.lo.EarlyServiceDiscovery/]: Found 2 early service jars (out of 101) in 28ms
+[09:02:16] [main/INFO] [ne.ne.fm.lo.FMLLoader/]: Loading FML Early Services:
+[09:02:16] [main/INFO] [ne.ne.fm.lo.FMLLoader/]:  - /workspace/.gradle/caches/modules-2/files-2.1/net.neoforged.fancymodloader/loader/11.0.16/42d3bfead0ba3aa89c7d45ac29115defc9967219/loader-11.0.16.jar
+[09:02:16] [main/INFO] [ne.ne.fm.lo.FMLLoader/]:  - /workspace/.gradle/caches/modules-2/files-2.1/net.neoforged.fancymodloader/earlydisplay/11.0.16/2d357375a7ea94a1ca86042d48fa4f719a552894/earlydisplay-11.0.16.jar
+[09:02:16] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: Not loading early display in headless mode.
+[09:02:16] [main/INFO] [ne.ne.fm.lo.mo.lo.GameLocator/]: Detected a joined NeoForge and Minecraft configuration. Applying filtering...
+[09:02:16] [main/INFO] [ne.ne.fm.lo.mo.lo.InDevFolderLocator/CORE]: Got mod coordinates badspell%%/workspace/Bad-Spell/build/classes/java/main:badspell%%/workspace/Bad-Spell/build/resources/main from env
+[09:02:16] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[09:02:16] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Bad Spell 0.1.0-alpha (badspell)
+		Minecraft 26.2 (minecraft)
+		NeoForge 26.2.0.93 (neoforge)
+[09:02:18] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/workspace/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.17.4+mixin.0.8.7/5f66cc9f59b8efaa942155a3d5a30599bf6640dd/sponge-mixin-0.17.4+mixin.0.8.7.jar Service=FML Env=SERVER
+[09:02:18] [main/INFO] [ne.ne.fm.lo.FMLLoader/]: Loading FML Plugins:
+[09:02:18] [main/INFO] [ne.ne.fm.lo.FMLLoader/]:  - /workspace/.gradle/caches/modules-2/files-2.1/net.neoforged/neoforge/26.2.0.93/6c86cacae3e5cd52f4f2307d980f468ad8869126/neoforge-26.2.0.93-universal.jar > net.neoforged.neoforge-coremods-26.2.0.93.jar
+[09:02:18] [main/INFO] [ne.ne.fm.lo.FMLLoader/]: Building game content classloader:
+ - badspell (composite(folder(/workspace/Bad-Spell/build/classes/java/main), folder(/workspace/Bad-Spell/build/resources/main)))
+ - minecraft (composite(filtered(jar(/workspace/Bad-Spell/build/moddev/artifacts/minecraft-patched-26.2.0.93.jar)), filtered(jar(/workspace/Bad-Spell/build/moddev/artifacts/minecraft-patched-26.2.0.93.jar))))
+ - mixinextras.neoforge (jar(/workspace/.gradle/caches/modules-2/files-2.1/net.neoforged/neoforge/26.2.0.93/6c86cacae3e5cd52f4f2307d980f468ad8869126/neoforge-26.2.0.93-universal.jar > mixinextras-neoforge-0.5.5.jar))
+ - neoforge (composite(filtered(jar(/workspace/.gradle/caches/modules-2/files-2.1/net.neoforged/neoforge/26.2.0.93/6c86cacae3e5cd52f4f2307d980f468ad8869126/neoforge-26.2.0.93-universal.jar))))
+ - net.neoforged.fml.generated (empty(VirtualJar/net.neoforged.fml.generated))
+[09:02:18] [main/INFO] [ne.ne.fm.lo.FMLLoader/]: Built game content classloader in 17ms
+[09:02:18] [main/INFO] [minecraft/GameTestMainUtil]: Running GameTestMain with cwd '/workspace/Bad-Spell/run', universe path 'gametestserver'
+[09:02:19] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[09:02:32] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 26.2.0.93, for MC 26.2
+[09:02:39] [main/INFO] [minecraft/RecipeManager]: Loaded 1585 recipes
+[09:02:39] [main/INFO] [minecraft/AdvancementTree]: Loaded 1688 advancements
+[09:02:40] [main/INFO] [ne.ne.ne.co.cr.RecipePriorityManager/]: Loaded 0 recipe priority overrides
+[09:02:42] [Server thread/INFO] [minecraft/LoggingLevelLoadListener]: Selecting global world spawn...
+[09:02:45] [Server thread/INFO] [minecraft/LoggingLevelLoadListener]: Loading 0 persistent chunks...
+[09:02:45] [Server thread/INFO] [minecraft/LoggingLevelLoadListener]: Preparing spawn area: 100%
+[09:02:45] [Server thread/INFO] [minecraft/LoggingLevelLoadListener]: Time elapsed: 2964 ms
+[09:02:45] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[09:02:45] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[09:02:45] [Server thread/INFO] [minecraft/GameTestServer]: 10 tests are now running at position 9062398, -59, 10717142!
+[09:02:47] [Server thread/INFO] [minecraft/GameTestRunner]: Running test environment 'badspell:test_environment' batch 0 (9 tests)...
+[09:02:47] [Server thread/WARN] [minecraft/MinecraftServer]: Can't keep up! Is the server overloaded? Running 2129ms or 42 ticks behind
+[09:02:48] [Server thread/INFO] [minecraft/GameTestServer]: [+_+++++++ ]
+[09:02:48] [Server thread/INFO] [minecraft/GameTestRunner]: Running test environment 'minecraft:default' batch 0 (1 tests)...
+[09:02:48] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++++]
+[09:02:48] [Server thread/INFO] [minecraft/GameTestServer]: ========= 10 GAME TESTS COMPLETE IN 3.181 s ======================
+[09:02:48] [Server thread/INFO] [minecraft/GameTestServer]: All 10 required tests passed :)
+[09:02:48] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[09:02:48] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[09:02:48] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[09:02:48] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[09:02:50] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[09:02:57] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[09:02:57] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[09:02:57] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[09:02:57] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[09:02:57] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[09:02:57] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[09:02:57] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+
+[Incubating] Problems report is available at: file:///workspace/Bad-Spell/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 58s
+13 actionable tasks: 6 executed, 7 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.2.1/userguide/configuration_cache_enabling.html

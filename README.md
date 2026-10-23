@@ -1,0 +1,58 @@
+# Bad Spell
+
+Survival-Magie für **Minecraft Java Edition 26.2**, ausschließlich **NeoForge**, Java 25, Package `com.badspell`, Mod-ID `badspell`, Version `0.1.0-alpha`.
+
+**Entwicklungsstand:** erster gebauter Mod-Stand mit Formelkern, interaktivem Formelbuch-Canvas, Runenhandschuh, Start-Feldzelle, Tinte und serverseitigem Punktlicht. **Die vollständige Mod und ihre Survival-Herstellung sind noch nicht implementiert.** Der Kernablauf wurde im echten grafischen Client und Server getestet; Details und Grenzen stehen in TESTING.md. Alle 161 Konzepte und die ergänzenden Vorgaben bleiben im [Implementierungsstatus](IMPLEMENTATION_STATUS.md) sichtbar.
+
+## Verifizierte Entwicklungswerkzeuge
+
+| Komponente | Version / Herkunft |
+|---|---|
+| Minecraft | 26.2, unverändert |
+| NeoForge | 26.2.0.93, offizielles 26.2-MDK und Maven-Metadaten/POM geprüft |
+| ModDevGradle | 2.0.148, offizielles MDK, Plugin tatsächlich aufgelöst |
+| Gradle | 9.2.1, offizieller Wrapper, Distribution-SHA-256 gesetzt |
+| JDK dieser Cloud-Instanz | Oracle JDK 25.0.5.0.2+1-LTS-2, SHA-256-verifiziert |
+| Java-Ziel | 25, auch im Core |
+| Direkte Fremdbibliotheken des Core | keine |
+
+Das MDK stammt aus `NeoForgeMDKs/MDK-26.2-ModDevGradle`, Commit `a0340c5454c01e43ccf83977601a4d90afee6e1f`. NeoForge 26.2.0.93 ist eine veröffentlichte Version ohne Beta-/Snapshot-Suffix und die letzte 26.2-Version in den geprüften Maven-Metadaten. Keine API einer anderen Minecraft-Version wird als Ersatz verwendet. NeoForm 26.2-2 und NeoForm Runtime 2.0.31 werden durch diese Werkzeugversionen aufgelöst.
+
+## Entwicklung
+
+In dieser Cloud-Instanz:
+
+```bash
+cd /workspace/Bad-Spell
+source scripts/cloud-env.sh
+./scripts/test-core.sh
+./gradlew --no-daemon :core:check --max-workers=2
+./gradlew --no-daemon build runGameTestServer --max-workers=2
+```
+
+Außerhalb der Cloud genügt ein installiertes JDK 25 mit passendem `JAVA_HOME`; `cloud-env.sh` ist ausschließlich für diese Umgebung gedacht. Der Wrapper lädt Gradle mit Prüfsumme. Für den Cloud-Client zuerst `source scripts/cloud-display.sh`, dann `./gradlew runClient`. Auf einem Rechner mit vorhandener Anzeige nur `JAVA_HOME` setzen und `./gradlew runClient` starten. Dedizierter Entwicklungsserver: `./gradlew runServer`. Die Minecraft-EULA muss der Serverbetreiber selbst lesen und akzeptieren; dieses Projekt akzeptiert sie nicht automatisch.
+
+Gebautes Mod-Artefakt: `build/libs/badspell-0.1.0-alpha.jar`. Der Entwicklungsstand lädt im echten Minecraft-26.2-GameTestServer. Ein separat erzeugtes Core-JAR allein ist keine Minecraft-Mod. Der Testlauf prüft die Development-Klassen; ein zusätzlicher Installationstest der gepackten JAR ist noch offen.
+
+Netzwerk: NeoForge-Dokumentation/Maven, Gradle-/Maven-Presets und Mojang-Hosts `libraries.minecraft.net`, `piston-meta.mojang.com`, `piston-data.mojang.com`, `resources.download.minecraft.net` werden benötigt. Die anfänglichen HTTP-403-Sperren sind behoben; JDK, Gradle, NeoForge und Minecraft wurden mit aktiver TLS-/Prüfsummenprüfung bezogen. Keine Mod-API-Schlüssel oder zusätzlichen Geheimnisse erforderlich.
+
+## Aktuellen Funktionsstand im Client prüfen
+
+Neue Creative-Testwelt verwenden und im Tab **Bad Spell** Formelbuch, Runenhandschuh, Start-Feldzelle und Runentinte nehmen. Das Buch öffnet eine Lichtfunke-Vorlage. Runen lassen sich bewegen, hinzufügen, über typgleiche Ports verbinden und löschen. Mausrad im Canvas zoomt, mittlere Maustaste verschiebt die Fläche; das Mausrad in der linken Palette scrollt die Runenliste. Zahlen-/Boolwerte stehen rechts. Änderungen speichern, danach **An Handschuh** exportieren; exportiert wird ausschließlich die gespeicherte Revision. Mit Handschuh und Zelle im Inventar auf eine nahe freie Stelle vor einem Block zielen und rechtsklicken. Licht benötigt 30 FL + 5 FK und bleibt 600 Simulationsticks aktiv.
+
+Dieser Kernablauf wurde im Client ausgeführt; Editieren der Lichtstärke änderte die tatsächlichen Kosten. Reguläres Speichern und Weltneuladen wurde ebenfalls geprüft (TESTING.md). Kein Survival-Rezeptpfad existiert bisher. Andere Lichtformen und die übrigen Zauber sind nicht als Spielwirkung implementiert. Der Q1-Handschuh besitzt vier unabhängige Snapshot-Slots. Umschalt+Mausrad wählt den Slot in Haupt- oder Nebenhand. Export schreibt in den ausgewählten Slot; leere Slots wirken keinen Ersatzzauber. Q2/Q3-Upgrades fehlen noch. Über **Historie** lassen sich frühere gespeicherte Revisionen als Entwurf laden und mit normalen Tintenkosten in einer neuen Revision speichern. Vor dem Öffnen müssen Änderungen gespeichert sein.
+
+## Unterlagen
+
+- [Implementierungsstatus und vollständige Checkliste](IMPLEMENTATION_STATUS.md)
+- [Architektur](ARCHITECTURE.md)
+- [Designentscheidungen](DESIGN_DECISIONS.md)
+- [Tests, Grenzen und Fortsetzung](TESTING.md)
+- [Vollständiger extrahierter Designtext](docs/DESIGN_SPECIFICATION.txt), 58 PDF-Seiten
+- Offizielle Dokumentation: https://docs.neoforged.net/
+
+Repository-Lizenz: GPL v3 gemäß vorhandener LICENSE. Herkunft und MIT-Lizenz der MDK-Dateien: [MDK_LICENSE.txt](docs/MDK_LICENSE.txt). Keine Fremdassets eingebunden.
+
+## JAR im Repository
+
+Der aktuelle unvollständige Entwicklungsbuild liegt unter [releases/0.1.0-alpha/badspell-0.1.0-alpha.jar](releases/0.1.0-alpha/badspell-0.1.0-alpha.jar), inklusive SHA-256-Datei. Er benötigt Minecraft 26.2 und NeoForge 26.2.0.93. Noch kein vollständiger Survival-Spielstand; bekannte Grenzen siehe IMPLEMENTATION_STATUS.md und TESTING.md.

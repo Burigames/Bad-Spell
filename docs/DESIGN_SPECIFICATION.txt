@@ -1,0 +1,3743 @@
+MINECRAFT MOD · TECHNISCHES GAME DESIGN
+
+
+
+
+BAD
+SPELL
+Vollständiges Game-Design-Dokument
+Runenmagie · Forschung · Alchemie · Welt · Gegner · Herstellung ·
+Automatisierung
+
+
+Version: 1.0 – ausgearbeitete Referenzspezifikation | Stand: 23. Oktober 2026
+
+Grundlage: 161 zuvor ausgewählte Inhalte plus technische, spielmechanische und wirtschaftliche Ergänzungen.
+Neue Zwischengegenstände und zusätzliche Maschinen sind ausdrücklich als verbindende Designvorschläge
+aufgenommen.
+
+
+
+
+  Zweck dieses Dokuments: Eine konsistente, weitgehend implementierbare Designbasis. Die hier
+  eingeführten Zahlen, Dropchancen, Rezepte und Limits sind Startwerte für Prototyping, keine bereits
+  getesteten Balance-Fakten. Vor der Veröffentlichung müssen sie anhand von Spieltests und der gewählten
+  Minecraft-/Modloader-Version geprüft werden.
+
+
+
+
+Leitprinzip: Magie ist weder ein Zauberspruch-Katalog noch eine zweite Redstone-Sprache. Sie ist eine
+allgemeine, nachvollziehbare Naturkraft, die mit formalen Runen beschrieben, durch Energie versorgt und in
+Werkzeugen, Ritualen und Maschinen verwendet wird.
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+
+Inhalt
+
+Inhalt                                                                                                                             2
+
+
+01 Designziel und feste Projektentscheidungen                                                                                      7
+
+  Vision, Zielgruppe, Spielschleife . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+
+  Unveränderliche Leitplanken aus der Konzeptplanung        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .7
+
+  Zusätzliche verbindende Designentscheidungen dieser Fassung . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+
+  Designgrenzen / Nicht-Ziele . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+
+  Phasen des Spielerlebnisses . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+
+
+02 Magisches Feld und formale Runensprache                                                                                         8
+
+  Einheiten, Werte und Rechenmodell . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+
+  Formeldefinition: typisiert und modular . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+
+  Runenfamilien und erste Bibliothek     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+
+  Validierung, Ausführung und Kostenberechnung . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+
+  Beispiel: drei vollständige Formeln . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+
+  Spielerwerkzeuge und Formelfehler      . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+
+
+03 Rohstoffökonomie und mehrstufige Herstellung                                                                                  12
+
+  Grundprinzip: die Werkbank ist nur der Einstieg . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+
+  Stationen und Arbeitsprofile   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+
+  Primärrohstoffe, Entstehung und Teilprodukte . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+
+  Materialklassifikation und Qualitätsstufen . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+
+  Konkrete Rezeptketten – industrielle Basismaterialien . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+
+  Rezeptketten – Stationen und Hauptwerkzeuge . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+
+  Ausgearbeiteter Herstellungsweg: vom Erz zum Netzwerk . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+
+
+04 Fortschritt, Forschung und Entdeckungen                                                                                       16
+
+  Wissen statt Magie-Level . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+
+  Vier gleichwertige Wege, eine Formel zu erwerben       . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+
+  Rune-Entschlüsselung als Miniprozess . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+
+  Weltweite Wissens-Meilensteine . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+
+  Schwierigkeits- und Wirtschaftsbalance     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+
+  Rezept- und Forschungsanzeige . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+
+
+05 Die neun magischen Kerngegenstände                                                                                            18
+
+  Inventar, Haltbarkeit und Wiederbeschaffung      . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+
+
+06 Blockkatalog: 20 ausgewählte Blöcke und Ergänzungen                                                                           19
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                             2
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+  Funktionsblöcke – fünf . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+
+  Runen und Konstruktion – fünf . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+
+  Dekorativ und baulich – fünf . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+
+  Natürlich vorkommend – fünf . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+
+  Zusätzliche Infrastrukturblöcke – neue Designergänzungen . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+
+
+07 Magische Ausrüstung: Waffen, Rüstungen und Zubehör                                                                            21
+
+  Ausrüstungsarchitektur . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+
+  Fünf magische Waffenkategorien . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
+
+  Vier Rüstungskategorien . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
+
+  Fünf Accessoire-Kategorien . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
+
+  Vier Spezialgegenstände . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+
+  Zahlen, Setbonus und Reparaturen . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+
+
+08 Runenverzauberung, Flüche und Siegel                                                                                          23
+
+  Verzauberungen als kontrollierte Formeln . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+
+  Fluchstufen, Grenzen und Heilung . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+
+  Verzauberungsrezepte und Abhängigkeiten . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+
+
+09 Alchemie: Labor, Essenzen und Synthesen                                                                                       24
+
+  Grundfunktion und Prozesskette . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+
+  Die zehn gewählten Alchemiesysteme . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+
+  Essenzen- und Reagenzienbibliothek . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+
+  Alchemie-Rezepte: vom Rohstoff bis zum fertigen Objekt . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+
+  Homunkulus als bewusst begrenzte Automatisierung        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+
+
+10 Magische Automatisierung und Anlagenbau                                                                                       26
+
+  Einheitliche Netzarchitektur   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+
+  Die 15 ausgewählten Systeme . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+
+  Anlagenbau und physische Schnittstellen     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+
+  Vier ausgearbeitete Musteranlagen      . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+
+  Fehler-, Rechte- und Leistungsmanagement . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+
+  Exploit-Verhinderung . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+
+
+11 Rituale, Beschwörungen und mehrteilige Magie                                                                                  29
+
+  Ritualstruktur: ein einheitliches Fünf-Phasen-Modell . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+
+  Die 20 übernommenen Ritualsysteme . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+
+  Ritual-Multiblöcke und Konstruktionspläne . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+
+  Ritualrezepte und Boss-Beschwörungen . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+
+  Unterbrechungs- und Rückerstattungslogik      . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                             3
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+  Mehrspieler und Anti-Autofarming . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+
+
+12 Kreaturen: 18 gewöhnliche magische Wesen                                                                                        32
+
+  KI-, Spawn- und Lootregeln . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+
+  Vier magische Tiere . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+
+  Drei Monster    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+
+  Vier Humanoide / NPC-Typen . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 33
+
+  Vier magische Konstrukte und Wesen        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 33
+
+  Drei seltene mächtige Wesen       . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 33
+
+  Spawn-, Taming- und Summon-Beschränkungen . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 33
+
+
+13 Die zehn Bosse: Arenen, Phasen und Belohnungen                                                                                  33
+
+  Kampfdesign und allgemeine Regeln . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+
+  Vier beschwörbare Bosse . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+
+  Sechs natürlich vorkommende Bosse . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+
+  Respawn, Multiplayer-Fairness und garantierte Beute . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+
+  Bossmaterialien und Ausrüstungsrouten . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+
+
+14 Weltgenerierung: 23 ausgewählte Orte und Phänomene                                                                              35
+
+  Grundsätze und Weltverträglichkeit      . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+
+  Vier Biome     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+
+  Fünf oberirdische Strukturen . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+
+  Fünf Dungeons . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+
+  Sechs Ressourcen und Naturformationen         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+
+  Dimension und zwei Weltphänomene          . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 37
+
+  Weltplatzierung und exakte Datenkonfiguration . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 37
+
+  Loot-Verteilung und Pity-Regeln     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 38
+
+
+15 Spieloberflächen und Bedienkonzept                                                                                              38
+
+  Formelbuch: fünf Ansichten . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 38
+
+  Wichtige UX-Prinzipien . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 38
+
+  HUD und Statusanzeigen . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 38
+
+  Tutorials und Onboarding . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+
+
+16 Implementierung: Datenmodell, Multiplayer und Performance                                                                       39
+
+  Modularchitektur . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+
+  Speicherschema und Persistenz       . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+
+  Server-Tick und Graph-Ausführung . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+
+  Networking und Synchronisation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
+
+  Besitz und Zugriffskontrolle    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                               4
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+  Serverkonfiguration und Datapack-Erweiterbarkeit      . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
+
+  Speicher- und Lastziele . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
+
+  Migration, Fehlererholung und Crash-Konsistenz . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
+
+
+17 Referenzrezepte, Abhängigkeiten und Konsistenz                                                                                40
+
+  Bootstrap: vom ersten Steinwerkzeug zum ersten Feldnetz . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 41
+
+  Herstellungsstufen je Objektklasse . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 42
+
+  Konkrete Produktionsbilanz: zwei Kristall-Konnektoren . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 42
+
+  Konkrete Produktionsbilanz: Runenplatte mit einer Formel      . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 42
+
+  Rezept-Regeln für Datapacks und Automatisierung       . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 42
+
+  Nachvollziehbare Materialumwandlung und Verluste . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+
+
+18 Qualitätssicherung und Abnahmekriterien                                                                                       43
+
+  Funktionale Tests: Formeln und Netzwerke . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+
+  Herstellung und Transaktionen . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 44
+
+  Rituale, Bosse und Sicherheit . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 44
+
+  Benutzbarkeit und Accessibility    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 44
+
+  Performance- und Kompatibilitätstests . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 44
+
+
+19 Entwicklungsfahrplan und lieferbare Meilensteine                                                                              45
+
+  Baufolge mit klaren Abnahmen . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 45
+
+  Prioritätensystem . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 45
+
+  Arbeitsartefakte für die tatsächliche Implementierung . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 45
+
+
+20 Anhang A – Vollständiges Register aller 161 ausgewählten Konzepte                                                             45
+
+
+21 Anhang B – Normalisierte Spielwerte und Terminologie                                                                          52
+
+  Richtwerte für Kostenformeln . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 53
+
+  Datenbeispiel: Rezept als neutrales JSON     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 53
+
+  Datenbeispiel: Rune-Graph als neutrale Struktur . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 53
+
+  Akzeptierte bewusste Vereinfachungen       . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 54
+
+
+22 Anhang C – Vollständige Montagevorschriften für Ausrüstung                                                                    54
+
+  Rezeptnotation und gemeinsame Regeln . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 54
+
+  Waffen: fünf exakte Fertigungsketten     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 54
+
+  Rüstung: Einzelteil- und Setherstellung . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 55
+
+  Zubehör und Spezialausrüstung – exakte Rezepte . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 55
+
+
+23 Anhang D – Zusätzliche Stations-, Block- und Netzrezepte                                                                      56
+
+  Präzise Montage der zusätzlichen Infrastruktur . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 56
+
+  Maschinen-Interfaceverhalten bei mehrstufigen Aufträgen       . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 57
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                             5
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+
+24 Anhang E – Zauberkatalog für erste spielbare Builds                                                                          57
+
+  Zwölf vollständig designte Spieler- und Anlagenzauber    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 57
+
+  Zauberfreigabe und Wechselwirkungen       . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 57
+
+  Energie- und Nutzungsbalance – Testprofile . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 58
+
+  Freigabestatus und nächster praktischer Umsetzungsschritt . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 58
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                            6
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+
+01 Designziel und feste
+Projektentscheidungen
+
+Vision, Zielgruppe, Spielschleife
+Bad Spell ist eine umfangreiche Survival-Magie-Mod für Minecraft. Spieler entdecken die Gesetze eines schon
+immer vorhandenen magischen Feldes, entziffern Runen, entwickeln eigene Formeln und erschaffen daraus
+Werkzeuge, tragbare Ausrüstung, Alchemie, Rituale und industrielle magische Anlagen. Die erste Spielstunde soll
+handwerklich und entdeckend sein; das Endgame erlaubt großformatige, reproduzierbare Magie ohne
+unbeschränkte kostenlose Produktion.
+
+Kernschleife: Erkunden → Materialien sichern → Rohstoffe mehrstufig verarbeiten → Wissen entschlüsseln → neue
+Runenformeln entwickeln → Formeln testen → bessere Energieversorgung und Geräte bauen → gefährliche Orte
+und Bosse bewältigen → Magie automatisieren → neue Gebiete erschließen.
+
+
+Unveränderliche Leitplanken aus der Konzeptplanung
+• Magie ist eine natürliche fundamentale Kraft. Grundsätzlich kann jede Spielfigur Magie erlernen; es gibt keine
+zufällige Geburtsklasse.
+
+• Eine einzige Runensprache dient zum direkten Zaubern, Verzaubern, Gravieren, Ritualisieren und Automatisieren.
+
+• Bei vollständig definiertem Eingabestatus liefern gleiche Formel, gleiche Parameter und gleiche
+Umgebungsbedingungen dasselbe Resultat; Spielerintention ist kein versteckter Eingabewert.
+
+• Nur gezeichnete Runen bewirken nichts. Aktivierung erfordert ein strukturiertes magisches Feld, gültige Formel,
+passende Schnittstelle und ausreichende Energie.
+
+• Formeln können Parameter, Referenzen, Module und Unterformeln enthalten; räumliche Anordnung und explizite
+Verbindungen sind bedeutungstragend.
+
+• Feldkristalle leiten und formen Feldenergie; sie speichern oder verstärken sie grundsätzlich nicht. Andere,
+separat benannte Geräte übernehmen Speichern und Wandeln.
+
+• Das Formelbuch ist der alleinige vollwertige Formeleditor. Gravurstation und Runenhandschuh importieren
+geprüfte Kopien; sie sind keine unabhängigen Editoren.
+
+• Keine verpflichtenden Magie-XP, Skilltrees oder Fraktionsreputation. Fortschritt entsteht durch Wissen,
+Materialien, Ausrüstung und Weltzugang.
+
+
+Zusätzliche verbindende Designentscheidungen dieser Fassung
+ Bereich                           Festlegung
+
+ Energie                           Feldladung (FL) ist der technische Verbrauchswert. Fokus (FK) begrenzt direkte Zauber; Anlagen
+                                   benötigen Feldladung aus Quellen/Speichern.
+
+ Herstellung                       Seltene Gegenstände entstehen in mindestens zwei Arbeitsschritten; fortgeschrittene Ausrüstung
+                                   in drei bis sechs, verteilt auf spezialisierte Stationen.
+
+ Sicherheit                        Maschinen mit Blockveränderungen respektieren Besitzerrechte, Schutzgebiete, Chunk-Status
+                                   und konfigurierbare Weltregeln.
+
+ Spielende                         Optionales Endziel ist das erfolgreiche Sternendrachen-Endgame und der erste stabile,
+                                   automatisierte Großritual-Kreislauf. Sandbox-Spiel läuft danach weiter.
+
+ Kompatibilität                    Minecraft- und Modloader-Zielversion werden erst beim Implementierungsstart festgelegt; dieses
+                                   Dokument beschreibt bewusst versionsunabhängige Regeln.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                              7
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Designgrenzen / Nicht-Ziele
+Keine obligatorische Fraktions- oder NPC-Beziehungsverwaltung. Die ausgewählten NPC-Typen können handeln,
+lehren oder kämpfen, aber es gibt kein verpflichtendes Reputationssystem. Keine zufällige Umdeutung einer
+korrekten Rune, keine unsichtbaren Paywalls, keine Ersetzung aller Vanilla-Mechaniken und kein vollständiger
+kreativer Programmierzugriff ohne Rechen- und Weltgrenzen.
+
+
+Phasen des Spielerlebnisses
+ Phase                     Zeitkorridor               Neue Möglichkeiten
+                           (Richtwert)
+
+ I: Spuren                 0–3 h                      Arkane Rohstoffe erkennen, erste Tinte herstellen, Feldkompass und einfache
+                                                      Formeln finden.
+
+ II: Handwerk              3–10 h                     Arkanwerkbank, Schleifer, Alchemietisch, Runenmeißel, Runenhandschuh,
+                                                      grundlegende Formeln.
+
+ III: Netzwerk             10–25 h                    Gravurstation, Runenplatten, Kristallkabel, gespeiste Anlagen,
+                                                      Alchemie-Veredelung.
+
+ IV: Ritual und Tiefe      25–50 h                    Dungeons, bossgebundene Katalysatoren, mehrteilige Rituale, Dimension Die
+                                                      Zersplitterung.
+
+ V: Arkanindustrie         50 h+                      Autocrafting, Portale, größere Speicher, stärkere Ausrüstung, Endgame-Bosse
+                                                      und vernetzte Systeme.
+
+
+
+
+02 Magisches Feld und formale Runensprache
+
+Einheiten, Werte und Rechenmodell
+ Größe                   Startwert / Semantik                                    Auswirkung
+
+ Feldladung FL           Ganzzahlig, 1 FL kleinste verrechenbare Einheit         Zauber und Maschinen buchen FL atomar von einer
+                                                                                 oder mehreren zugeordneten Quellen.
+
+ Fokus FK                Spielerbasis 100 FK, Erholung 3 FK/s nach 2 s Ruhe      Direktes Wirken verlangt FK und bei stärkeren
+                                                                                 Effekten ggf. externe FL.
+
+ Leitkapazität           Kristallkabel 80 FL/t; verstärktes Kabel 320 FL/t       Kabel transportieren FL, erzeugen oder speichern
+                                                                                 keine Energie.
+
+ Feldspeicher            Kleiner Kern: 2.000 FL; großer: 12.000 FL               Eigene Maschinenkomponente; Lade-/Entladerate
+                                                                                 begrenzt.
+
+ Tick                    20 Simulationsticks pro Sekunde (Sollwert)              Deterministischer, serverautoritärer Zeitbezug;
+                                                                                 TPS-Einbrüche verzögern reale Abläufe.
+
+ Reichweite              Direkt 16 Blöcke Basis, Leitungsreichweite über         Keine unbegrenzte Fernwirkung ohne Netzwerk oder
+                         Netz                                                    aufwendiges Ritual.
+
+ Stabilität ST           0–100%, als Qualitätswert von Gerät/Umgebung            Beeinflusst Validierungsreserve und Verschleiß;
+                                                                                 ändert nie willkürlich den Runeffekt.
+
+ Resonanz                Signatur-ID plus Frequenzklasse A–D                     Feldkompass, Portale, Relais und gebundene Orte
+                                                                                 verwenden kompatible Signaturen.
+
+
+Energiegrundsatz: Jede Umwandlung, jeder Transport und jede dauerhafte Wirkung hat mindestens einen
+definierten Verbrauch, Verlust oder ein Limit. Freie Ätherquellen geben nur eine begrenzte FL-Menge pro Tick ab.
+Feldkristalle bilden Leitungselemente; FL muss aus Ätherkollektoren, Kondensatoren, Opfermaterial oder
+geladenen Speichern stammen. Leitungen haben 2% Verlust je 16 Kabelblöcke, gerundet auf ganze FL erst am
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                              8
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Netzabschluss. Energie kann nicht durch zyklische Leitungsverbindungen dupliziert werden.
+
+
+Formeldefinition: typisiert und modular
+Eine Formel ist ein gerichteter Graph. Knoten sind Runen oder aufgerufene Unterformeln. Kanten tragen
+typisierte Werte (z. B. Ziel, Position, Vektor, Skalar, Bedingung oder Energiereferenz). Parameter haben Namen,
+Typ, erlaubte Grenzen und optional Standardwerte. Ein Ausgangsknoten definiert den Effekt. Räumliche
+Anordnung im Editor bestimmt Lesbarkeit und ggf. Nachbarschaftsoperatoren; die eigentliche Ausführung wird aus
+explizit bestätigten Verbindungen erzeugt. Lose dekorative Runen sind ungültig, wenn sie an einer ausführbaren
+Kette hängen sollen.
+
+Eine gültige Formel besitzt id, version, titel, autor, parameter, knoten, kanten, eingänge, ausgänge,
+energie_budget, sicherheitsprofil und prüfsumme. Speicherung erfolgt in einer neutralen serverseitigen
+Datenstruktur; der Editor serialisiert sie nicht als frei ausführbaren Skripttext. Beim Import in Handschuh oder
+Gravurstation wird eine unveränderliche Kopie mit Versionsverweis gespeichert.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                             9
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Runenfamilien und erste Bibliothek
+ Familie             Rune (Beispiel)     Eingabe → Ausgabe / Regel
+
+ Quelle              ZIEL                Spielerblick oder festgelegte ID → Entität / Blockposition.
+
+ Quelle              POSITION            Koordinate + Dimension → Position; Zielchunk muss verfügbar sein.
+
+ Quelle              UMGEBUNG            Block, Helligkeit, Wetter, Biom → Messwerte; nur lesend.
+
+ Quelle              IMPULS              Manueller Auslöser oder gültiges Steuersignal → Ereignis.
+
+ Element             LICHT               Position + Stärke 1–8 + Dauer → Lichtzustand; 1–8 FL/s.
+
+ Element             WÄRME               Ziel + Wärmegrad 1–4 → Temperaturwirkung; keine permanente
+                                         Blockfeuer-Erzeugung ohne Genehmigung.
+
+ Element             KÄLTE               Ziel + Kühlgrad 1–4 → definierte Abkühlung.
+
+ Element             SCHUB               Entität + Vektor + Stärke → Impuls; Massen- und Sicherheitslimit.
+
+ Element             SCHILD              Bereich + Stärke + Dauer → projektile/Entitäten filternde Barriere.
+
+ Element             HEIL                Lebewesen + Punkte → Regeneration mit Abklingzeit und Zulässigkeitscheck.
+
+ Element             SEHEN               Ziel → magische Signatur/Status ohne fremde Geheimdaten.
+
+ Form                PUNKT               Position → Zielregion mit Radius 0.
+
+ Form                STRAHL              Start, Richtung, Distanz → getroffene Ziele.
+
+ Form                KREIS               Zentrum, Radius 1–8 → kreisförmige Zielregion.
+
+ Form                KUGEL               Zentrum, Radius 1–6 → dreidimensionale Zielregion.
+
+ Form                PFAD                Liste von Wegpunkten max. 16 → bewegter Wirkbereich.
+
+ Logik               GLEICH              Zwei gleichartige Werte → boolescher Vergleich.
+
+ Logik               GRÖSSER             Zwei Zahlen → boolescher Vergleich.
+
+ Logik               UND                 Zwei boolesche Werte → Bool.
+
+ Logik               ODER                Zwei boolesche Werte → Bool.
+
+ Logik               NICHT               Bool → Bool.
+
+ Logik               FALLS               Bedingung + zwei typgleiche Werte → genau ein Ergebnis.
+
+ Zeit                VERZÖGERE           Ereignis + Ticks 1–1200 → verzögertes Ereignis.
+
+ Zeit                INTERVALL           Ticks 20–1200 → wiederkehrendes Ereignis; Betriebskosten.
+
+ Zeit                BEGRENZE            Ereignis + max. Aufrufe → terminierender Ablauf.
+
+ Bindung             SIGNA               Ein Ort / Objekt → lesbare magische Signatur.
+
+ Bindung             BINDE               Zwei zugelassene Ziele + Besitzerfreigabe → Bindungsrelation.
+
+ Bindung             ÜBERTRAGE           Quelle + Ziel + Ressource → transportierbares Objekt/FL.
+
+ Bindung             SIEGEL              Ziel + Regel → versiegelte Interaktion.
+
+ Kontrolle           PRÜFE               Formel + Kontext → Gültigkeit / Kostenabschätzung.
+
+ Kontrolle           AKTIVIERE           Prüfergebnis + Auslöser → Effektausführung.
+
+ Kontrolle           ABBRUCH             Ereignis → sicherer Abbruch / Refundregel.
+
+ Kontrolle           MESSEN              Netz → FL, Fluss, Fehlerzustand.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                               10
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+ Familie             Rune (Beispiel)                Eingabe → Ausgabe / Regel
+
+ Modul               AUFRUF                         Signierte Unterformel + Parameter → typisierte Ergebnisse.
+
+ Modul               RÜCKGABE                       Zwischenwerte → genau spezifizierter Modulausgang.
+
+
+Diese 35 Kernrunen bilden die Startbibliothek. Komplexe Wirkungen sind Kombinationen der Kernrunen und
+formal definierter Erweiterungsrunen. Erweiterungen durch neue Minecraft-Versionen oder andere Mods erfolgen
+ausschließlich über registrierte, serverseitig überprüfte Wirkungstypen; niemals über willkürlich eingebettete
+Spielerprogramme.
+
+
+Validierung, Ausführung und Kostenberechnung
+• 1. Editorprüfung: typisierte Ports, notwendige Parameter, keine ungültigen Zyklen, maximal 128 Knoten pro
+Formel und 8 Ebenen Unterformeln.
+
+• 2. Sicherheitsprüfung: Wirkungsrecht pro Block/Entität/Chunk, Reichweite, Dimension, Zielstatus, Anti-Griefing-
+und PvP-Regeln.
+
+• 3. Kostenprüfung: minimale FL und FK werden vor Ausführung berechnet. Kontinuierliche Effekte reservieren
+mindestens 20 Ticks Energie vorab.
+
+• 4. Atomare Aktivierung: Energie wird nur abgebucht, wenn alle primären Voraussetzungen gleichzeitig erfüllt
+sind. Bei fehlendem Budget geschieht nichts.
+
+• 5. Laufzeit: 512 Knotenauswertungen je Tick und Anlage; 64 weltweit gleichzeitig aktive Großrituale als
+konfigurierbarer Standard; Überschreitung pausiert statt Serverlast zu erhöhen.
+
+• 6. Protokoll: Ergebniscode, Verbrauch und verantwortliche Spieler-ID; sensible Koordinaten werden nur
+Berechtigten angezeigt.
+
+Stabilität und Fehlersicherheit: Instabile Geräte lösen keinen zufälligen anderen Zauber aus. Unter 25% ST
+verweigert die Anlage die Ausführung; bei 25–49% ST steigen die Kosten um 25%; ab 50% bleiben Semantik und
+Wirkung unverändert. Fällt ein laufendes Ritual aus, gelten seine expliziten Abbruch-/Erstattungsregeln. Kleine
+kosmetische Partikeleffekte können zufällig variieren, aber nie Nutzwirkung oder Kosten.
+
+
+Beispiel: drei vollständige Formeln
+ Formel               Graph / Parameter                                                   Kosten und Einschränkung
+
+ Lichtfunke           IMPULS → ZIEL → PUNKT → LICHT(stärke=3,dauer=30 s) →                5 FK + 30 FL; Reichweite 12; Zielblock
+                      AKTIVIERE                                                           darf nicht geschützt sein; temporäres
+                                                                                          Licht ohne Platzierung.
+
+ Behutsamer Schub     IMPULS → ZIEL(Entität) → SCHUB(0,0.6,0.3) → AKTIVIERE               12 FK + 45 FL; Ziel max. 100
+                                                                                          Lebenspunkte; kein Wirkversuch in
+                                                                                          PvP-geschützten Arealen.
+
+ Nachtlampe           INTERVALL(40t) + UMGEBUNG(Helligkeit) → GRÖSSER(7) → NICHT          1 FL/sek Sensorik; 3 FL/s aktiv;
+                      → FALLS → LICHT(stärke=5) → AKTIVIERE                               Ausführung nur im geladenen Chunk und
+                                                                                          bei erlaubter Blockposition.
+
+
+
+
+Spielerwerkzeuge und Formelfehler
+Der Editor unterscheidet Syntaxfehler (fehlender Port), Typfehler (Position statt Entität), Kontextfehler (Ziel
+geschützt), Budgetfehler (zu wenig FL/FK), Netzfehler (kein zulässiger Pfad) und Laufzeitfehler (Ziel nach
+Prüfung verschwunden). Jede Meldung markiert den ursächlichen Knoten und zeigt die kleinste mögliche Korrektur.
+Das Monokel darf fremde Anlagen anzeigen, aber keinen unbefugten Zugriff auf private Formeln oder Kisten
+erlauben.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                             11
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+
+03 Rohstoffökonomie und mehrstufige
+Herstellung
+
+Grundprinzip: die Werkbank ist nur der Einstieg
+Vanilla-Crafting wird für grobe Rahmen, Behälter und frühe Bauteile verwendet. Präzise Teile müssen an den
+geeigneten Stationen veredelt, kristallisiert, extrahiert, graviert, stabilisiert und erst anschließend
+zusammengebaut werden. Fortschritt entsteht aus Werkzeugketten, nicht nur aus der Jagd nach selteneren
+Erzen. Kein Kerngegenstand höher als Phase II entsteht durch ein einziges 3×3-Rezept.
+
+
+Stationen und Arbeitsprofile
+ Kürzel / Station         Funktion                                              Freischaltung / Einschränkung
+
+ W / Werkbank             Grundformen, leere Behälter, Metallrahmen,            Vanilla, ohne Magie.
+                          einfache Tinte
+
+ OF / Ofen                Trocknen, Brennen, einfache Metallverarbeitung        Vanilla.
+
+ AW /                     Montage von Runenwerkzeugen, leitfähigen              Phase II; benötigt integrierten Feldkristall.
+ Arkanwerkbank            Bauteilen und Endausrüstung
+
+ KS / Kristallschleifer   Schleift rohe Kristalle, erzeugt Präzisionssplitter   Phase II; braucht Schleifscheibe, 20 FL/Rezept.
+ (neu)                    und Kristallstaub
+
+ AT / Alchemietisch       Extraktion, Destillation, Trankbrauen, Tinte,         Phase II; Verbrauch von Fläschchen, Wärme oder FL.
+                          Katalysator
+
+ AS / Arkaner             Legierungen, arkaner Stahl, Resonanzgläser,           Phase III; 80 FL/Batch plus Brennstoff.
+ Schmelzofen              Veredelung
+
+ GS / Gravurstation       Import aus Formelbuch, Gravur auf Runenplatten        Phase III; 30–500 FL abhängig von Komplexität; kein
+                          und zugelassenen Artefakten                           eigenständiger Editor.
+
+ RP / Runenpresse         Formt Rohplatten und presst leitfähige                Phase III; nur Metall-/Kristall-Halbzeuge, keine
+ (neu)                    Runenbahnen                                           Formelbearbeitung.
+
+ RS / Ritualsockel        Ritualaufbau, Energiepuffer, Validierung,             Phase IV; Multiblock erforderlich für große Rituale.
+                          Opfergabe und Ausführung
+
+ ÄK / Ätherkollektor      Wandelt Ätherquellen-Fluss in FL für Netze            Phase III; maximal 60 FL/t an Quelle, 8 FL/t ohne Quelle.
+ (neu)
+
+ FS / Feldspeicher        Speichert FL in getrenntem Kondensatorkern            Phase III; Kapazität/Rate durch Hardware.
+ (neu)
+
+ AP / Arkane              Kontrolliert Reinheit von Essenzen, Qualitäten und    Phase II; Teil des Alchemietisch-Bausatzes, kein
+ Prüfschale (neu)         Signatur                                              eigenständiger neuer Craftingblock.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                      12
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Primärrohstoffe, Entstehung und Teilprodukte
+ Rohstoff               Fundort / Gewinnung                                         Erster Produktionsschritt
+
+ Feldkristallerz        Kristallhöhlen; außerdem vereinzelte Adern in steinigen     Abbau → rohe Feldkristalle, Schleifer → leitfähige
+                        Höhenlagen                                                  Splitter/Staub.
+
+ Arkanerz               Unterirdisch, seltener in Zersplitterung                    Abbau → Rohbrocken, Schmelzofen → Arkanbarren.
+
+ Resonanzgeode          Seltene kleine Höhlenformation                              Aufbrechen → Resonanzsplitter, Schmelzofen →
+                                                                                    Resonanzglas.
+
+ Runenholz              Arkanwald, einzelner uralter Runenbaum                      Fällen → Runenholzstämme, Werkbank → Bretter,
+                                                                                    AT → Harz.
+
+ Mondblüte              Nebelhaine und nachts am Waldrand                           Pflanze → Blüten, AT → Mondsud, destillieren →
+                                                                                    Mondsalz.
+
+ Ätherquelle            Feste natürliche Weltformation                              Mit Kollektor nutzen; nicht mit Eimer versetzen
+                                                                                    oder unendlich vermehren.
+
+ Leuchtmoos             Höhlen/Arkanwald                                            Trocknen → Leuchtfaser; Trank- und
+                                                                                    Lampenbestandteil.
+
+ Kristallsäulen-Fragm   Dungeons / spätere Handwerksdemontage                       Schleifer → klare Kerne; selten, nicht früh farmbar.
+ ente
+
+ Vanilla: Kupfer,       Bekannte Weltressourcen                                     Verbindendes Grundmaterial; Redstone ist
+ Eisen, Gold, Quarz,                                                                Schnittstelle, kein Ersatz der Runensprache.
+ Redstone, Glas,
+ Leder
+
+
+
+
+Materialklassifikation und Qualitätsstufen
+Reinheit ist für verarbeitete Halbzeuge ein klarer ganzzahliger Wert Q0, Q1, Q2, Q3. Q0 = roh, Q1 = gereinigt, Q2
+= stabilisiert, Q3 = resonanzkalibriert. Die Qualität verändert Kapazität, Haltbarkeit und Kosten; sie verändert nie
+eine Runenbedeutung. Q2 wird ab Phase III, Q3 ab Phase V erreichbar. Standardrezepte garantieren die
+dokumentierte Qualität; keine verdeckte Zufallslotterie bei Herstellung.
+
+ Zwischenmaterial        Herstellung                                                    Hauptverwendung
+
+ Feldkristallsplitter    KS: 1 Rohkristall → 3 Splitter                                 Kabel, Monokel, Leitbahnen.
+
+ Kristallstaub           KS: 2 Splitter → 4 Staub                                       Runentinte, Runenplatte, Mischungen.
+
+ Gereinigter             KS + AT: 4 Splitter + Reinwasser → 1 Kern Q1                   Werkzeuge, Netzwerk, Speicher.
+ Kristallkern
+
+ Resonanzglas            AS: 2 Splitter + 2 Glas + 1 Arkanstaub → 2 Platten             Konnektor, Relais, Monokel.
+
+ Arkanbarren             AS: 2 Erzbrocken + 1 Kohle + 40 FL → 1 Barren                  Rüstung, Gravurwerkzeug, Maschinen.
+
+ Arkanlegierung          AS: 2 Arkanbarren + 1 Gold + 1 Mondsalz → 2 Legierungen        High-Tier-Bauteile, Ritualfassung.
+
+ Runenharz               AT: 2 Runenholz + 1 Fläschchen Reinwasser → 2 Harz             Isolierung, Pergament, Siegel.
+
+ Leitpaste               AT: 2 Kristallstaub + 1 Redstone + 1 Runenharz → 4 Paste       Runenbahnen, Konnektoren, Leiter.
+
+ Präzisionsspule         AW: 2 Kupfer + 2 Leitpaste + 1 Splitter → 1 Spule              Relais, Sensor, Teleporter.
+
+ Leere Runenplatte       RP: 2 Arkanbarren + 2 Paste → 2 Platten                        GS → beschriebene Formelplatte.
+
+ Gebundene               GS: 1 leere Platte + Formelimport + 30–500 FL                  Ritualsockel, Automatisierung.
+ Runenplatte
+
+ Mondsalz                AT: 2 Mondsud → 1 Mondsalz                                     Flüche, Alchemie, Veredelung.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                   13
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+ Zwischenmaterial         Herstellung                                                    Hauptverwendung
+
+ Ätherlösung              AT: 2 Mondblüten + 1 Kristallstaub + Wasser → 1 Lösung         Leistungsfähige Flüssigkatalysatoren.
+
+ Resonanzkern             AS + KS: 4 Resonanzsplitter + 1 Kristallkern → 1 Kern          Portale, Feldkompass, Speicher.
+
+ Stabilisatorsiegel       GS + AT: 1 Runenharz + 1 Mondsalz + 1 Leitpaste → 1 Siegel     Ausfallabsicherung, Rüstungsprägung.
+
+ Leerer Seelenanker       AW: 1 Resonanzkern + 2 Arkanlegierung + 1 Siegel → 1 Anker     Seelenrituale; erst durch Ritual aktivierbar.
+
+
+
+
+Konkrete Rezeptketten – industrielle Basismaterialien
+ ID / Herstellung       Station / Eingaben                                                 Ausgabe / Zweck
+
+ R-001 Rohkristall      Fund: Feldkristallerz, Eisenspitzhacke oder besser                 1–3 rohe Kristalle; Fortune begrenzt max. 5.
+
+ R-002 Splitter         KS: 1 roher Kristall + 20 FL                                       3 Feldkristallsplitter.
+
+ R-003 Kristallstaub    KS: 2 Splitter + 10 FL                                             4 Kristallstaub.
+
+ R-004 Reinkern         KS: 4 Splitter → Rohkern; AT: Rohkern + Reinwasser + 25 FL         1 Kristallkern Q1.
+
+ R-005 Arkanbarren      AS: 2 Arkanerzbrocken + 1 Kohle + 40 FL                            1 Arkanbarren Q1.
+
+ R-006 Legierung        AS: 2 Arkanbarren + 1 Goldbarren + 1 Mondsalz + 75 FL              2 Arkanlegierungen Q2.
+
+ R-007 Runenharz        AT: 2 Runenholz + 1 Wasserflasche + 10 FL                          2 Runenharz.
+
+ R-008 Leitpaste        AT: 2 Staub + 1 Redstone + 1 Harz + 10 FL                          4 Leitpaste.
+
+ R-009 Spule            AW: 2 Kupfer + 2 Leitpaste + 1 Splitter                            1 Präzisionsspule.
+
+ R-010 Platte           RP: 2 Arkanbarren + 2 Leitpaste + 40 FL                            2 leere Runenplatten.
+
+ R-011 Resonanzglas     AS: 2 Resonanzsplitter + 2 Glas + 1 Arkanstaub + 50 FL             2 Resonanzglasplatten.
+
+ R-012                  KS: 4 Splitter → Formling; AS: Formling + 1 Q1-Kern + 100 FL       1 Resonanzkern Q2.
+ Resonanzkern
+
+ R-013 Reinwasser       AT: 1 Wasserflasche + 1 Holzkohle, 10 s                            1 Reinwasserflasche; Glasflasche beim
+                                                                                           Trinken.
+
+ R-014 Mondsud          AT: 2 Mondblüten + 1 Reinwasser + 15 FL                            2 Mondsud.
+
+ R-015 Mondsalz         AT: 2 Mondsud + 20 FL, 12 s                                        1 Mondsalz.
+
+ R-016 Leuchtfaser      OF: 3 Leuchtmoos, 6 s                                              2 Leuchtfaser.
+
+ R-017 Arkanstaub       KS: 1 Arkanbarren + 30 FL                                          2 Arkanstaub; absichtlicher Materialtausch.
+
+ R-018 Stabilisierung   AT: 1 Harz + 1 Mondsalz → Bindemasse; GS: Masse + 1 Paste + 30     1 Stabilisatorsiegel.
+                        FL
+
+ R-019 Runentinte       AT: 2 Kristallstaub + 1 Mondsud + 1 Tintenbeutel + Fläschchen      1 Runentintenflakon (64 Schreibpunkte).
+
+ R-020 Kristallkabel    AW: 1 Kupfer + 2 Feldkristallsplitter + 2 Leitpaste                8 Kristallkabel, 80 FL/t.
+
+ R-021                  AS: 3 Arkanlegierung + 2 Resonanzkerne + 1 Siegel + 180 FL         1 Kern, später FS-Großspeicher.
+ Großspeicherkern
+
+ R-022                  KS: 1 Resonanzglas + 2 Kristallsplitter + 45 FL                    1 Monokel-/Sensorlinse.
+ Präzisionslinse
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                   14
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Rezeptketten – Stationen und Hauptwerkzeuge
+ ID / Herstellung      Station / Eingaben                                                   Ausgabe / Zweck
+
+ R-030                 W: 1 Crafting Table + 4 Runenholzbretter + 2 Kupfer + 1              1 Arkanwerkbank; erster magischer
+ Arkanwerkbank         Feldkristallsplitter                                                 Arbeitstisch.
+
+ R-031                 AW: 3 Eisen + 1 Quarzblock + 2 Kupfer + 1 Q1-Kern                    1 Kristallschleifer; benötigt Kabel oder
+ Kristallschleifer                                                                          100-FL-Startzelle.
+
+ R-032                 AW: 1 Braustand + 2 Glas + 2 Runenholz + 1 Kupfer + 1                1 Alchemietisch; Reinwasser/Essenz.
+ Alchemietisch         Kristallstaub
+
+ R-033 Arkaner         AW: 1 Hochofen + 4 Arkanbarren + 2 Paste + 1 Spule                   1 Schmelzofen; ab Phase III.
+ Schmelzofen
+
+ R-034 Runenpresse     AW: 2 Eisenblöcke + 2 Arkanbarren + 2 Spulen + 1 Siegel              1 Runenpresse.
+
+ R-035 Gravurstation   AW: 2 Arkanlegierung + 2 Spulen + 1 Präzisionslinse + 1 Q1-Kern      1 Gravurstation; Importport Formelbuch.
+
+ R-036 Ritualsockel    AW: 4 Arkanstein + 2 Arkanlegierung + 1 Resonanzkern + 1             1 Ritualsockel; Ritualkontrolle.
+                       Runenhalter
+
+ R-037 Runenmeißel     AW: 2 Eisen + 1 Arkanbarren + 1 Leitpaste + 1 Splitter               1 Runenmeißel mit 256 Bestätigungen.
+
+ R-038 Formelbuch      W: 1 Buch + 2 Runenharz + 1 Kristallstaub → Rohbuch; AT:             1 Formelbuch mit 64 Schreibpunkten.
+                       Rohbuch + 1 Runentinte
+
+ R-039 Handschuh       AW: 2 Leder + 1 Gold + 2 Spulen + 1 Q1-Kern → Rohhandschuh;          1 Runenhandschuh, 4 Formelslots.
+                       GS: 1 Siegel + 60 FL
+
+ R-040 Monokel         AW: 1 Gold + 1 Präzisionslinse + 1 Resonanzglas + 1 Runenharz →      1 Arkanes Monokel, passiver
+                       Gestell; GS: 1 Siegel + 60 FL                                        Analysemodus.
+
+ R-041 Feldkompass     AW: 1 Kompass + 1 Resonanzkern + 2 Paste → Rohkompass; GS: 1         1 Feldkompass, Signaturslot.
+                       Signa-Runenplatte + 80 FL
+
+ R-042                 AW: 2 Arkanbarren + 2 Splitter + 1 Präzisionsspule; GS: 1            1 Resonanzgabel, 2 Modi.
+ Resonanzgabel         Prüfe/Impuls-Formel + 45 FL
+
+ R-043 Leere           W: 3 Papier + 1 Runenharz → 3 Träger; AT: 1 Träger + Tinte           1 beschreibbare Zauberrolle.
+ Pergamentrolle
+
+ R-044 Beschriebene    RP: leere Platte; GS: Formelbuch-Import + leere Platte + FL-Kosten   1 versiegelte Runenplatte, unveränderliche
+ Platte                                                                                     Formelkopie.
+
+ R-045                 AW: 1 Resonanzkern + 2 Spulen + 3 Arkanlegierung + 1                 1 Ätherkollektor, produziert FL nur nach
+ Ätherkollektor        Kristallglas                                                         Quellenregeln.
+
+ R-046 Feldspeicher    AW: 1 Q1-Kern + 2 Arkanbarren + 2 Leitpaste + 1 Siegel               1 kleiner Speicher (2.000 FL, 80 FL/t).
+
+ R-047 Konnektor       AW: 2 Resonanzglas + 1 Spule + 2 Paste; GS: Signaturbindung 50       2 Kristall-Konnektoren (Paarbindung
+                       FL                                                                   erforderlich).
+
+ R-048 Relais          AW: 1 Resonanzkern + 2 Präzisionsspulen + 2 Kristallglas             1 Kristall-Relais, Reichweitenverlängerung.
+
+
+Handwerkliche Engpässe: Die Runenpresse benötigt bereits den Schmelzofen, die Gravurstation verlangt
+veredeltes Resonanzglas, und ein Ritualsockel nutzt mindestens einen Resonanzkern. Dadurch müssen Rohstoffe
+zuerst durch mehrere Stationen laufen. Kein High-Tier-Gerät darf seine eigenen Rohmaterialien vollständig selbst
+herstellen. Der Spieler kann Rohstoffe per Automatisierung verarbeiten, sobald er die dafür notwendigen
+Grundstationen gebaut hat.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                    15
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Ausgearbeiteter Herstellungsweg: vom Erz zum Netzwerk
+Beispiel – Kristall-Konnektoren: (1) Feldkristallerz abbauen, (2) Kristalle im Schleifer spalten, (3) Splitter zu
+Staub und Kerne reinigen, (4) Resonanzgeoden aufbrechen, (5) Resonanzglas im arkanen Schmelzofen herstellen,
+(6) Runenharz im Alchemietisch extrahieren, (7) daraus Leitpaste herstellen, (8) Spule an Arkanwerkbank
+montieren, (9) Konnektor-Paar zusammensetzen, (10) über ein vorhandenes Formelbuch in der Gravurstation eine
+gemeinsame Signatur binden, (11) Konnektoren an zwei Netzwerke anschließen. Reichweite und Energieverlust
+bleiben begrenzt.
+
+Beispiel – endgamefähige Runenrüstung: Arkanerz → Arkanbarren → Arkanlegierung; Feldkristallerz →
+gereinigter Kern; Mondblüte → Mondsud → Mondsalz; alle Pfade vereinigen sich in Stabilisatorsiegel und
+Runenleiter. Rüstungsrohling wird auf der Arkanwerkbank gefertigt, in der Gravurstation geprägt und im
+Ritualsockel mit Bosskatalysator kalibriert. Die Basisausrüstung funktioniert ohne Endgame-Ritual, höchste Qualität
+Q3 nicht.
+
+
+
+04 Fortschritt, Forschung und Entdeckungen
+
+Wissen statt Magie-Level
+Spieler schalten keine Fähigkeiten allein durch Punktesammeln frei. Sie benötigen die jeweilige Runenkenntnis,
+die als entschlüsseltes Symbol im Formelbuch hinterlegt wird. Fundstücke bleiben lesbar, können aber erst nach
+bestandener Analyse vollständig als bearbeitbare Formel importiert werden. Der Runenhandschuh übernimmt
+ausschließlich Formeln, deren verwendete Runen bereits bekannt sind; gefundene Schriftrollen dürfen als
+einmalige, geprüfte Fertigartefakte auch unbekannte Runen enthalten, jedoch nicht als freie Vorlage dupliziert
+werden.
+
+
+Vier gleichwertige Wege, eine Formel zu erwerben
+ Weg                     Ablauf                                                          Grenzen
+
+ Selbst entwickeln       Bekannte Runen im Formelbuch zu einem gültigen Graph            Keine zusätzlichen Forschungspunkte;
+                         verbinden; Simulation und Testlauf durchführen.                 Kosten für Schreiben und Testen
+                                                                                         bleiben.
+
+ Finden                  Runentafeln, Schriftrollen, Büchersplitter oder                 Funde können beschädigt sein und
+                         Bibliotheksfragmente in Weltstrukturen bergen.                  entschlüsselt werden müssen.
+
+ Bei NPCs lernen         Alchemist lehrt Alchemie, Artefakthändler verkauft Vorlagen,    Handel mit Emeralds, Materialien oder
+                         abtrünniger Magier besitzt riskante Konstruktionen.             spezifischen Fundstücken; keine
+                                                                                         Reputation.
+
+ Bestehende Formeln      Monokel zeigt Komponenten; Formelbuch importiert nur erlaubte   Eigentums- und Kopierschutz
+ analysieren             oder öffentliche Lehrformeln.                                   verhindert Diebstahl privater
+                                                                                         Anlagenformeln.
+
+
+
+
+Rune-Entschlüsselung als Miniprozess
+Ein fremdes Runenfragment zeigt die Form, den vermuteten Typ und bis zu drei Kontext-Hinweise. Der Spieler
+platziert es im Formelbuch, ergänzt fehlende Porttypen und vergleicht Messwerte aus sicherer Feldanalyse. Der
+abschließende Validierungslauf kostet 5–30 FL und verbraucht 1–4 Schreibpunkte. Die Lösung ist pro Worldseed
+und Fragmenttyp stabil, nicht ein zufälliges Ratespiel. Bereits verstandene Runen werden account-/weltgebunden
+gespeichert. Im Mehrspieler bleiben gelernte Runen pro Spieler; Lehrbücher können nur über ein bewusst
+freigegebenes Tauschobjekt weitergegeben werden.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                       16
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Weltweite Wissens-Meilensteine
+ Stufe                 Nachweis                                                 Freigabe
+
+ T0 – Finder           Erstes Feldkristallerz, Runenschrift im Dorf/Tempel      Grundlagen LICHT, IMPULS, PUNKT, erste Tinte.
+
+ T1 – Lehrling         Erste korrekte Formel, Arkanwerkbank, Schleifer          Handschuh, Monokel, einfache Tränke und
+                                                                                Verbesserungen.
+
+ T2 – Konstrukteur     5 entschlüsselte Runen, Schmelzofen, 1 veredelter        Gravur, Runenplatten, Konnektoren, Sensorik und
+                       Kern                                                     kleinere Barrieren.
+
+ T3 – Ritualist        2 abgeschlossene Dungeons, 1 Resonanzkern,               Ritualkreise, Bindungs- und Schutzrituale,
+                       Ritualsockel                                             Bosssummons.
+
+ T4 – Architekt        Dimension betreten, 2 unterschiedliche Bosskerne         Großspeicher, Teleporter, automatische Produktion,
+                       gewonnen                                                 Q3-Veredelung.
+
+ T5 – Meister          Sternendrache besiegt oder gleichwertige optionale       Prestige-Baupläne und äußerst komplexe
+                       Großprüfung                                              Konstruktionen ohne Grundsystemzwang.
+
+
+Wichtig: Die Meilensteine definieren empfohlene Tutorials und Zugang zu Rezepten, keine XP-Level. Ein kundiger
+Spieler kann einzelne Wege abkürzen. Bosse sollen seltene Bauteile liefern, aber nicht jedes fortgeschrittene
+Werkzeug hart an Bosskills knüpfen.
+
+
+Schwierigkeits- und Wirtschaftsbalance
+ Parameter                    Anfangsregel                                       Balanceziel
+
+ Direkte Zauber               100 FK, 3 FK/s Regeneration                        5–8 kleine Anwendungen vor Pause; niemals
+                                                                                 AFK-Dauerfeuer.
+
+ FL-Startzelle                100 FL einmalig aus frühen Rohstoffen              Bootstrap ohne Kollektor; geringe Reichweite.
+
+ Ätherkollektor ohne          8 FL/t nur bei offenem Himmel, 2 FL/t bei Nacht    Kleiner Außenstandort; kein Nullkosten-Endlosnetz.
+ Quelle
+
+ Ätherkollektor an Quelle     60 FL/t, gleichzeitig max. 2 Kollektoren pro       Quellen sind seltene Infrastruktur-Vorteile.
+                              Quelle
+
+ Kleiner Speicher             2.000 FL; 80 FL/t ein-/aus                         Versorgt 5–20 einfache Verbraucher.
+
+ Autocrafting                 1 Rezept/4 s früh; 1 Rezept/s mit Upgrade          Handwerk bleibt anfangs bedeutungsvoll.
+
+ Portal                       500 FL pro Aktivierung + 15 FL/s offen             Reisen praktisch, aber nicht kostenlos.
+
+ Großritual                   1.500–10.000 FL + Materialopfer                    Langfristiges Ziel mit Vorbereitung.
+
+ Monster-/Bossbeute           Garantierte Schlüsselressource beim ersten Kill    Kein Fortschrittsstopp durch Pech.
+
+ Magischer Bergbau            16 Blöcke/min Basisausbau                          Unter Vanilla-Handabbau-Spitzenrate, aber bequem
+                                                                                 und kontinuierlich.
+
+
+
+
+Rezept- und Forschungsanzeige
+Das Formelbuch enthält getrennte Register Runen, Formeln, Analyse und Handwerkswege. Der
+Handwerksweg zeigt den gesamten Abhängigkeitsbaum: Eingangsressourcen, passende Maschinen, FL-Verbrauch,
+Zeit, Nebenprodukte und alternative Gewinnungswege. Ein Rezept ist sichtbar, sobald der Spieler eines seiner
+Komponenten entdeckt; unbekannte Komponenten erscheinen nur als Materialkategorie, bis sie entschlüsselt
+wurden. Suchfilter: Handwerkbar jetzt, benötigte Station, T-Stufe, Material, Produktionsdauer.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                17
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+
+05 Die neun magischen Kerngegenstände
+
+1. Runenmeißel
+Werkzeug zur Gravur physischer Runen auf dafür zugelassenen Blockflächen. Der Spieler wählt eine Rune,
+betrachtet ein festes Feldraster, bestätigt die Platzierung und verbraucht dabei genau einen Haltbarkeitspunkt.
+
+Regeln: 256 Bestätigungen; Abbruch kostet nichts; mehrere Runen pro Fläche; pro Blockfläche 4×4 Slots, bis zu sechs
+Blockflächen. Bevor ein Effekt entsteht, müssen Runen zu einem gültigen Feldgraphen verbunden und extern aktiviert werden.
+Geschützte Blöcke bleiben unangetastet.
+
+
+2. Runenhandschuh
+Hauptwerkzeug für direktes Zaubern, inklusive Schnellzugriff auf im Formelbuch entwickelte Formeln. Jeder
+importierte Slot enthält eine unabhängige Kopie mit Formel-ID und Prüfsumme.
+
+Regeln: Start 4 Formelslots, Q2 8, Q3 12; Mausrad+Modifikatortaste wählt Slot; Rechtsklick löst nach Vorschau aus. Kein
+Formeleditor im Handschuh; FK regeneriert natürlich, FL kommt aus tragbarer Feldzelle (100–600 FL) oder naher Anlage.
+Unterbrochene Zauber verbrauchen nur die dokumentierten Startkosten.
+
+
+3. Arkanes Monokel
+Wearable mit passiver Feldsicht, Signaturerkennung, Netzpfad- und Knoten-Diagnose. Anzeigen nur für
+angeschautes Ziel, nicht für beliebige entfernte Chunks.
+
+Regeln: Kein Hand-Slot; schaltbare Overlay-Intensität; passive Sicht kostet 1 FK je 5 s oder 1 FL/s aus Feldzelle. Privatformeln
+nur als neutraler Energietyp/Fehlerzustand sichtbar, nicht als vollständiger Graph ohne Berechtigung. Keine automatische
+Rohstoff-Röntgenkarte.
+
+
+4. Feldkristall
+Feldleitendes Halbzeug und zentrales Netzelement. Sein physischer Kristallkörper beeinflusst Reichweite, Frequenz
+und Leitfähigkeit, aber nicht die gespeicherte Energie.
+
+Regeln: Leitet, speichert und verstärkt nicht. Kabel verbinden unmittelbar, Konnektoren vernetzen freigegebene Gegenstellen
+drahtlos, Relais verlängern Funkreichweite. Feldspeicher und Kollektor sind eigene Geräte.
+
+
+5. Runentinte
+Verbrauchsmaterial des Formelbuchs und der Zauberrollen. Magische Schrift dient als dauerhafte formale
+Beschreibung, nicht als aktive Quelle.
+
+Regeln: Flakon 64 Schreibpunkte; Rune neu anlegen: 1 Punkt, Untermodul editieren: 2 Punkte, Formelrevision speichern: max. 8
+Punkte, abhängig von geänderten Knoten. Tinte kann im Buchslot nachgefüllt werden. Runenmeißel verbraucht nie Tinte.
+
+
+6. Runenplatte
+Modulare Feldschaltung für Maschinen, Rituale und tragbare Ausrüstung. Sie wird in der Runenpresse geformt und
+in der Gravurstation mit einer bereits im Formelbuch vorhandenen Formel beschrieben.
+
+Regeln: Plattenstufe Q1: max. 24 Knoten; Q2: 64; Q3: 128. Der Inhaber einer Anlage darf importierte Kopie
+aktivieren/deaktivieren, aber keine inhaltliche Bearbeitung ohne Formelbuch. Bei Demontage bleiben Platte und Signatur
+erhalten.
+
+
+7. Formelbuch
+Visueller universeller Graph-Editor. Ein großes zoombares Canvas besitzt frei platzierbare Knoten,
+Portverbindungen, benannte Parameter und beliebig viele Tags/Kategorien ohne Ordnerhierarchie.
+
+Regeln: Zoom 25–400%, pan, Auto-Layout optional, Undo/Redo 100 Schritte, inkrementelle Validierung, Versionshistorie 20
+Revisionen pro Formel, Export nur bei Freigabe. Tinten-Slot oben im Editor, Import aus Fundstücken, Kopien an Handschuh und
+Gravurstation.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                             18
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+8. Feldkompass
+Ortet entweder eine eingeführte weltgenerierte Signatur oder eine selbst an einem Ort gebundene Signatur. Die
+Signatur ist dauerhaft mit genau diesem Ort verknüpft.
+
+Regeln: Signaltyp für Biom/Struktur oder personalisierten Zielpunkt; Reichweite 1.024 Blöcke normal, 4.096 Q3; zeigt Winkel
+und grobe Signalstärke, nicht exakte Koordinaten. Persönliche Signatur lässt sich nicht auf andere Orte umbiegen, nur als neuer
+Datensatz neu prägen.
+
+
+9. Resonanzgabel
+Diagnosewerkzeug für magische Konstruktionen und manuelle Auslösung von zulässigen Formeln. Zwei Modi:
+Diagnostizieren und Aktivieren.
+
+Regeln: Diagnose zeigt Eigentümerfreigabe, FL-Budget, Leitungsunterbrechung und fehlerhaften Knoten; Aktivieren sendet
+einen kontrollierten Impuls. Keine Reparaturautomatik; keine Rechteumgehung. 256 Anwendungen Haltbarkeit, Diagnose
+belastet Haltbarkeit nicht.
+
+
+
+Inventar, Haltbarkeit und Wiederbeschaffung
+Gebundene Geräte bleiben nach normalem Tod Vanilla-konform als Item erhalten oder fallen als Inventardrop;
+optionale Soulbound-Verzauberung ändert dies explizit. Eine zerbrochene Resonanzgabel wird mit Runenharz +
+Splitter an der Arkanwerkbank repariert. Runenhandschuhe besitzen austauschbare Q1/Q2/Q3-Spulen; der
+Formelinhalt ist in Spieler-Daten und Item-NBT gespiegelt und wird gegen Duplikation per UUID/Revision geprüft.
+Ein beschädigter Handschuh verliert nicht kommentarlos die Originalformeln im Formelbuch.
+
+
+
+06 Blockkatalog: 20 ausgewählte Blöcke und
+Ergänzungen
+
+Funktionsblöcke – fünf
+ Block                        Spezifikation / Interaktion
+
+ Gravurstation                Zwei Slots: physische Leerstufe und Formelbuch-Import. FL-Anzeige, Graphprüfung, Knopf Gravieren,
+                              30–500 FL; ungültige Formeln lassen Rohling unberührt.
+
+ Alchemietisch                Vier Zutatenplätze, Wasser-/Lösungsmittel-Slot, Essenzbehälter, Wärme-/FL-Eingang, Prozessleiste. Kann
+                              direkt und automatisiert betrieben werden.
+
+ Arkaner Schmelzofen          Drei Eingänge, Schlacke-Slot, 2.000-FL-Puffer, Prozesszeit 8–40 s. Verarbeitet Rohbrocken, Legierungen
+                              und Resonanzglas.
+
+ Ritualsockel                 Zentrale Prüfung eines Ritualmultiblocks; vier Opfergaben-Slots und externe Rohstoff-Podeste; zeigt
+                              Phasen, Energiebedarf, Rechte und Abbruchfolge.
+
+ Arkanwerkbank                3×3 Montage mit zusätzlichem Resonanzslot; Hauptmontagewerkzeug für präzise Arkantechnik. Ohne
+                              eigenes Energienetz nur frühe Rezepte.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                 19
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Runen und Konstruktion – fünf
+ Block                        Spezifikation / Interaktion
+
+ Runenblock                   Je Seite 4×4 Gravurstellen; Materialvariante bestimmt Robustheit, nicht Runenbedeutung; frei verbindbar
+                              über Nachbarports.
+
+ Kristallkabel                80 FL/t Basis; sichtbare Netzanschlüsse; Färbung optional; Kabelverschleiß nur bei Überlast, kein ständiger
+                              Ersatzverbrauch.
+
+ Kristall-Konnektor           Zwei separat gepaarte Anker, max. 128 Blöcke Sichtlinienentfernung; 8 FL/t Grundverbrauch; nur mit
+                              Besitzerfreigabe.
+
+ Kristall-Relais              Verlängert Konnektor-Funkstrecke um max. 128 Blöcke, 5 FL/t Wartung, maximal 4 Relais pro Strecke.
+
+ Runenhalter                  Nimmt genau eine fertige Runenplatte, stellt Feld-/Redstone-/Item-Port je nach Bauform bereit und zeigt
+                              Aktivitäts-LED. Kein eigener Editor.
+
+
+
+
+Dekorativ und baulich – fünf
+ Block                        Spezifikation / Interaktion
+
+ Arkanstein                   Blaugrüner Baustein aus Tiefengestein + Kristallstaub; hohe Explosionsresistenz, normale Abbaubarkeit.
+
+ Kristallglas                 Teiltransparentes Resonanzglas-Bauelement; leitet erst mit eingesetztem Kristallkabel, nicht allein.
+
+ Arkane Laterne               Lichtstufe 12, optional durch Feldsignal regelbar; 1 FL/2 s aktiv, alternativ statisches schwächeres Licht 8.
+
+ Runenbücherregal             Deko und Wissensdisplay; 4 Formelbuchtitel als sichtbare Bände; erhöht Ritualanalyse-Komfort, keine
+                              bloße Power-Spirale.
+
+ Kristallsäule                Bau- und Ritualstrukturblock mit Anschlusspunkt; in Ritualen nur bei korrekter Anordnung wirksam.
+
+
+
+
+Natürlich vorkommend – fünf
+ Block                        Spezifikation / Interaktion
+
+ Feldkristallerz              Abbau mit Eisen oder besser, natürliche Rohkristalldrops; nicht per einfachem Steinbrecher dupierbar.
+
+ Arkanerzblock                Dichter Erzblock, bei Abbau 1–2 Erzbrocken; Silktouch gibt Erzblock selbst.
+
+ Runenholzstamm               Neues Holzset (Stamm, Brett, Treppe, Zaun); für Harzherstellung und hochwertige Rahmen.
+
+ Leuchtmoos                   Wächst langsam nur bei ausreichender Luftfeuchte und niedriger Helligkeit; erneuerbarer Faserrohstoff.
+
+ Resonanzkristall             Weltformationsblock, bricht zu Splittern; hoher Sensorwert, nicht direkt unbegrenzt aufstellbar.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                        20
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Zusätzliche Infrastrukturblöcke – neue Designergänzungen
+ Zusatzblock                             Crafting und Rolle
+
+ Kristallschleifer                       Siehe R-031; erweitert Ressourcenverarbeitung.
+
+ Runenpresse                             Siehe R-034; formt leere Runenplatten.
+
+ Ätherkollektor                          Siehe R-045; erzeugt begrenzte Feldladung.
+
+ Feldspeicher                            Siehe R-046; getrennte Energiespeicherung.
+
+ Magischer Sensor                        AW: 1 Linse + 1 Spule + 1 Redstone + 1 Paste → Sensor.
+
+ Zeitschaltmodul                         AW: 1 Redstone-Repeater + 1 Spule + 1 leere Platte → Zeitmodul.
+
+ Gegenstandseinlass / -auslass           AW: 1 Trichter + 1 Kabel + 1 Leitpaste → Anschluss.
+
+ Transportanker                          AW: 1 Spule + 2 Arkanbarren + 1 Resonanzglas → Routenanker.
+
+ Teleporterrahmen                        AW: 4 Arkanstein + 2 Legierung + 1 Resonanzkern → Rahmenpaket.
+
+ Barrierenprojektor                      AW: 2 Legierung + 1 Linse + 1 Spule + 1 Platte → Projektor.
+
+ Sortiermodul                            AW: 1 Komparator + 1 Spule + 1 Runenplatte → Sortiermodul.
+
+ Schwebekern                             AS: 1 Resonanzkern + 2 Arkanlegierung + 1 Ätherlösung → Kern.
+
+ Magische Verteidigungseinheit           AW: 1 Projektor + 2 Arkanbarren + 1 Sensor → Einheit.
+
+ Lichtsteuerblock                        AW: 1 Laterne + 1 Sensor + 1 Leitpaste → Schalter.
+
+ Ritualpylon                             AW: 2 Kristallsäulen + 1 Resonanzglas + 1 Siegel → Pylon.
+
+
+Zusatzblöcke sind bewusst auf bestehende Produktionsketten verteilt. Ein Transportanker entsteht nicht direkt aus
+Rohquarz, sondern braucht Spulen und Resonanzglas; der Schwebekern benötigt aus mehreren Stationen
+kommende Legierungen und Alchemie.
+
+
+
+07 Magische Ausrüstung: Waffen, Rüstungen
+und Zubehör
+
+Ausrüstungsarchitektur
+Ausrüstungsgegenstände besitzen Stufe, Qualität, Haltbarkeit, Resonanzklasse, maxRunenslots und optional
+Formelkopie. Effekte stammen aus zulässigen Runengraphen oder festen Itemspezifikationen. Alle Werte gelten bei
+Normal-Schwierigkeit. Rüstungswerte folgen Minecrafts vertrauten Skalierungen; Effekte sind Ergänzungen, keine
+Vollimmunität. Waffen-Sonderaktionen benötigen FK oder FL. Ein Equipment-Slot kann nur ein wirksames
+Runenprofil gleichzeitig aktivieren; Mehrfachprofile auf Q3-Ausrüstung erhöhen den Gesamtenergiebedarf.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                         21
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Fünf magische Waffenkategorien
+ Kategorie            Basis und Spezialfähigkeit                          Mehrstufiger Herstellungsweg
+
+ Runenschwert         7 Grundschaden / 1,6 Geschwindigkeit; Gravur        Eisen-/Arkanbarren → Q1-Kristallkern → Schwertrohling AW →
+                      ermöglicht temporären Licht-, Schub- oder           R-044 Runenplatte GS → Prägung GS.
+                      Schildbruchimpuls bei 25–60 FL.
+
+ Magierstab           5 Angriff / Reichweite 20; reduziert FK-Kosten      Runenholz trocknen → Runenharz → Schaft AW → Kristallkern
+                      um 10%, trägt 2 Formelslots (Q3: 4).                KS/AT → Spitze AS → Bindung GS.
+
+ Zauberbuch           Offhand-Artefakt; 3 gespeicherte Kurzformeln        Papier und Buch → AT Runentinte → AW Bucheinband → GS
+                      und 15% schnellere FK-Erholung bei                  Formeln aus Formelbuch prägen.
+                      gehaltenem Buch, keine neue Formeledition.
+
+ Magischer Bogen      Vanilla-Bogenschaden plus wählbarer Schub           Bogen + Runenholz → Leuchtfaser → Präzisionsspule → AW
+                      oder Lichtspur, max. 1 Zusatzeffekt/Pfeil.          Bogenrohling → GS Runenprägung.
+
+ Arkaner Dolch        4 Schaden / 2,3 Geschwindigkeit; schneller          Eisen + Arkanlegierung → AS Klinge → AW Griff → AT
+                      Fluch-/Siegelauftrag mit kurzer Reichweite,         Essenzbeschichtung → GS Prägung.
+                      begrenzte Ladungen.
+
+
+
+
+Vier Rüstungskategorien
+ Kategorie          Schutzprofil                                       Herstellung und Abwägung
+
+ Magierroben        Rüstungsset 8 Punkte; 15% FK-Regeneration,         Wolle/Leder + Leuchtfaser → AT Essenzbehandlung → AW Nähen →
+                    2 zusätzliche passive Runenslots beim Vollset.     GS Schutzformeln. Kaum physischer Schutz.
+
+ Runenrüstung       Rüstungsset 16 Punkte; je Stück 1–2                Arkanbarren Q1 → AS Legierung Q2 → AW Rüstungsteile → GS
+                    Runenslots, Vollset +10% Stabilität.               Siegel → optional RS Q3-Kalibrierung.
+
+ Kristallrüstung    Rüstungsset 14 Punkte; +20%                        Q1-Kerne → Resonanzglas → Kristallfaser im AT → AW
+                    Netz-/Feldresistenz, aber höherer                  Panzersegmente → GS Prägung.
+                    Reparaturaufwand.
+
+ Arkane Schilde     Blockieren regulären Nahkampf; optional            Vanilla-Schild → Arkanlegierung → Präzisionsspule → GS Schildrune.
+                    8-FL-Projektilabwehr, nicht gegen alle
+                    Bossangriffe.
+
+
+
+
+Fünf Accessoire-Kategorien
+ Kategorie            Maximalwirkung / Einsatz                                Herstellungslogik
+
+ Magische Ringe       Ein Ring: +5 FK oder 5% Kostenreduktion oder ein        Goldring W → Kristallstaub AT → GS 1 kleine Formel; Q2 mit
+                      kleiner Sensor; max. 2 Ring-Slots.                      Resonanzglas.
+
+ Amulette             Tragen einen konstanten Schild- oder                    Gold + Runenharz → Resonanzkern Q2 → AW Fassung → GS
+                      Signaturindikator; nur ein aktives Amulett.             Bindung.
+
+ Talismane            Einmalige Rettungs-, Reinigungs- oder                   Pergament + Mondsalz → Siegel GS → AT Essenz →
+                      Fluchblockade bei erfüllter Bedingung.                  gebundener Verbrauchstalisman.
+
+ Magische Gürtel      Max. 2 zusätzliche tragbare Feldzellen, keine           Leder + Kupferbeschläge → Spulen AW →
+                      Erhöhung interner Speicherleistung.                     Runenharz-Isolierung AT.
+
+ Magische             Langsames Fallen (max. 4 s) oder geringere              Wolle + Leuchtfaser → AT Elixierbad → AW Fassung → GS
+ Umhänge              Sturmbelastung; PvP-regelkonform.                       Formelsiegel.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                  22
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Vier Spezialgegenstände
+ Kategorie              Spezialmechanik                                        Herstellungsweg
+
+ Schwebestiefel         0,7 s zusätzliches Gleiten / Sprungkorrektur; 8 FL/s   Lederstiefel → Schwebekern AS → Siegel AT/GS → AW
+                        beim Schweben; keine kostenlose Dauerfliegerei.        Montage → RS Hochstufe.
+
+ Magischer              22 Blöcke Basisreichweite, max. 6 FL je Zug, keine     Eisenhaken W → Präzisionsspule AW → Runenharz AT →
+ Greifhaken             Anker auf geschützten Flächen.                         Leitstrang AW → GS Schubrune.
+
+ Arkaner Köcher         Speichert 64 Pfeile; 1 benutzerdefinierte              Leder + Runenholz W → AT Bindeharz → AW Spule → GS
+                        Pfeilverzauberung mit begrenztem FL-Puffer.            Projektillogik.
+
+ Magische               Allgemeine Handwerkshandschuhe: +10%                   Leder + Leuchtfaser → AT Alchemiebad → AW
+ Handschuhe             Alchemiegeschwindigkeit oder sicherer Griff für        Verstärkung → optionale GS Prägung.
+                        heiße Kristalle; NICHT der Runenhandschuh.
+
+
+
+
+Zahlen, Setbonus und Reparaturen
+Q1 = 100% Basiswerte und 1 Formelslot; Q2 = +20% Haltbarkeit und höchstens 2 Formelslots; Q3 = +35%
+Haltbarkeit und höchstens 3 Formelslots (Sondergeräte laut eigener Beschreibung). Q2 kostet im Mittel 2,5-fache
+Rohstoffe, Q3 5-fache plus Bosskatalysator. Verbrauchte Ladungen werden an Feldspeichern aufgeladen;
+beschädigte Ausrüstung wird an der Arkanwerkbank mit dem Originalmaterial instand gesetzt. Q3-Reparatur
+verlangt Resonanzsplitter, aber keinen erneuten Bosskill.
+
+Rüstungsboni stapeln nicht unbegrenzt: gleiche passive Runenfamilie hat ein Softcap von 25%
+Gesamtverbesserung. Geschwindigkeits-, Schadens- oder Regenerationsboni aus mehreren Quellen werden erst
+addiert, dann durch Softcap gedämpft. UI zeigt die effektive, nicht nur die theoretische Summe.
+
+
+
+08 Runenverzauberung, Flüche und Siegel
+
+Verzauberungen als kontrollierte Formeln
+Die Runenverzauberung erlaubt eine zulässige Formel auf geeigneter Ausrüstung. Für eine Verzauberung benötigt
+man eine leere Runenplatte, die eigentliche Formel aus dem Formelbuch, eine Stabilisatorsiegel-Bindung und
+eine geeignete Gravurstation. Nach dem Aufbringen wird die Formel zur Itemkomponente. Der Spieler kann
+Parameter in einer neuen Revision im Formelbuch verändern und danach kostenpflichtig erneut gravieren; ein
+beliebiger Editor in der Gravurstation wäre mit der Kernregel unvereinbar.
+
+ Ausgewähltes System         Mechanische Ausarbeitung
+
+ Runenverzauberung           GS: Gegenstand + passende Formelplatte + Siegel; Basiskosten 80 FL + 10 FL/Knoten, max. Komplexität
+                             abhängig von Q.
+
+ Lebewesenflüche             Zeitbegrenzte Statusmuster (z. B. langsamer FK-Aufbau, Zielmarkierung, Schwächung); PvP nur bei
+                             erlaubter Weltregel.
+
+ Ortsflüche                  Räumliche Zone mit konfigurierbarem Radius 2–16; nur eigener/zulässiger Bereich, Energieverbrauch 2–20
+                             FL/s.
+
+ Fluchbrechung               Reinigungsritual oder Alchemie-Antidot für erlaubte Fluchklasse; fremde Schutzsiegel nicht ohne
+                             Besitzer-/Adminfreigabe.
+
+ Seelenbindung               Benanntes Item an eine Spieler-ID gebunden; Inventarverhalten nach Tod konfigurierbar; Besitzerwechsel
+                             über explizites Ritual.
+
+ Magische Siegel             Sichern Truhen, Portale, Bereiche und Geräte; fein granular nach Spieler-/Team-/Freigabeliste.
+
+ Temporäre Verstärkungen     1–15 Minuten aktive Verstärkung, reserviert FL oder konsumiert Alchemie-Ladung; nicht permanent
+                             kombinierbar.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                23
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+ Ausgewähltes System          Mechanische Ausarbeitung
+
+ Magische Stabilität          ST 0–100% aus Itemqualität, Umgebung und Überlast; transparente Kosten-/Ausfallschwellen.
+
+ Verzauberungsanalyse         Monokel zeigt öffentliche Wirkung und Sicherheit; Formelbuch kann nur eigene/öffentliche komplexe
+                              Formeln analysieren.
+
+ Verzauberungsmodifikatio     Neue Formelrevision wird im Buch erzeugt, an GS neu validiert und auf Item gebunden; alter Zustand als
+ n                            Rollback bis Bestätigung.
+
+
+
+
+Fluchstufen, Grenzen und Heilung
+Flüche besitzen Typ, Stufe I–III, Intensität, Tickintervall, Ende, verantwortliche Quelle und Reinigungsstufe. I ist
+durch gewöhnliches Antidot/kleines Reinigungsritual entfernbar, II erfordert AT-Katalysator plus Schutzkreis, III ist
+boss- oder dungeongebunden und benötigt Ritualsockel. Ein Fluch darf weder permanente Charaktervernichtung
+noch unheilbaren Kontrollverlust erzeugen; Quest-Flüche tragen ausdrücklich eine erreichbare Lösungsinformation.
+
+
+Verzauberungsrezepte und Abhängigkeiten
+ ID / Herstellung       Station / Eingaben                                                   Ausgabe / Zweck
+
+ E-01 Geringes          AT: Runenharz + Mondsalz → Masse; GS: Masse + Leitpaste, 30 FL       1 Stabilisatorsiegel, schützt Q1-Formeln.
+ Siegel
+
+ E-02                   RP: leere Platte; GS: importierte Angriffsformel + Platte + 120 FL   1 geladene Waffenplatte für
+ Waffenprägung                                                                               Runenschwert/Bogen.
+
+ E-03 Ortsfluchsiegel   AT: 2 Mondsalz + 1 Ätherlösung → Essenz; GS: 1 Platte + Formel;      1 begrenzter Ortsfluch-Anker.
+                        RS: 1 Essenz, 400 FL
+
+ E-04                   KS: Kristallkern → Linse; AT: Mondsud + Leuchtfaser; GS:             1 Reinigungsfokus für Fluch II.
+ Reinigungsfokus        Fluchbrechungsformel
+
+ E-05 Seelenbindung     AW: 1 Seelenanker; GS: BINDE+SIEGEL; RS: 1.200 FL + 2 Mondsalz       1 an Besitzer gebundenes Artefakt.
+
+ E-06 Q3-Prägung        AS: Arkanlegierung; GS: 1 Q2-Platte + Bosskatalysator + Siegel;      1 Q3-Ausrüstungsprägung.
+                        RS: 2.000 FL
+
+
+
+
+09 Alchemie: Labor, Essenzen und Synthesen
+
+Grundfunktion und Prozesskette
+Alchemie ist ein eigenständiges Material- und Zustandsveränderungssystem. Ausgangsmaterialien werden
+gereinigt, zerkleinert, extrahiert, destilliert, katalysiert und gegebenenfalls fixiert. Der Alchemietisch ist für
+Rezepte mit Flüssigkeiten und Essenzen verantwortlich; Arkaner Schmelzofen und Kristallschleifer liefern feste
+Vorprodukte. Die Station besitzt Slots für Lösungsmittel, Rohmaterial, Reagenz, Katalysator sowie ein flüssiges und
+ein festes Ergebnis.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                   24
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Die zehn gewählten Alchemiesysteme
+ System                    Verbindliche Mechanik
+
+ Trankbrauen               Tränke mit definierten Konzentrationen 1–3 und Dauer; Standardtränke sind von flüssiger Essenz und
+                           Fläschchen abhängig.
+
+ Essenzgewinnung           Jede Rohpflanze / jeder Kristall besitzt 1–2 extrahierbare Essenztypen; Extraktion verbraucht Lösungsmittel
+                           und FL.
+
+ Transmutation             Wandelt Stoffe nur über feste, verlustbehaftete Rezeptlisten (z. B. Kupfer zu Eisenpulver 4:1), niemals freie
+                           wertsteigernde Massenkreisläufe.
+
+ Materialveredelung        Verbessert Q-Stufen bestimmter Halbzeuge; Q3 benötigt Feldstabilisator oder Bosskatalysator.
+
+ Magische Elixiere         Dauerhafte Gegenstandsbeschichtung oder 10–30 min Spielerbonus mit Abklingzeit; keine endlosen Attribute.
+
+ Alchemistische Bomben     Wurfgegenstände mit klar definiertem Radius 2–4, Freigabe für Blockschaden getrennt; max. Stapelgröße 16.
+
+ Magische Tinten           Erzeugt Runentinte und Spezialtinten für Rollen/rituelle Siegel; zentrale Versorgung des Formelbuchs.
+
+ Homunkuli                 Kleine alchemische Hilfswesen mit begrenztem Auftrag und Lebenszeit/Energiezufuhr; Crafting über
+                           mehrstufiges Ritual.
+
+ Katalysatoren             Beschleunigen oder erlauben bestimmte Prozesse; verschleißen 1 Punkt/Batch, statt immer komplett
+                           verbraucht zu werden.
+
+ Alchemistische            Messung von Stoffeigenschaften im Alchemietisch; entdeckt Rezept-Hinweise, keine eigenständigen
+ Forschung                 Forschungs-XP.
+
+
+
+
+Essenzen- und Reagenzienbibliothek
+ Name                  Quellen und Schritte                                                      Verwendung
+
+ Mondessenz            Mondblüte + Reinwasser → Mondsud → AT Destillation                        Fokuselixier, Tinte, Reinigungsritual.
+
+ Kristallessenz        Kristallstaub + Wasser + Silber-/Goldspuren im AT                         Gereinigte Kerne, leitfähige
+                                                                                                 Beschichtung.
+
+ Ätheressenz           Ätherlösung am gefassten Ätherkollektor energetisieren                    Portale, Schwebekern, starke Elixiere.
+
+ Runenharzessenz       Runenholz + Wasser + schwache Wärme extrahieren                           Siegel, Pergament, Isolierung.
+
+ Sturmessenz           Arkaner Sturm / Sturmrochen-Drop; AT stabilisieren                        Bewegungszauber, Blitzschutz,
+                                                                                                 Magnetspulen.
+
+ Frostessenz           Äthergipfel-Frostgewächs oder Frostseher-Drop                             Kälteformel, Stabilitätsbad, Frostschild.
+
+ Schattenessenz        Nebelhaine / Tiefenverschlinger-Drop                                      Ortsfluch, Seelenanker, Analyse riskanter
+                                                                                                 Formeln.
+
+ Sternenessenz         Zersplitterung und Sternendrache                                          Q3-Kalibrierung, starkes Portal, Finale.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                       25
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Alchemie-Rezepte: vom Rohstoff bis zum fertigen Objekt
+ ID / Herstellung      Station / Eingaben                                                  Ausgabe / Zweck
+
+ A-01 Reinwasser       AT: Wasserflasche + Holzkohle, 10 s                                 1 Reinwasser; Hilfsstoff.
+
+ A-02 Mondessenz       AT: 2 Mondblüten + Reinwasser → Mondsud, dann 2 Mondsud + 20        1 konzentrierte Mondessenz.
+                       FL
+
+ A-03 Fokus-Trank I    AT: 1 Mondessenz + 1 Leuchtfaser + Reinwasser + 30 FL               1 Trank: +30 FK über 30 s, 90 s Cooldown.
+
+ A-04                  AT: 1 Kristallessenz + 1 Runenharz + 1 Leuchtfaser + 40 FL          1 Trank: 15% Resistenz gegen magische
+ Feldschutz-Trank                                                                          Projektile, 3 min.
+
+ A-05                  AT: 1 Mondessenz + 1 Ätheressenz + 1 Siegel, 90 FL                  1 Elixier: +20 ST am ausgerüsteten Artefakt
+ Stabilitätselixier                                                                        für 10 min.
+
+ A-06 Resonanzspre     KS: Kristallstaub; AT: 2 Staub + 1 Sturmessenz + 1 Glas + 30 FL     1 Bombe, Entitäten-Schub Radius 3;
+ ngsatz                                                                                    Blockschaden standardmäßig aus.
+
+ A-07 Frostbombe       AT: 1 Frostessenz + 2 Mondsalz + 1 Glas + 45 FL                     1 Bombe, Bereichsverlangsamung 6 s.
+
+ A-08 Spezialtinte     AT: 1 Runentinte + 1 Kristallessenz + 1 Ätherlösung + 50 FL         1 Ritualtinte (32 Punkte, Q2/Q3-Gravur).
+
+ A-09                  AT: 4 Kupferstaub + 1 Kristallessenz + 80 FL → 1 Eisenpulver; OF:   1 Eisenbarren, deutlicher
+ Kupferumwandlung      Pulver                                                              Material-/Energieverlust.
+
+ A-10 Katalysator-Fo   AS: 2 Arkanlegierung + 1 Resonanzglas → Rohling; AT: 1              1 wiederverwendbarer Katalysator (20
+ rmling                Mondessenz + 40 FL                                                  Chargen).
+
+ A-11                  W: 2 Glas + 1 Ton + 1 Harz → Gefäß; AT: 1 Kristallessenz + 1        1 animierbares Gefäß; RS: 800 FL + 1
+ Homunkulus-Gefäß      Mondessenz; GS: Bindungsplatte                                      Leuchtfaser → Homunkulus.
+
+ A-12                  AT: 2 Mondsalz + 1 Mondessenz + 1 Leuchtfaser + 60 FL               1 Reinigungslösung für Fluch I/II.
+ Reinigungsessenz
+
+ A-13 Qualitätsbad     AT: Q1-Kern + 1 Kristallessenz + 1 Katalysator + 100 FL             1 Q2-Kern; Katalysator verliert 1
+                                                                                           Haltbarkeit.
+
+ A-14                  AT: 1 Sternenessenz + 2 Ätheressenz + 1 Stabilisatorsiegel + 300    1 Q3-Katalysator; Endgame.
+ Sternenkonzentrat     FL
+
+ A-15 Schutzlack       AT: 1 Runenharz + 1 Kristallessenz + 1 Leuchtfaser + 20 FL          2 Einheiten Rüstungs-Schutzlack.
+
+
+
+
+Homunkulus als bewusst begrenzte Automatisierung
+Ein Homunkulus kann genau eine einfache Aufgabe (Material von Einlass zu Auslass tragen, Pflanze in einem
+Radius von 6 Blöcken prüfen, Ritualgegenstand anreichen) ausführen; maximal drei pro Spieler aktiv. Er benötigt 1
+FL/5 s aus der zugewiesenen Basis oder läuft nach zehn Minuten aus. Er kann weder fremde Behälter öffnen noch
+die komplexe Runendrohne ersetzen. Herstellung enthält Glasarbeit, alchemische Vitalisierung, Runenprägung und
+abschließendes Ritual.
+
+
+
+10 Magische Automatisierung und
+Anlagenbau
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                 26
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Einheitliche Netzarchitektur
+Ein magisches Netzwerk besteht aus Produzenten, Speicher, Leitung, Steuerung, Verbrauchern und Ports.
+Jede Komponente kennt Besitzer, Frequenzkanal, maximalen Durchsatz, Energiebedarf und einen sicheren
+Fehlerzustand. Ein Kabel verbindet physisch benachbarte Blöcke. Gekoppelte Konnektoren erlauben Funkstrecken;
+Relais verlängern sie gegen laufende FL-Kosten. Redstone-Ein- und Ausgänge sind optionale Adapter; sie ersetzen
+nicht die Typvalidierung einer Runenformel.
+
+Netzverarbeitung pro Server-Tick: (1) geladenen Graph aktualisieren, (2) Quellenangebot sammeln, (3) zulässige
+Verbraucher priorisieren, (4) Reservierungen durchführen, (5) Transfers mit Durchsatz/Verlust berechnen, (6)
+Aktionen prüfen und ausführen, (7) Anzeige aktualisieren. Bei Unterversorgung laufen Notbarrieren und kritische
+Speicherladungen priorisiert, Landwirtschaft oder Crafting pausiert zuerst. Priorität ist pro Anlage einstellbar,
+maximal 5 Stufen.
+
+
+Die 15 ausgewählten Systeme
+ System                        Mechanik, Grenzen und Zusammenspiel
+
+ Magische Sensoren             Erkennen Entitäten in Radius 2–12, Bewegung, Helligkeit, Itemmenge oder Füllstand; 1–3 FL/s;
+                               Besitzerrechte, keine versteckten Spieler-Ortungsdaten.
+
+ Runenlogik                    Boolesche Operatoren, Vergleich, Verzweigung und parametrisierte Unterformeln; läuft im identischen
+                               Runengraph-System.
+
+ Magische Zeitschaltungen      Verzögerungen 1–1.200 Ticks; tägliche Trigger nur bei geladenem Chunk; kein nachträgliches Abarbeiten
+                               stundenlanger Offline-Ticks.
+
+ Fernsteuerung                 Ritual-/Anlagen-Fernimpuls über signiertes Konnektor-Netz; Kontrolle nur innerhalb geladener oder
+                               ausdrücklich zugelassener Chunks.
+
+ Gegenstandstransport          Routenanker und Ein-/Auslässe transportieren bis zu 16 Items alle 2 s, 2 FL/Stack+Distanz; kein Durchgriff
+                               auf fremde Truhen.
+
+ Magische Teleporter           Zwei gekoppelte Anker/Rahmen, 500 FL/Teleport + Distanzaufschlag; nur geladene, sichere Zielplattform;
+                               Boss-/PvP-Restriktion.
+
+ Schwebende Plattformen        Max. 5×5 Blöcke und 32 Blockmasse; 15 FL/s + 1 FL/Blockmasse pro Sekunde; max. 64 Blöcke Weg je
+                               Streckenauftrag.
+
+ Magische Förderanlagen        Verbund aus Einlass, Sortiermodul und Auslass; max. 64 Items/min Grundstufe; Filter nach Item-ID und
+                               Tags.
+
+ Automatisches Crafting        Fertigt 1 bekanntes Rezept/4 s; braucht Zutaten aus Netzwerk und zuständige Station; Energie wie
+                               manueller Prozess plus 10%.
+
+ Automatisierte Alchemie       Alchemietisch mit Runenplatte, Essenzleitung und Fehler-Reset; nur bereits bekannte Rezeptliste, kein
+                               unendlicher Trankspam.
+
+ Magischer Bergbau             Bereich 5×5×8, maximal 16 Blöcke/min, 20 FL/Block plus Härteaufschlag, kein Abbau fremder Claims,
+                               keine Weltgrenzenverletzung.
+
+ Magische Landwirtschaft       Radius 7, Pflanzenwachstum nicht beschleunigt; pflanzt und erntet legal, 4 FL/Pflanze; Saatgut- und
+                               Chunkprüfung.
+
+ Magische Barrieren            Projektion von Kugel/Fläche max. Radius 12; Laufkosten nach Größe und Absorptionsleistung;
+                               Spieler-/Teamfilter optional.
+
+ Automatische Verteidigung     Sensor + Zielwahllogik + definierter Schub-/Schadenseffekt; max. 2 Treffer/s; Server-PvP- und
+                               Mob-Griefing-Regeln.
+
+ Magische Beleuchtung          Dimm-/Tageslichtlogik über Lichtsteuerblock und Arkane Laterne; 1–3 FL/s pro Lampengruppe.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                  27
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Anlagenbau und physische Schnittstellen
+Alle Verbraucher haben mindestens einen Feldport; Inventargeräte zusätzlich Item-Einlass und -Auslass.
+Seitenkonfiguration wird mit Resonanzgabel angezeigt: oben/unten/N/S/O/W für Eingabe, Ausgabe oder gesperrt.
+Anlagen werden standardmäßig beim Abbauen gestoppt und entladen; bereits fertig produzierte Items werden in
+ein internes Ausgabefach gelegt. Ist dieses voll, pausiert die Anlage. Das Entfernen eines Kabels löst einen sicheren
+Netz-Rebuild aus, niemals Energieduplikation.
+
+
+Vier ausgearbeitete Musteranlagen
+
+Muster A: Automatische Mondblüten-Ernte
+Komponenten: 1 Ätherkollektor, 1 kleiner Feldspeicher, 12 Kristallkabel, 1 magischer Sensor, 1 Runenhalter mit
+Formel WENN ausgewachsen → ERNTE, 1 Ernteeinheit, 1 Gegenstandsauslass, 1 Saatgutspeicher. Ablauf: Sensor
+liest pro 40 Ticks drei Pflanzenpositionen; Ernte ist nur bei vollständig gewachsener Pflanze erlaubt. Auslass nimmt
+maximal 16 Items pro Zyklus. Ernte kostet 4 FL/Pflanze, Sensor 1 FL/s. Bei fehlender Saat pausiert Neuansaat ohne
+Vernichtung der Ackerfläche. Das System kann anschließend Mondsud herstellen, wenn ein automatisierter
+Alchemietisch angeschlossen wird.
+
+Muster B: Vollautomatische Runentinte
+Rohstoffe: Farm produziert Mondblüten; Kristallstaub kommt aus Kristallschleifer, Tintenbeutel aus regulärer Farm
+oder Handel. Stationen: AT reinigt Wasser; AT destilliert Mondsud; KS vermahlt Kristallsplitter; AT synthetisiert
+Runentinte. Automation: Filterrouter leitet Flüssigkeiten und Item-Batches, Formelplatte bestätigt
+Zutatenverfügbarkeit, Craftingcontroller startet nur bei mindestens 1 vollständiger Charge. Abfall und Engpass:
+Fehlende Tintenbeutel stoppen gezielt die letzte Stufe; weder Wasserflaschen noch Staub verschwinden vor
+Reservierung.
+
+Muster C: Sicheres Heimportal
+Zwei Teleporterrahmen mit verankerten SIGNА-IDs, mindestens einem Q2-Speicher je Seite, primärem
+Konnektor/Relais und Schutzsensor. Der Spieler muss die Zielplattform vorher betreten und autorisieren. Bei
+Aktivierung werden 500 FL + 2 FL pro 16 Blöcke Entfernung reserviert. Der Zielraum wird auf 3×3×3
+Hindernisfreiheit, Dimension, Weltgrenze und Rechte geprüft. Bei blockiertem Ziel oder Offline-Chunk bleibt der
+Spieler stehen und die Reservierung wird abzüglich höchstens 5 FL Prüfgebühr vollständig freigegeben.
+
+Muster D: Autocrafting einer Runenplatte
+Der Herstellungsauftrag fordert zwei Arkanbarren und zwei Leitpaste für die Runenpresse. Benötigte
+Vorprodukte werden rekursiv über den Rezeptgraphen angefordert: Arkanbarren aus Erz im Schmelzofen; Leitpaste
+aus Kristallstaub, Redstone und Harz am Alchemietisch; Kristallstaub aus dem Schleifer; Harz aus Runenholz. Nach
+Fertigung zweier Leerplatten beginnt die Gravurstation nur mit einer vom Spieler zuvor freigegebenen
+Formelbuch-Kopie und ausreichender FL-Reserve. Eine Formularüberarbeitung im Buch ändert nicht
+stillschweigend die laufende Fertigungscharge.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                              28
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Fehler-, Rechte- und Leistungsmanagement
+ Fehler                        Spielerfeedback                               Serveraktion
+
+ Kein Energiepfad              Rot markierter Kabel-/Konnektorabschnitt      Betroffene Verbraucher pausieren, keine
+                                                                             Zusatzlast.
+
+ Quelle erschöpft              FL-Angebot unter Mindestwert                  Speicher puffert; Prioritäten reduzieren Last.
+
+ Zutaten fehlen                Rezept zeigt erste fehlende Zutat und Menge   Input bleibt reserviert, bis Auftrag storniert
+                                                                             oder erfüllt.
+
+ Output voll                   Gelbes Ausgabefachsymbol                      Maschine pausiert ohne Itemdrop-Lag.
+
+ Chunk nicht geladen           Graues Offline-Symbol                         Keine neue Arbeit; wenige abgeschlossene
+                                                                             Transfers beim Re-Load.
+
+ Keine Berechtigung            Schildsymbol + Betreibernachricht             Aktion abgelehnt, keine Weltänderung.
+
+ Runengraph ungültig           Genaue Knotennummer / Typmeldung              Auftrag bleibt in sicherer Wartestellung.
+
+
+
+
+Exploit-Verhinderung
+Items werden über reservieren → verarbeiten → committen atomar übertragen. Maschine A entfernt
+Gegenstände erst, wenn Maschine B den Eingang bestätigt hat. Weltblöcke werden nur serverseitig verändert, mit
+Besitzer- und Event-Prüfung. Cross-Dimension-Teleport erzeugt erst den Zielankersnapshot, dann die Zielposition
+und erst danach die Quelle als abgeschlossen. Netzwerkänderungen werden pro Tick gebündelt; Zyklen sind
+erlaubt, haben aber weder zusätzliche Energie noch autonome kostenlose Aktionen.
+
+
+
+11 Rituale, Beschwörungen und mehrteilige
+Magie
+
+Ritualstruktur: ein einheitliches Fünf-Phasen-Modell
+Jedes Ritual besitzt (1) Vorbereitung des Multiblocks, (2) Prüfung von Formel, Signaturen, Wetter/Ort und
+Opfergaben, (3) Aufladung des Ritualsockels, (4) Ausführung in definierten Phasen sowie (5) Abschluss oder
+sicheren Abbruch. Opfergaben werden, sofern nicht anders angegeben, erst mit Beginn von Phase 4 verbraucht.
+Energie wird in Phase 3 reserviert und anteilig nach tatsächlicher Ausführung verrechnet. Bei Störungen können
+nur durch ausdrücklich definierte Instabilitätsregeln Nebenwirkungen entstehen; keine willkürliche Fluchlotterie.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                        29
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Die 20 übernommenen Ritualsysteme
+ Kategorie / Ritualtyp              Implementierte Funktion
+
+ Art: Beschwörungsrituale           Beschwört definierte Kreatur/Boss mittels Runengraph, Opfergaben, Anker und gültigem Gebiet.
+
+ Art: Transformationsrituale        Verwandelt definierte Stoff- oder Blocklisten, immer mit Nettoverlust und Materialobergrenzen.
+
+ Art: Schutzrituale                 Aktiviert Schutzdomänen mit Energiebedarf, maximaler Größe und Rechtefilter.
+
+ Art: Bindungsrituale               Bindet Artefakte, Spielerfreigaben, Vertraute oder Ortsanker durch signierte Verknüpfung.
+
+ Art: Reinigungsrituale             Entfernt stufengerechte Flüche und instabile Feldreste.
+
+ Beschwörung: Wesen                 Standardkreaturen aus festgelegtem Katalog; kein beliebiger NBT-Mob-Import.
+
+ Beschwörung: Bosse                 Eigene Arenaanforderungen, Cooldowns, Gebühren und Katalysatoren für ausgewählte Bosse.
+
+ Beschwörung: Vertraute             Bis zu 2 Begleiter pro Spieler, Bindungs- und Ernährungs-/FL-Regeln.
+
+ Beschwörung: temporär              Lebensdauer 30 s–30 min, Zeit wird serverseitig gespeichert, keine Offline-Verlängerung.
+
+ Beschwörung: dauerhaft             Erfordert seltenen Anker, Wartungsenergie oder klar definierte Behausung; globale Populationsgrenze.
+
+ Mechanik: Mehrblock                Sockel, Pylonen, Kreise und definierte Orientierungen; Visualisierung eines holografischen Bauplans.
+
+ Mechanik: Ritualkreise             Physische Runen-/Arkansteinringe Radius 3, 5 oder 7; grafische Symbolfolge muss mit Formel
+                                    übereinstimmen.
+
+ Mechanik: Opfergaben               Konsumierte Items sind UI-seitig vorher markiert; Nichtverbrauch und Container-Rückgabe exakt
+                                    ausgewiesen.
+
+ Mechanik: Mehrspieler              2–4 Spieler können definierte Fokusbeiträge, Rollen und Signaturen beisteuern; Solo-Alternative stets
+                                    vorhanden.
+
+ Mechanik: Bedingungen              Ort, Biom, Höhe, Mondphase, Wetter, Tageszeit, Reichweite, geladene Chunks; Bedingungen werden
+                                    vorab gezeigt.
+
+ Besonders: Portalsrituale          Gebundene Tore zwischen freigegebenen Orten und zur Zersplitterung; pro Öffnung und Betrieb Kosten.
+
+ Besonders: Seelenrituale           Seelenanker, Soulbound-Ausrüstung und Rückholungen nur mit ausdrücklicher Einwilligung.
+
+ Besonders: Astrale Rituale         Himmelsobjekte und Zeitfenster dienen als transparente, berechenbare Bedingungen; kein zufälliger
+                                    Sterneneffekt.
+
+ Besonders:                         Abbruch durch Unterenergie, Blockbruch, Angriff oder manuell; explizite Verlusttabelle.
+ Ritualunterbrechung
+
+ Besonders:                         Freigegebene Ritualvorlagen durch Sensor-/Zeitschaltformel startbar; Bossrituale standardmäßig nicht
+ Ritualautomatisierung              vollautomatisch.
+
+
+
+
+Ritual-Multiblöcke und Konstruktionspläne
+ Ritualklasse           Pflichtkonstruktion                                                   Maximalleistung
+
+ Klein: R3              1 Ritualsockel, 8 Runensteine im Radius 3, 1 bis 2                    1 Kreatur, 1 Ziel, bis 1.200 FL.
+                        Opfergabensockel
+
+ Mittel: R5             1 Ritualsockel, 4 Ritualpylonen in Himmelsrichtungen, 16              Bis 4 Kreaturen / Bereich Radius 8, bis 4.000
+                        Runensteine, 4 Opfergaben                                             FL.
+
+ Groß: R7               1 Ritualsockel, 8 Ritualpylonen, 24 Runensteine, 1                    Boss- und Portalsrituale, bis 10.000 FL.
+                        Signaturkristall, 4 Opfergaben
+
+ Astral                 R5 oder R7 plus freien Himmel und Sternsignatur                       Spezialbedingung, ersetzt keine
+                                                                                              Energie-/Opferkosten.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                        30
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Ritualrezepte und Boss-Beschwörungen
+ ID / Herstellung        Station / Eingaben                                                           Ausgabe / Zweck
+
+ RT-01 Wesenruf          R3 + Platte(SIGNA→BINDE) + 1 Mondessenz + 1 Leuchtfaser + 350                Temporärer Geisterfuchs, 10 min.
+                         FL
+
+ RT-02                   R5 + Homunkulusgefäß oder Wesenanker + 2 Resonanzkerne + 1                   Dauerhaft gebundener Begleiter; 1 FL/10 s
+ Dauervertrauter         Siegel + 1.400 FL                                                            Wartung.
+
+ RT-03 Reinigung II      R3 + Reinigungslösung + 2 Mondsalz + Reinigungsformel + 700 FL               Entfernt Fluchstufe II im Zielgebiet.
+
+ RT-04                   R5 + 4 Arkanlegierung + 2 Siegel + 1 Q2-Platte + 2.000 FL                    Barriere Radius 8 für 20 min, zusätzlicher
+ Schutzdomäne                                                                                         Unterhalt.
+
+ RT-05                   R3 + 8 Kupferstaub + 2 Kristallessenz + 500 FL                               2 Eisenpulver; nicht wirtschaftlich als
+ Rohstoffwandel                                                                                       Materialduplikation.
+
+ RT-06 Seelenanker       R5 + vorbereiteter leerer Seelenanker + 2 Mondsalz + 1.200 FL                Besitzergebundener Anker; benötigt
+                                                                                                      Zustimmung.
+
+ RT-07                   R7 + 4 Resonanzkerne + 2 Ätheressenz + 1 Zersplitterungsscherbe              Portal in die Dimension für 60 s; Zielhub
+ Zersplitterungstor      + 6.000 FL                                                                   gesichert.
+
+ RT-08                   R7 an Kristallgeode + 4 Q2-Kerne + 2 Mondessenz + 4.500 FL                   Boss erscheint; 2 h Cooldown je Arena.
+ Kristallmatriarchin
+
+ RT-09 Eidwächter        R7 auf Tempelrunenkreis + 2 Siegel + 1 Seelenanker + 5.000 FL                Boss erscheint; Interaktionsarena
+                                                                                                      versiegelt.
+
+ RT-10 Ur-Elementar      R7 + je 1 Frost-, Sturm-, Äther- und Kristallessenz + 5.500 FL               Elementar-Boss; Bedingungen vorab
+                                                                                                      sichtbar.
+
+ RT-11 Der               R7 in astralem Observatorium + Sternensignatur + 1                           Boss erscheint nur bei passendem
+ Beobachter              Q3-Katalysator + 7.000 FL                                                    Sternfenster.
+
+ RT-12 Astraler          R5 + 1 Ätheressenz + 1 Präzisionslinse + 2 Mondsalz + 1.800 FL               Einmalige 30-minütige Verbesserung der
+ Fokus                                                                                                Analyse-Reichweite.
+
+ RT-13 Unterbrechun      R3 + Stabilisatorsiegel + 250 FL                                             Ritual lässt sich 1-mal sicher unterbrechen,
+ gsfokus                                                                                              geringerer Verlust.
+
+ RT-14 Kleines Portal    R5 + 2 verankerte Kompasssignaturen + 2 Resonanzkerne + 3.000                Statisches Portalpaar, benötigt laufend FL.
+                         FL
+
+
+
+
+Unterbrechungs- und Rückerstattungslogik
+ Abbruchzeitpunkt                  Verbrauch                                              Zustand
+
+ Vor Validierung                   0 Items, 0 FL                                          Keine Änderungen.
+
+ Nach Validierung, vor             0 Items, bis 5 FL Diagnostik                           Ritual vollständig wiederverwendbar.
+ Aufladung
+
+ Während Aufladung                 0 Items, 5% bisher geladene FL als                     Puffer restlich zurückgebucht.
+                                   Wärmeverlust
+
+ Ausführungsphase <50%             Verbrauchte Opfergaben bleiben weg, 50%                Wirkung nicht ausgeführt; Rest deaktiviert.
+                                   restliche FL zurück
+
+ Ausführungsphase ≥50%             Verbrauchte Opfergaben, nicht genutzte FL              Effekt nur wenn definierter atomarer Abschluss
+                                   zurück                                                 erreicht.
+
+ Bei aktivem Boss                  Keine Rückgabe nach Boss-Spawn                         Boss bleibt und unterliegt Arenaregeln.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                              31
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Mehrspieler und Anti-Autofarming
+Mehrspieler können bis zu vier Fokuskanäle gleichzeitig besetzen; der Ritualsockel prüft vorab die Identitäten und
+addiert ihren jeweils expliziten FK-Beitrag (maximal 25% FL-Ersparnis, Mindestbudget 75%). Alle Rituale sind
+alternativ allein durch vollständige FL-Zahl und geeignete Kristalle ausführbar. Bossrituale müssen manuell
+bestätigt werden; niemand darf durch periodische Timer eine ganze Bossarena ohne Spielerpräsenz instanziieren.
+Bei Boss-Spawns sind pro Dimension maximal drei aktive Ritualbosse gleichzeitig zugelassen.
+
+
+
+12 Kreaturen: 18 gewöhnliche magische
+Wesen
+
+KI-, Spawn- und Lootregeln
+Neue Mobs sollen die Welt besiedeln, nicht alle zehn Sekunden jede Landschaft überfluten. Angegebene
+Spawngewichte gelten relativ innerhalb ihrer eigenen Biome und nur bei gültiger Höhe, Helligkeit, Tageszeit
+und Mobcap. Passive Wesen nutzen ein separates vorsichtiges Budget; Konstrukte und Elitegegner sind seltener.
+Die folgenden Lebenspunkte (LP) und Drops sind Normalmodus-Startwerte. Bei Friedlich bleiben passive und
+neutrale Wesen, aggressive despawnen Vanilla-konform. Beschworene Wesen tragen NBT-Markierung summoned
+und unterliegen anderen Populationsregeln als natürliche Spawns.
+
+
+Vier magische Tiere
+ Mob                   Spawn / Werte                          Verhalten, Drops und Nutzen
+
+ Geisterfuchs          Nebelhain, nachts; 18 LP, neutral,     Weicht Kampf aus, wird durch Mondblüte angelockt, erkennt versteckte
+                       Gewicht 7                              Feldspuren; Drop 0–1 Geisterfell (kein Pflichtkill), 5% Signaturhaar; als
+                                                              Vertrauter beschwörbar.
+
+ Mondmotte             Arkanwald/Nebelhain, Nacht; 6          Fliegt zu Mondblüten, lässt selten Mondstaub fallen (0–2 ohne Tötung per
+                       LP, passiv, Gewicht 13                 Netz); dient als Alchemie-Frührohstoff.
+
+ Kristallschildkröte   Kristallhöhle, ruhige                  Zieht sich in Panzer zurück, reflektiert 20% schwache Projektilenergie; 0–2
+                       Wasserbecken; 30 LP, neutral,          Kristallschuppen bei natürlichem Häutungsereignis.
+                       Gewicht 3
+
+ Himmelsqualle         Äthergipfel, über 130 Y; 14 LP,        Schwebt langsam, setzt Nebelpartikel frei; 0–1 Ätherfaden bei sanfter Ernte,
+                       passiv, Gewicht 4                      fällt bei Tötung kaum Zusatzloot.
+
+
+
+
+Drei Monster
+ Mob                   Spawn / Werte                           Angriff, Schwäche, Loot
+
+ Hohle Rüstung         Tempel, Labor, Schatzkammer; 32         Nahkampfschlag 6 Schaden, alle 3 s Schutzhaltung; Schwäche: stabiler
+                       LP, 8 Rüstung, Gewicht 7                Lichtkreis. Drop 1–2 Eisen, 10% altes Runensiegel.
+
+ Obsidianbestie        Tiefe Höhlen, Zersplitterung; 45 LP,    Langsamer Sprint, 7 Schaden, kurze Erdstoß-Welle; frostempfindlich. Drop
+                       10 Rüstung, Gewicht 4                   1–3 dunkle Splitter und selten Obsidianherz.
+
+ Arkanes Auge          Observatorium, Runenlabyrinth; 24       Fliegt, scannt Zauber und schießt 4 Schaden Feldprojektil; schwach gegen
+                       LP, 0 Rüstung, Gewicht 6                Schub. Drop 1–2 optische Kerne.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                       32
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Vier Humanoide / NPC-Typen
+ Mob                   Vorkommen / Werte                     Funktion und Interaktion
+
+ Alchemist             Alchemistenhütte oder                 Lehrt Essenzen und alchemistische Forschung, bietet Tinkturen/Behälter.
+                       Wanderspawn; 20 LP, friedlich         Keine Reputation erforderlich.
+
+ Runenwächter          Runenkreis, Schatzkammer; 40          Bewacht alte Konstruktionen; erklärt durch Symbole eine Rune, Drop bei
+                       LP, neutral bis bei                   Besiegung max. 1 Wächterfragment.
+                       Grenzverletzung feindlich
+
+ Artefakthändler       Dörfer, Magiertürme,                  Verkauft Schriftrollen, leere Platten und Signaturproben gegen Emeralds und
+                       gelegentlich reisend; 20 LP,          Halbzeuge.
+                       friedlich
+
+ Abtrünniger Magier    Verlassene Labore, seltene            Nutzt 2–3 feste Zaubergraphen mit sichtbarem Telegraph; Drop 0–1 defektes
+                       Nachtüberfälle; 30 LP, aggressiv      Formelblatt, 5% komplexe Formel.
+
+
+
+
+Vier magische Konstrukte und Wesen
+ Mob                  Spawn / Werte                       Verhalten und Nutzen
+
+ Runendrohne          Selten in Laboren, auch             Transportiert max. 16 Items über 12 Blöcke, 2 FL/s aus Basis; kein kostenloses
+                      craftbar; 20 LP                     Fliegen über ungeladene Chunks.
+
+ Lebendes Buch        Versunkene Bibliothek, selten;      Flattert um Regale, greift nur bei Plünderung an; Drop 1–3 lose Seiten, 10%
+                      12 LP, neutral                      entschlüsselbare seltene Rune.
+
+ Feldmanifestation    Feldanomalien, nur bei hoher        Teleportiert max. 4 Blöcke, entzieht 10 FL bei Kontakt; Drop 1 instabile Essenz
+                      Spannung; 28 LP, aggressiv          (nach AT stabilisierbar).
+
+ Runenbaum            Arkanwald, stationäres              Verteidigt Wurzeln bei ungerechtfertigtem Angriff, kann über Ritual gereinigte
+                      Waldwesen; 60 LP, neutral           Runenholztriebe produzieren; Loot bewusst gering.
+
+
+
+
+Drei seltene mächtige Wesen
+ Mob                  Spawn / Werte                    Rolle, Gefahr und Gewinn
+
+ Arkaner Hirsch       Arkanwald/Äthergipfel,           Flieht statt anzugreifen, erzeugt Signaturspur; seltenes Geweih wird durch Ritual
+                      nachts, sehr selten; 80 LP,      oder natürliches Abwerfen gewonnen, nicht nur Töten.
+                      neutral
+
+ Kristallwyrm         Kristallhöhlen, besondere        Unterirdischer Miniboss mit Tunnelstoß und Splitterregen; Drop 2–4
+                      Kammern; 140 LP, aggressiv       Wyrmschuppen, 1 Kernfragment.
+
+ Arkaner Koloss       Alte Großruinen, selten; 180     Mehrphasiger Wächter, hält bei 50% LP kurz inne und öffnet Kern; Drop 1
+                      LP, neutral bis aktiviert        Kolosskern, 3–6 Arkanbruchstücke.
+
+
+
+
+Spawn-, Taming- und Summon-Beschränkungen
+Geisterfüchse lassen sich mit Mondblüte anlocken, aber nur rituell als Vertraute binden; zufälliges
+Rechtsklick-Zähmen ist bewusst nicht vorgesehen. Homunkuli und Runendrohnen besitzen Eigentümer-IDs.
+Natürliche seltene Wesen werden nicht durch Massenfarmen zu Endgame-Bossdrops; Schlüsselressourcen
+stammen aus dokumentierten Begegnungen oder Rezeptalternativen. In passiven Tieren existieren gewaltfreie
+Erntewege, damit die Alchemie nicht zum Schlachten zwingt.
+
+
+
+13 Die zehn Bosse: Arenen, Phasen und
+Belohnungen
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                      33
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Kampfdesign und allgemeine Regeln
+Jeder Boss hat mindestens zwei Phasen, ein lesbares Telegraf-Signal, eine ausnutzbare Gegenmaßnahme und eine
+garantierte Schlüsselbelohnung bei Erstbesiegung. Spieler sollen selbst entwickelte Runenformeln nutzen, aber
+keine einzelne Rune darf jede Bossmechanik neutralisieren. Schaden durch Spieler-/Anlagenmagie unterliegt
+Bosswiderständen; kreative Lösungen wie Barrieren, Schub zum Positionieren und zeitgesteuerte Ablenkung
+bleiben sinnvoll. HP sind auf 1–2 Spieler balanciert; je zusätzlichem Spieler im aktiven Arenaradius +35% maximale
+LP bis insgesamt +105%, kein Hochskalieren während des laufenden Kampfs.
+
+
+Vier beschwörbare Bosse
+ Boss                Arena / Startwerte                    Phasen, Konter und Schlüsselbeute
+
+ Kristallmatriarch   Beschwörung R7 an                     P1 Kristallsplitterfächer, P2 zwei kleinere Kristallbruten, P3 10-s-Kernöffnung
+ in                  Resonanzgeode; 320 LP, 12             nach zerstörtem Stützpylon. Garantiert Matriarchinnenkern (1), 3–6
+                     Rüstung                               Reinfragmente; öffnet Q3-Kristalltechnik.
+
+ Eidwächter          R7 im vergessenen Tempel; 360         P1 Nahkampf plus transparente Schutzsiegel, P2 drei bindende Prüfungen (Kreis
+                     LP, 15 Rüstung                        halten, Glyphen lesen, Schub umgehen), P3 8-s-Schildpause. Garantiert
+                                                           Eidfragment (1), 2–4 Wächtermetall.
+
+ Ur-Elementar        R7 mit vier Essenzen; 400 LP, 8       Wechselt Feuer/Frost/Sturm/Feld mit 12-s-Telegraf; gegenphasige Schutzformel
+                     Rüstung                               reduziert Angriff. Garantiert Urkern (1), 4 Elementessenzen; unterstützt
+                                                           hochrangige Alchemie.
+
+ Der Beobachter      R7 im Observatorium bei               P1 scannt zuletzt gewirkte Runenfamilie, P2 spiegelt eine angekündigte Form, P3
+                     Astralfenster; 420 LP, 6 Rüstung      wechselnde Sichtkorridore. Kein echter Zugriff auf private Formeln. Garantiert
+                                                           Beobachterlinse (1), 1 Sternensplitter.
+
+
+
+
+Sechs natürlich vorkommende Bosse
+ Boss                Fundort / Startwerte               Phasen, Konter und Schlüsselbeute
+
+ Waldwyrm            Altwurzelstätte im Arkanwald;      Wurzelgreifer und Giftpollen; brennendes Licht unterbricht Wurzelkanal (kein
+                     290 LP, 8 Rüstung                  Waldbrand nötig). Garantiert Wyrmherz (1), 4–8 Runenholzfasern.
+
+ Der Erste Hirsch    Heiliger Hain, einzigartiges       Optionaler Kampf oder friedliche Ritualprüfung; Lichtspiegel und Sprintwellen;
+                     Ereignis pro Struktur; 300 LP,     garantiert Erstes-Geweih (1) bei erfolgreicher Prüfung statt Zwangskill.
+                     6 Rüstung
+
+ Tiefenverschling    Tiefe unterirdische Kammer;        Saugt Feldladung ab, verschlingt Blöcke nur in Arena; Signaturanker beschränkt
+ er                  480 LP, 12 Rüstung                 seine Reichweite. Garantiert Tiefenkern (1), Schattenessenz (2–4).
+
+ Frostseher          Äthergipfel-Turm; 340 LP, 9        Kältefelder und Eisduplikate; Wärmerune verhindert Einfrieren, nicht
+                     Rüstung                            Gesamtschaden. Garantiert Frostlinse (1), Frostessenz (3).
+
+ Sturmrochen         Luftriss bei arkanem Sturm;        Luftkampf, elektrische Bahnen und Windstoß; Erdungs-Siegel unterbindet
+                     350 LP, 5 Rüstung                  Ladungsschlag. Garantiert Sturmsegel (1), Sturmessenz (3).
+
+ Sternendrache       Zersplitterung, zentrale           P1 Flugrouten, P2 Sternensplitter und Portalwechsel, P3 Plattformverlagerung; keine
+                     Sterneninsel; 620 LP, 14           permanente Geländevernichtung. Garantiert Sternenherz (1), 4–7 Sternenessenz;
+                     Rüstung                            optionales Endziel.
+
+
+
+
+Respawn, Multiplayer-Fairness und garantierte Beute
+Natürlich vorkommende Bossarenen werden weltweit generiert; nach erstem Sieg sind erneute Kämpfe durch
+einen seltenen Rückrufkatalysator möglich, hergestellt aus den üblichen Zwischenmaterialien plus einer
+Nicht-Bossressource. Für Beschwörungsbosse gelten 2 Stunden Arena-Cooldown. Die garantierte
+Schlüsselbelohnung wird für einen teilnahmeberechtigten Spieler als einzelner Welt-Drop vergeben (keine
+Verdopplung durch Gruppenbeute); jeder berechtigte Spieler erhält separat ein Wissensprotokoll ohne
+Craftingwert. Damit bleiben Koopkämpfe fair, ohne Wirtschaftsexploits zu erzeugen.
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                       34
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Bossmaterialien und Ausrüstungsrouten
+ Katalysator                     Verwendung / Alternativen
+
+ Matriarchinnenkern              Q3-Feldleiter, Kristallrüstung, Resonanzgroßspeicher; alternativ 8 Reinfragmente für eine
+                                 Q2-Teilstufe.
+
+ Eidfragment                     Q3-Schutzsiegel, stärkere Ortsbarriere; kein Pflichtmaterial für gewöhnliche Rüstung.
+
+ Urkern                          Elementar-Elixier, Hochtemperatur-Schmelzprozess, Elementarrituale.
+
+ Beobachterlinse                 Hochstufen-Monokel, Astralrituale, Signaturanalyse.
+
+ Wyrmherz / Geweih               Naturmagie, Runenholzrituale, tierfreundliche Vertrautenverbesserung.
+
+ Tiefenkern                      Seelenanker-Kalibrierung, Zersplitterungssiegel.
+
+ Frostlinse / Sturmsegel         Bewegungs- und Schutz-Ausrüstung sowie entsprechende Essenzen.
+
+ Sternenherz                     Endgame-Portal, Q3-Kern, Sternenrüstung und abschließende Großformeln.
+
+
+
+
+14 Weltgenerierung: 23 ausgewählte Orte
+und Phänomene
+
+Grundsätze und Weltverträglichkeit
+Neue Biome ergänzen Overworld und verdrängen Vanilla-Biome nur in klar abgegrenzten Clustern. Strukturen
+respektieren Dörfer, Weltgrenzen, bestehende Claims und Mindestabstände zu Spawnpunkten.
+Rohstoffhäufigkeiten sind Startparameter für datapack-konfigurierbare Worldgen-Features, keine Garantie für jede
+Seed-Geometrie. Bereits generierte Chunks werden nach Installation niemals ohne explizite Weltkonvertierung
+rückwirkend verändert.
+
+
+Vier Biome
+ Biom                 Optik und Klimaregel                            Gameplay / Rohstoffe
+
+ Arkanwald            Dunkles Grün, milder Nebel, vereinzelte         Runenholz, Mondmotten, Waldwyrm-Heiligtümer, Mondblüte; 0–2
+                      Runenbäume, nächtliche Partikel; Overworld      Ruinen pro großem Waldcluster.
+                      Oberfläche, selten.
+
+ Kristallhöhlen       Große tief liegende Kammern mit kristallinen    Feldkristallerz, Resonanzgeoden, Kristallschildkröten,
+                      Adern und Spiegelungen, unter Y=0 gehäuft.      Kristallwyrm.
+
+ Nebelhain            Feuchte Senken, begrenzte Sicht, sanfte         Mondblüte, Geisterfüchse, Schattenessenz-Vorstufen, versteckte
+                      leuchtende Pflanzen, überwiegend oberirdisch.   Alchemistenhütte.
+
+ Äthergipfel          Hohe Gebirgszüge mit Schwebepartikeln,          Himmelsquallen, Frostessenz, Frostseher, Sturmrochen bei
+                      schroffe Plateaus und windige Übergänge.        Wetterereignis.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                 35
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Fünf oberirdische Strukturen
+ Struktur            Aufbau                                              Beute / Begegnung
+
+ Verlassener         3–5 Etagen, aufgebrochene Arkankabel, defekte       Frühe Tinte, Formelfragmente, selten Spulenbauplan; Hohle
+ Magierturm          Werkbank; 1 Turm pro ca. 800–1.600 Blöcke           Rüstung oder Auge.
+                     geeigneter Regionen.
+
+ Runenkreis          Kleine freistehende Glyphenanlage, Radius 3         Lehrt eine Grundrune, dient als Standort für kleinere Rituale;
+                     oder 5.                                             Runenwächter möglich.
+
+ Vergessener         Mehrraumruine mit Eid-Ritualkammer,                 Eidwächter-Arena, Runenfragmente, seltenes Stabilisatorsiegel.
+ Tempel              versteckten Schaltern und intakter
+                     Siegelstruktur.
+
+ Alchemistenhütte    Werkbank, Kräutertöpfe, einfache                    Alchemist, Mondblüte, Lehrformeln, Trankrezepte.
+                     AT-Konfiguration, Dorfnähe oder Nebelhain.
+
+ Astrales            Kuppel, Sternenkarte, vier                          Sternsignatur, Beobachter-Ritualstandort, präzise Linsen und
+ Observatorium       Orientierungs-Pylonen und                           Astralforschung.
+                     Beobachtungsplattform.
+
+
+
+
+Fünf Dungeons
+ Dungeon             Mechanik / Raumfolge                                        Beute / Schlüssel
+
+ Vergessenes         Einführung → Sicherheitsprüfung → Labortrakt →              Formelarchiv, Alchemie-Katalysator, Arkanes Auge.
+ Forschungslabor     verseuchter Kern; Runenlogik statt nur Schlüsselkarten.
+
+ Runenlabyrinth      5–9 verzweigte Korridorräume; Türöffnungen über             Analysefragmente, Signalgeräte, Runenwächter.
+                     erkannte Signaturen, keine Sackgasse ohne Hinweis.
+
+ Versiegelte         Mehrere Siegelkreise und Fallen; mindestens zwei            Arkanlegierung, Formelrolle, selten Q2-Platte.
+ Schatzkammer        Lösungswege (Runenformel oder Schlüsselkomponente).
+
+ Arkane              Verlassene Werkstatt, reparierbarer Schmelzofen,            Technikvorlagen, Rohbarren, 1 seltenes Präzisionsteil.
+ Schmiede            Förderbänder und Hitzegefahren.
+
+ Versunkene          Unterwasserarchiv mit Luftblasen und räumlichen             Lebendes Buch, neue Formelmodule, fortgeschrittene
+ Bibliothek          Schriftpuzzles; schrittweise Magieanalyse.                  Runenschrift.
+
+
+
+
+Sechs Ressourcen und Naturformationen
+ Formation           Verteilung (pro geeigneten Chunk)                   Spezialregel
+
+ Feldkristalladern   In Kristallhöhlen ca. 1,6 Vorkommen/Chunk,          Je Ader 3–8 Blöcke, Rohkristalle über Abbau.
+                     sonst 0,15
+
+ Arkanerz            Unter Y=-24: 0,28 Adern/Chunk                       Je Ader 2–5, höhere Chance nahe Großruinen.
+
+ Mondblüte           Nebelhain: 1–4 Pflanzen pro Oberflächenchunk,       Blüht nachts, nach Ernte langsame Nachwuchsrate.
+                     Arkanwald vereinzelt
+
+ Runenholz           Arkanwald ca. 6–12 Stämme/Chunk                     Bäume wachsen mit Runenholzsetzlingen nach, Harz bleibt
+                                                                         erneuerbar.
+
+ Ätherquelle         Nur ca. 1 auf 1.500–3.000 geeignete Chunks          Feststehende begrenzte Energiequelle, für Kollektoren und
+                                                                         Strategie relevant.
+
+ Resonanzgeode       Kristallhöhlen ca. 0,05/Chunk, Höhlen außerhalb     Einmalige Resonanzsplitter, nachwachsende Quelle nur über
+                     0,005                                               spätes Ritual mit Kosten.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                    36
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Dimension und zwei Weltphänomene
+
+Die Zersplitterung
+Eigenständige Endgame-Dimension, erreichbar ausschließlich über ein validiertes R7-Portalsritual mit
+Zersplitterungsscherbe. Optik: fragmentierte Inseln, dunkler Himmel, schwebende Arkansteinfragmente und
+Feldausbrüche. Die Dimension enthält drei Hauptrouten – Randinseln (Übergang und Rohstoffe),
+Resonanzschluchten (technische Prüfungen) und Sternenkernzone (Sternendrache). Sie soll keine inhaltlich
+leere Farmdimension werden: Je Route mindestens drei Dungeonvarianten, Fortschrittsmarkierungen und
+alternative Ausgänge. Spieler werden niemals über Leere gespawnt; der Portalanker generiert einen belastbaren
+Rückweg.
+
+Zersplitterungsscherben stammen aus fortgeschrittenen Overworld-Dungeons und bossunabhängig aus seltenen
+Astralbeobachtungen. Dadurch ist der erste Dimensionszugang nicht auf einen bestimmten Bosskill festgenagelt.
+Dimensionseigene Rohstoffe: Sternenstaub, Splittererz, Sternenscherben und instabile Essenz; alle benötigen nach
+Rückkehr AT/AS-Verarbeitung.
+
+Arkane Stürme
+Seltene Wetterereignisse in der Overworld, etwa ein gültiges Ereignis pro 5–8 Spieltage in betroffenen Biomen, mit
+klarer Vorwarnung durch Feldkompass/Monokel. Effekte: vorübergehend schwankendes Quellenangebot ±20%,
+Blitzgefahren, Auftauchen des Sturmrochens, Sturmessenz-Sammelmöglichkeiten. Runenformeln bleiben
+deterministisch: Wetter ist ein sichtbarer und lesbarer Eingabeparameter. Magische Barrieren können den
+Sturmschaden mindern. Der Mobcap bleibt geschützt.
+
+Feldanomalien
+Lokal begrenzte Felddruckzonen in Höhlen oder Ruinen, Radius 8–20 Blöcke, maximal eine Anomalie pro
+500-Blöcke-Raumcluster. Sie verändern Messwerte und können Feldmanifestationen hervorbringen. Spieler können
+sie mit Reinigungsritual auflösen oder kurzfristig für Forschung nutzen. Anomalien verändern nicht dauerhaft
+fremde Gebäude und dürfen nicht plötzlich in besiedelten Spielerbasen neu erscheinen.
+
+
+Weltplatzierung und exakte Datenkonfiguration
+ Parameter                       Default                                 Hinweis
+
+ Neue Oberflächenbiome           2–5% geeigneter Landfläche              Konfigurierbar, kein Ersatz für alle Vanilla-Biome.
+
+ Oberflächenstruktur-Mindesta    192 Blöcke zwischen großen Strukturen   Runenkreise dürfen dichter vorkommen.
+ bstand
+
+ Großdungeon-Mindestabstan       384 Blöcke                              Durch Datapacks pro Typ einstellbar.
+ d
+
+ Ätherquelle-Seltenheit          1 / 1.500–3.000 geeignete Chunks        Nur Zukunftschunks nach Installation.
+
+ Feldanomalien                   Max. 1 / 500-Block-Cluster              Nicht in geschützten Siedlungen.
+
+ Sturmwarnung                    60 s vor Event                          Per Monokel und Kompass optional.
+
+ Zersplitterung-Portal           R7, 6.000 FL Eintritt; 15 FL/s offen    Rückweganker garantiert.
+
+ Struktur-Schemas                Rotation + Spiegelung nur auf           Kein Abschneiden durch Chunkgrenzen.
+                                 getesteten Templates
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                         37
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Loot-Verteilung und Pity-Regeln
+Frühe Schriftfragmente sind in Magiertürmen und Runenkreisen häufig (50–80% pro gesuchter Schatzkiste).
+Seltene neue Runen sind in Runenlabyrinth/Versunkener Bibliothek garantiert spätestens nach drei vollendeten
+unterschiedlichen Dungeons derselben Tiergruppe. Runenfragmente, Bossmaterialien und Formeln haben
+getrennte Lootpools, sodass eine erhöhte Seltenheit nicht das gesamte Spielsystem blockiert. Fundstücke werden
+weltweit/spielerweise so markiert, dass Bosssiegel nicht durch Duplikations-Resets endlos kopiert werden können;
+normale Lootkisten bleiben Vanilla-kompatibel.
+
+
+
+15 Spieloberflächen und Bedienkonzept
+
+Formelbuch: fünf Ansichten
+ Ansicht                   Funktion und konkrete UI-Elemente
+
+ Bibliothek                Liste aller Formeln, Kategorien als freie Tags, Suche, Sortierung nach Name/Datum/Knotenanzahl,
+                           Favoriten, Eigentum.
+
+ Canvas                    Zoom/Pan, Drag-and-drop-Runen, farb- und formkodierte Ports, Magnetraster optional, Gruppierung,
+                           Module, Minimap, Undo.
+
+ Parameter                 Typ/Standard/Min/Max, Laufzeitkosten, erlaubte Ziele, Vorschau je Variante.
+
+ Prüfen                    Syntax-, Typ-, Berechtigungs-, Reichweiten-, Energiebudget- und Stabilitätsbericht mit Sprung zum
+                           Knoten.
+
+ Publizieren               Export an Handschuh, Gravurstation oder Scroll, Versionssnapshot, Berechtigungsentscheidung, optional
+                           sichtbare Signatur.
+
+
+
+
+Wichtige UX-Prinzipien
+• Begriffe konsistent: FK = persönlicher Fokus; FL = Feldladung; ST = Stabilität; Q = Halbzeug-/Artefaktqualität.
+
+• Jede Station zeigt Eingänge links, Prozess mittig, Outputs rechts sowie Fehlzustand direkt am betroffenen Port.
+
+• Rezeptschritte lassen sich als aufklappbarer Produktionsbaum durchklicken; verfügbare Zwischenprodukte
+werden im Inventar grün markiert.
+
+• Farbblindheitsmodus nutzt Symbole und Muster statt nur roter/grüner Ports; Cursor- und Fokusnavigation
+funktioniert per Tastatur.
+
+• Komplexe Ritualbaupläne zeigen Hologramm-Blöcke ohne Platzierungsautomatik; Spieler kann Schicht für Schicht
+umschalten.
+
+• Gefährliche Aktionen (Boss summon, Portal, Blockabbau, Seelenbindung) benötigen nachvollziehbare Vorschau
+und eine zweite Bestätigung.
+
+• Monokel-Overlay besitzt drei Leistungsstufen und kann durch Hotkey komplett ausgeblendet werden.
+
+• Modded Items erhalten Übersetzungs-Keys; Deutsch und Englisch sind Launch-Sprachen.
+
+
+HUD und Statusanzeigen
+Direktzauber-HUD zeigt FK-Balken, verwendete FL-Quelle, ausgewählte Formel, vorhergesagte Kosten, Ladestatus
+und konkreten Grund bei Ausführungssperre. Stationen besitzen keine blinkenden Vollbildwarnungen; Fehler
+werden mit stabilen Icons und Tooltips angezeigt. Bei Niedrigenergie sinkt eine Anzeige gleichmäßig, nicht abrupt.
+Tooltip des Items zeigt exakt seine aktive Rune, Formelsnapshot-Version und Eigentümerfreigabe.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                             38
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Tutorials und Onboarding
+Tutorial I führt in Rohkristall und Runentinte ein; Tutorial II vermittelt Feldversorgung und Runenhandschuh;
+Tutorial III legt eine Lichtformel mit fünf Knoten an; Tutorial IV verbindet eine Runenplatte mit Lampe und Sensor;
+Tutorial V zeigt eine zweistufige Alchemiekette; Tutorial VI erklärt Sicherheitsrechte, Ritualsockel und Abbruch.
+Tutorials sind optionale Buchseiten ohne unüberspringbare Questpflicht.
+
+
+
+16 Implementierung: Datenmodell,
+Multiplayer und Performance
+
+Modularchitektur
+Empfohlene Architektur: registry (Runen/Items/Blöcke/Rezepte), formula (Graphvalidierung, Typprüfung,
+Revisionen), field (FL-Erzeugung/Leitung/Verbrauch), machines (Prozessmaschinen und Itemtransfers), alchemy,
+ritual, worldgen, entities, client_ui und integration. Die Module teilen Datentypen und Ereignisschnittstellen,
+erzeugen aber keine unkontrollierten zirkulären Abhängigkeiten. Der Server ist allein autoritativ für FL, Items,
+Schaden, Weltänderung und berechtigte Aktivierungen.
+
+
+Speicherschema und Persistenz
+ Datenobjekt         Pflichtfelder                                              Prüfung
+
+ FormulaDefinition   uuid, schemaVersion, owner, revision, graphNodes,          Versionsmigration, Graphlimits, erlaubte Registries.
+                     typedEdges, parameters, checksum
+
+ FormulaSnapshot     sourceUUID, revision, immutableGraph, signature            Quellenverweis, Importberechtigung, kein stiller
+                                                                                Schreibzugriff.
+
+ RuneTile            worldPosition, faceSlots, connectedPorts, owner, channel   6 Flächen, je 16 Slots, serverseitige NBT-Konsistenz.
+
+ FieldNetwork        networkID, nodes, edgeCapacity, sourceBudget,              Netz-Rebuild bei Nachbarschafts-/Chunk-Änderung.
+                     ownerACL, loadedChunks
+
+ MachineJob          jobID, recipeID, reserveIDs, inputs, outputs, progress,    Atomare Reservierung, idempotenter Abschluss.
+                     owner
+
+ RitualInstance      instanceID, center, structureHash, signature, phase,       Phasenjournal und Wiederherstellung nach Absturz.
+                     budget, consumed, owner
+
+ CompassSignatur     signatureUUID, dimensionKey, blockPos, type,               Unveränderlich gebundener Ort, Rechte, Zielvalidität.
+ e                   creatorUUID
+
+ SummonedEntity      ownerUUID, ritualID, birthTick, expiryTick, upkeepSource   Mobcap, Ablaufzeit und Laden/Entladen.
+
+
+
+
+Server-Tick und Graph-Ausführung
+Priorität 1: Spieleraktionen; 2: aktive Boss- und Sicherheitsrituale; 3: Feldnetze mit kritischem Verbraucher; 4:
+Maschinenproduktion; 5: rein kosmetische Effekte. Feldnetze berechnen pro Tick nur die Unterschiede ihrer
+Topologie; ohne Veränderung wird ein gecachter Flussgraph verwendet. Graphen dürfen maximal 128
+Runenknoten enthalten, Maschinen können maximal 64 zeitgleiche Jobs pro Netzwerk und 512 Knotenoperationen
+pro Tick ausführen. Überlast führt zu Queueing, nicht zu Simulationsfehlern oder Serverfreeze. Jede physische
+Blockänderung meldet Vanilla-/Claim-Events.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                  39
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Networking und Synchronisation
+Clients senden ausschließlich Absichten (Slot wählen, Formel speichern, Aktivieren, Auftrag stoppen) inklusive
+Versionsnummer. Der Server prüft Berechtigungen, Inventare, Energie, Weltzugang und Gültigkeit und sendet ein
+begrenztes Antwortpaket zurück. Clientseitige VFX sind interpoliert, nicht maßgebend. Keine Client-Nachrichten
+dürfen beliebigen Java-Klassennamen, freien Code, externe URLs oder selbst festgelegte FL-Werte enthalten. Rate
+Limit: Standard 10 Formelspeicheraktionen/Minute, 20 Aktivierungsversuche/Sekunde pro Spieler; Werte
+serverkonfigurierbar.
+
+
+Besitz und Zugriffskontrolle
+Jede Maschine besitzt einen Besitzer und optional ein Team. Rechte: ansehen, nutzen, konfigurieren, abbauen,
+kopieren. Standard für fremde Spieler: nur die äußere Blockinformation ansehen. Öffentliche Lernformeln dürfen
+explizit kopiert werden; private Formelbücher und gebundene Seelenanker bleiben privat. Kompatibilität mit
+bestehenden Claim-/Schutz-Mods erfolgt über offizielle Events, soweit die gewählte Plattform sie anbietet. Fehlt
+eine Integration, muss die sicherste verfügbare Vanilla-Regel greifen.
+
+
+Serverkonfiguration und Datapack-Erweiterbarkeit
+ Datei / Parameter           Beispiel / Bedeutung
+
+ general.toml                enableWorldgen, worldgenFrequency, allowPvPSpells, enableGriefingEffects, localeDefault.
+
+ field.toml                  generationMultiplier=1.0, cableLossPer16=0.02, tickBudget=512, maxRituals=64.
+
+ ritual.toml                 bossSummonCooldownMinutes=120, autoBossSummon=false, maxBoundFamiliars=2.
+
+ alchemy.toml                transmutationEfficiency=0.25, potionCooldownMultiplier=1.0.
+
+ worldgen JSON               Biome/Feature-/Struktur-Sets, Spawntabellen, Lootpools, Signaturarten.
+
+ runes JSON                  Rune IDs, Porttypen, Energieformeln, freigegebene Effekt-Implementierungen, Symbol-Assets.
+
+ recipes JSON                Station, Eingaben/Tags, FL-Kosten, Zeit, Ausgaben, Mengen, Q-Minimum.
+
+
+
+
+Speicher- und Lastziele
+Prototyp-Ziel: Ein mittelgroßer Survival-Server mit 10 Spielern, 20 aktiven Feldnetzen, 200 Leitungsblöcken je
+Netz und 100 Jobs pro Minute soll ohne spürbare Dauerlast durch die Mod spielbar bleiben. Messziele:
+durchschnittliche Mod-Tickzeit unter 3 ms auf Testhardware; 99%-Perzentil unter 8 ms ohne Worldgen; ein
+einzelnes Netzwerk darf nicht mehr als 1 ms seiner Auswertungszeit beanspruchen. Diese Werte sind
+Zielgrößen, keine Leistungszusagen. Chunks, Shader, Renderdistance und Fremdmods können sie deutlich
+beeinflussen.
+
+
+Migration, Fehlererholung und Crash-Konsistenz
+Versionsmigration wird zentral versioniert: alte Formelknoten werden auf neue IDs gemappt, nicht stillschweigend
+gelöscht. Ungültige Savedata wird in ein Quarantäneobjekt überführt, dessen Inhalt exportiert werden kann.
+Maschinenjobs verwenden deterministische UUIDs und einen Journalzustand reserved/running/committed; nach
+Neustart wird ein Job einmalig abgeschlossen oder vollständig zurückgesetzt. Rituale speichern abgeschlossene
+Phasen vor sichtbarem Effekt-Commit. Backup und Weltkopie vor Major-Update sind ausdrücklich empfohlen.
+
+
+
+17 Referenzrezepte, Abhängigkeiten und
+Konsistenz
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                    40
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Bootstrap: vom ersten Steinwerkzeug zum ersten Feldnetz
+
+  Konsistenzregel: Die ersten Maschinen dürfen keine Verarbeitungsprodukte voraussetzen, die ausschließlich
+  mit sich selbst hergestellt werden können. Deshalb gibt es wenige ausdrücklich markierte Primitive-Rezepte.
+  Sie sind ineffizient, werden später von spezialisierten Stationen verdrängt und dienen ausschließlich zum
+  Überbrücken des technischen Einstiegs.
+
+
+ ID / Herstellung      Station / Eingaben                                                Ausgabe / Zweck
+
+ B-00 Kristallbruch    W: 1 roher Feldkristall + 1 Feuerstein                            2 grobe Kristallsplitter (einmalige Frühroute
+                                                                                         ohne FL).
+
+ B-01                  W: 2 grobe Splitter + 1 Sandpapier (1 Papier + Sand)              1 Feldkristallsplitter Q0; teuer, aber
+ Handgeschliffener                                                                       ausreichend für erste Werkbank.
+ Splitter
+
+ B-02 Startzelle       AW: 2 Redstone + 1 Kristallsplitter + 1 Kohle + 1 Kupfer          1 Einmal-Feldzelle mit 100 FL; nach
+                                                                                         Nutzung leere Hülle.
+
+ B-03 Erste            W: 1 Crafting Table + 4 Runenholzbretter + 2 Kupfer + 1           1 AW ohne Netzbetrieb für einfache
+ Arkanwerkbank         Q0-Splitter                                                       Montage.
+
+ B-04 Früher           AW: 3 Eisen + 1 Quarzblock + 2 Kupfer + 2 grobe Splitter          1 KS; Startzelle liefert die ersten 5
+ Schleifer                                                                               Schleifchargen.
+
+ B-05 Unreiner         OF: 3 Arkanerzbrocken + 1 Quarz + 1 Kohle                         1 Arkanbarren Q0; nur für Frühmaschinen,
+ Arkanbarren                                                                             nicht für Q2-Rüstung.
+
+ B-06                  AW: 1 Hochofen + 4 Arkanbarren Q0 + 2 Leitpaste + 1               1 AS; hergestellt nach erster
+ Früh-Schmelzofen      Präzisionsspule                                                   Alchemie-/Schleifversorgung.
+
+ B-07 Runenhalter      AW: 2 Arkanbarren Q1 + 1 Kupfer + 1 Leitpaste + 1 Kristallkabel   1 Runenhalter; für Runenplatten und
+                                                                                         Rituale.
+
+ B-08 Einfache         AW: 1 Kupfer + 1 Feldkristallsplitter + 1 Redstone →              Verbindet die Einmal-Feldzelle mit KS, AT
+ Energieeinspeisung    Startzellenadapter                                                oder AS.
+
+ B-09 Schmelzofen-H    AS: 2 Arkanerzbrocken + 1 Kohle + 40 FL                           1 Arkanbarren Q1; effizienter und reiner als
+ ochstufe                                                                                B-05.
+
+ B-10                  W: 2 Sand + 1 Papier + 1 Feuerstein → 3 Sandpapier                Hilfsstoff für B-01.
+ Quarzschleifmittel
+
+
+Expliziter Einstiegspfad ohne Kreisabhängigkeit: Vanilla-Eisen/Quarz/Kupfer/Feuerstein + erster Rohkristall →
+B-00/B-01 → Arkanwerkbank → B-02 Startzelle → B-04 Kristallschleifer → Kristallstaub → erster Alchemietisch → Harz
+und Leitpaste → Spule → B-05 unreiner Arkanbarren → B-06 arkaner Schmelzofen → reiner Arkanbarren Q1 →
+veredelte Legierung → Gravurstation / Runenpresse → Kollektor / Speicher / später Ritualsockel. Der Alchemietisch
+wird von der Werkbank montiert und muss keine bereits existierende Tinte besitzen.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                               41
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Herstellungsstufen je Objektklasse
+ Klasse                      Min. Stationen / Materialstufen           Konkrete Beispiele
+
+ Frührohstoff                W + optional OF                           Sandpapier, grober Kristallsplitter, unreiner
+                                                                       Arkanbarren.
+
+ Frühes Werkzeug             W → AW → optional AT                      Formelbuch, Runenmeißel, Alchemietisch.
+
+ Standard-Artefakt           KS → AT/AS → AW → GS                      Runenhandschuh, Monokel, Feldkompass.
+
+ Magische Infrastruktur      KS + AT + AS → AW → GS                    Konnektor, Relais, Sensor, Feldspeicher.
+
+ Hochrangige Ausrüstung      KS + AT + AS → AW → GS → RS               Runenrüstung Q3, Schwebestiefel Q3, Hochamulett.
+
+ Ritual-/Bossgerät           Worldgenfund → KS/AT/AS → GS → R5/R7      Portal, Bossbeschwörung, Seelenanker.
+
+
+
+
+Konkrete Produktionsbilanz: zwei Kristall-Konnektoren
+Für ein Konnektorpaar werden nach R-047 2 Resonanzglas, 1 Spule und 2 Leitpaste benötigt. Zusätzlich
+müssen das Paar über eine Signaturplakette an der Gravurstation gebunden und 50 FL bezahlt werden.
+Resonanzglas verlangt 2 Resonanzsplitter, 2 Glas und 1 Arkanstaub pro Zweiereinheit. Die Spule verlangt 2 Kupfer,
+2 Leitpaste und 1 Splitter. Somit beträgt der reine Verbrauch vor Energie: 2 Resonanzsplitter, 2 Glas, 1
+Arkanstaub, 2 Kupfer, 4 Leitpaste, 1 Feldkristallsplitter; die 4 Leitpaste entstehen aus 2 Kristallstaub, 1
+Redstone und 1 Runenharz mit 0 Paste Rest. Inklusive Herstellung von Runenharz sind mindestens zwei
+Runenholz plus ein Reinwasser nötig. Ein Konnektorpaar wird erst dadurch zu einem verkabelbaren, freigegebenen
+Netzwerkbestandteil. Bei Wiederabbau bleibt die Paarung bestehen.
+
+
+Konkrete Produktionsbilanz: Runenplatte mit einer Formel
+Die Runenpresse verbraucht für 2 leere Runenplatten zwei Q1-Arkanbarren und zwei Leitpaste, 40 FL. Eine Platte
+wird in die Gravurstation gelegt; daneben wird eine gültige Formelbuch-Kopie mit bekannter Runensyntax
+importiert. Gravurkosten = 30 FL + 4 FL je ausführbarem Knoten (höchstens 500 FL), aufgerundet auf volle FL; die
+Platte muss die zur Formelkomplexität nötige Qualität besitzen. Ein Schreibfehler oder ungültiger Graph verbraucht
+keine Platte; nach erfolgreichem Commit trägt die Platte eine unveränderliche Formelsnapshot-ID. Die zweite leere
+Platte bleibt im Inventar und wird nicht versehentlich mit graviert.
+
+
+Rezept-Regeln für Datapacks und Automatisierung
+Jedes Rezept ist ein Datensatz mit Eingabe-IDs/Tags, Mengen, Flüssigkeiten, Station, Prozessdauer, FL, Minimaltier,
+Qualitätsanforderung, Ergebnis und optionalem Behälterrücklauf. Produktionsgraphen werden vor Spielstart
+auf unerreichbare Grundrezepte geprüft; ausdrücklich erlaubte Rückumwandlungen müssen Nettoverlust besitzen.
+Weder Duplikationsresultate noch unendliche Energiequellen sind zulässig. Automationsaufträge wählen immer
+eine konkrete Alternative; kein stiller Wechsel zwischen Q0 und Q3.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                    42
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Nachvollziehbare Materialumwandlung und Verluste
+ Prozess                    Rohbilanz                                              Warum sinnvoll
+
+ Handarbeit:                1 roher Kristall + Feuerstein + Sandpapier → 1         Eröffnet das erste Gerät, bleibt ineffizient.
+ kristallisieren            Q0-Splitter mit Zwischenverlust
+
+ Schleifer:                 1 roher Kristall + 20 FL → 3 reguläre Splitter         Spezialisierte Station belohnt Fortschritt.
+ Kristallspaltung
+
+ Ofen: unreines             3 Erzbrocken + Quarz + Kohle → 1 Q0-Barren             Ermöglicht Schmelzofen ohne Zirkelschluss.
+ Arkanmetall
+
+ Arkaner Schmelzofen        2 Erzbrocken + Kohle + 40 FL → 1 Q1-Barren             Bessere Reinheit und effizientere Erzverwertung.
+
+ Transmutation              4 Kupferstaub + Kristallessenz + 80 FL → 1             Komfort/Notlösung, keine Vermehrung aus
+                            Eisenpulver                                            Gratisenergie.
+
+ Boss-Q3-Veredelung         Mehrere Q2-Vorprodukte + einzigartiger                 Seltene Erfolge geben horizontale Mehrwerte und
+                            Katalysator → Q3                                       Buildoptionen.
+
+
+
+
+18 Qualitätssicherung und Abnahmekriterien
+
+Funktionale Tests: Formeln und Netzwerke
+ Test                  Eingabe / Ablauf                                      Erwarteter Zustand
+
+ F-01                  Identische Formel + gleicher Weltzustand 100-mal      Gleicher Gameplay-Effekt und Kosten; nur VFX-Random
+ Determinismus         ausführen.                                            möglich.
+
+ F-02 Typfehler        POS-Kante an ENTITÄT-Port verbinden.                  Editor blockiert mit markiertem Port; keine FL weg.
+
+ F-03 Zyklus           Rückkante ohne terminierenden Zeitoperator            ValidationError: zyklischer Runengraph.
+                       einbauen.
+
+ F-04 Modultiefe       Neunte Ebene Unterformeln versuchen.                  Import abgelehnt, lesbare Fehlermeldung.
+
+ F-05                  Direktzauber mit 0 FK und ausreichender FL            Kein Effekt; FK/FL korrekt unangetastet.
+ FK-Unterdeckung       aktivieren.
+
+ F-06                  Aktiven Feldleiter unter Last abbrechen.              Verbraucher sicher pausiert; keine negative FL.
+ Kabeltrennung
+
+ F-07 Funkrechte       Fremdes Konnektorpaar ohne Berechtigung               Keine Verbindung; Eigentümer bleibt unverändert.
+                       koppeln.
+
+ F-08 Entladen         Speicher aus-/einbauen und Chunk entladen.            Keine Energieverdoppelung oder -löschung durch Desync.
+
+ F-09 Welt-Rechte      Bergbau auf geschütztes Gebiet richten.               Kein Blockverlust, Hinweis an Eigentümer.
+
+ F-10                  Formel importieren, Originalbuch anschließend         Kopie bleibt unverändert, neues Snapshot explizit.
+ Runenhandschuh        ändern.
+
+ F-11                  Gravurpreview verlassen und erneut öffnen.            0 Haltbarkeitsverbrauch.
+ Meißel-Abbruch
+
+ F-12 Feldkompass      Persönliche Signatur prägen, neuen Ort anpeilen.      Alte Bindung bleibt unverändert, neues Ziel eigener
+                                                                             Datensatz.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                43
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Herstellung und Transaktionen
+ Test                   Ablauf                                           Erwartung
+
+ C-01 Bootstrap         Neue Survivalwelt ohne Creative/Commands;        Kollektor und Gravurstation ohne unauflösbare Kreisrezepte
+                        alle Stationen nacheinander bauen.               erreichbar.
+
+ C-02 Rezeptkosten      R-047 vollständig ohne Creative erzeugen.        Konnektorpaar durch mindestens vier Stationen und
+                                                                         Signaturbindung.
+
+ C-03 Output voll       Alchemietisch mit vollem Ausgabefach             Input nicht vernichtet; Batch hält an.
+                        automatisieren.
+
+ C-04 Crash während     Server in reserviert/running/committed Zustand   Genau eine Ausgabe nach Neustart, keine Duplikation.
+ Job                    beenden.
+
+ C-05 Formula-Gravur    Platte mit typfalscher Formel gravieren.         Platte und FL bleiben erhalten, Fehler markiert.
+
+ C-06 Qualitätslimit    Q1-Platte mit 65-Knoten-Formel beladen.          Abgelehnt, Q3 oder kleinere Formel empfohlen.
+
+ C-07 Rezeptzyklus      Eigene Modpack-Rezepte mit positiver             Warnung/Deaktivierung je Konfig, kein autonomes
+                        Stoffschleife laden.                             Duplizieren.
+
+
+
+
+Rituale, Bosse und Sicherheit
+ Test                  Ablauf                                               Erwartung
+
+ R-01 Abbruch vor      R7 aufladen und vor Ausführung zerstören.            Opfergaben unberührt, FL gemäß Abbruchtabelle zurück.
+ Opfer
+
+ R-02 Boss-Cooldown    Gleichen Summon zweimal unmittelbar versuchen.       Zweiter Spawn blockiert, Zeit sichtbar.
+
+ R-03 Mehrspieler      Vier Spieler 25% FK-Beitrag bereitstellen.           Max. 25% FL-Ersparnis insgesamt; Solo-Alternative offen.
+
+ R-04                  Fremdes Item seelenbinden.                           Klare Freigabe erforderlich, sonst keine Bindung.
+ Besitzzustimmung
+
+ R-05 Offline-Boss     Beschworenen Boss beim Chunk-Unload verlassen.       Geregelte Entladung/Persistenz, kein Mob- oder
+                                                                            Lootduplikat.
+
+ R-06 Dimensionstor    Mit blockierter Zielplattform teleportieren.         Keine Teleportation ins Void oder in Blöcke.
+
+ R-07                  Timer triggert Bossritual.                           Standardregel verweigert automatische Bossauslösung.
+ Automatiksummon
+
+
+
+
+Benutzbarkeit und Accessibility
+Mindestens fünf Testpersonen, die die Mod zuvor nicht kennen, sollen in einem frischen Survivalspiel ohne
+externe Wiki eine Lichtformel herstellen und auslösen können (Ziel: in 90 Minuten bei normaler
+Minecraft-Erfahrung). Spieler müssen ein vollständiges Runenplatten-Rezept nachvollziehen können, ohne in
+Rezeptkreisen hängen zu bleiben. Alle Farbzustände benötigen einen Symbol-/Textersatz; Tastaturbedienung,
+Skalierung bis 150% und deutsch-/englischsprachige Texte müssen überprüft werden.
+
+
+Performance- und Kompatibilitätstests
+Getestet werden minimaler Client, dedizierter Server, Modpack mit üblicher Lager-/Energieautomation,
+10-Spieler-Lastprofil, Chunkload/Unload und Save-Restore. Jede Weltänderungsanlage muss mit
+Claim-/Berechtigungsregeln und Vanilla-Gamerules interagieren. Formellisten mit 500+ Einträgen dürfen nur
+sichtbare Canvas-Komponenten rendern. Chunkgrenzen sollen keine Item- oder FL-Verluste verursachen, außer
+ausdrücklich gebuchte Transportkosten.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                 44
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+
+19 Entwicklungsfahrplan und lieferbare
+Meilensteine
+
+Baufolge mit klaren Abnahmen
+ Meilenstein        Mindestumfang                                                 Definition of Done
+
+ M0 – Datenbasis    Item-Registries, Stationen, Rezept-JSОN, Lokalisierung,       Alle ID-Pfade eindeutig, keine doppelten
+                    kreative Testwelt.                                            Registrierungen.
+
+ M1 – Feldkern      FL-Produktion, Kabel, Speicher, Rechte, Netzwerk-Profiler.    F-05 bis F-08 bestehen, keine negativen Budgets.
+
+ M2 –               Graph-Editor, 35 Grundrunen, Snapshot-Import,                 F-01 bis F-04, F-10, F-11 bestehen.
+ Formelsprache      Handschuh/Meißel.
+
+ M3 – Handwerk      11 Stationsklassen inklusive Primitive, R-001 bis R-048,      C-01 bis C-07 bestehen; keine Kreisrezepte.
+                    Rezeptbaum.
+
+ M4 – Systeme       Alchemie, Verzauberungen, 15 Automationssysteme, Rituale      Vier Musteranlagen und RT-01 bis RT-07 spielbar.
+                    R3–R7.
+
+ M5 – Inhalt        23 Weltgenerierungskonzepte, 18 Mobs, 10 Bosse, Dimension.    Weltgen-, KI-, Kampf- und Drop-Regressionen
+                                                                                  bestanden.
+
+ M6 – Release       Polish, Multiplayer, Migration, Performance, Accessibility,   Alle QA-Tests; Survivaldurchlauf T0–T5 ohne
+ Candidate          Tutorials.                                                    Commands möglich.
+
+
+
+
+Prioritätensystem
+P0: Spieler kann Feldkern, Formelbuch, Meißel, Handschuh und ersten Energiepfad ohne Absturz verwenden. P1:
+Mehrstufige Herstellung, Gravurstation, Runenplatte, Runenhalter und Alchemietisch. P2: Automatisierung,
+größere Rituale, Worldgen und grundlegende Gegner. P3: vollständiger Bosskatalog, Zersplitterung, Q3-Endgame
+und dekorative Sets. Inhalte dürfen als vertikale Scheiben entwickelt werden; eine unfertige Runen-Engine wird
+nicht durch zusätzlichen Content kaschiert.
+
+
+Arbeitsartefakte für die tatsächliche Implementierung
+Aus diesem Dokument lassen sich sechs maschinenlesbare Deliverables ableiten: (1) Registry mit
+Items/Blöcken/Entitäten, (2) JSON-Rezeptdaten pro Station, (3) Rune-Type-System und Formula-Graph-Schema, (4)
+Loot-/Worldgen-JSON, (5) UI-Wireframes für Formelbuch und Stationsmenüs, (6) automatisierte Prüfmatrix. Namen
+sind Design-IDs; die endgültigen technischen IDs sollten kleingeschrieben, ASCII-kompatibel und dauerhaft
+versioniert sein, z. B. badspell:field_crystal_shard oder badspell:rune_engraving_station.
+
+
+
+20 Anhang A – Vollständiges Register aller
+161 ausgewählten Konzepte
+
+Dieses Register führt die ursprünglich ausgewählten Konzepte getrennt von allen später ergänzten
+Zwischenmaterialien, Maschinen und Designregeln. Es dient als Vollständigkeitsprüfung. Wo Begriffe sich
+überschneiden, zählen sie trotzdem genau so, wie sie in der Konzeptphase festgelegt wurden.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                               45
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Magische Gegenstände (9)
+
+ ID         Konzept
+
+ 01         Runenmeißel
+
+ 02         Runenhandschuh
+
+ 03         Arkanes Monokel
+
+ 04         Feldkristall
+
+ 05         Runentinte
+
+ 06         Runenplatte
+
+ 07         Formelbuch
+
+ 08         Feldkompass
+
+ 09         Resonanzgabel
+
+
+
+
+Blöcke (20)
+
+ ID         Konzept
+
+ 01         Gravurstation
+
+ 02         Alchemietisch
+
+ 03         Arkaner Schmelzofen
+
+ 04         Ritualsockel
+
+ 05         Arkanwerkbank
+
+ 06         Runenblock
+
+ 07         Kristallkabel
+
+ 08         Kristall-Konnektor
+
+ 09         Kristall-Relais
+
+ 10         Runenhalter
+
+ 11         Arkanstein
+
+ 12         Kristallglas
+
+ 13         Arkane Laterne
+
+ 14         Runenbücherregal
+
+ 15         Kristallsäule
+
+ 16         Feldkristallerz
+
+ 17         Arkanerzblock
+
+ 18         Runenholzstamm
+
+ 19         Leuchtmoos
+
+ 20         Resonanzkristall
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026   46
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Ausrüstung (18)
+
+ ID         Konzept
+
+ 01         Runenschwerter
+
+ 02         Magierstäbe
+
+ 03         Zauberbücher
+
+ 04         Magische Bögen
+
+ 05         Arkane Dolche
+
+ 06         Magierroben
+
+ 07         Runenrüstung
+
+ 08         Kristallrüstung
+
+ 09         Arkane Schilde
+
+ 10         Magische Ringe
+
+ 11         Amulette
+
+ 12         Talismane
+
+ 13         Magische Gürtel
+
+ 14         Magische Umhänge
+
+ 15         Schwebestiefel
+
+ 16         Magischer Greifhaken
+
+ 17         Arkaner Köcher
+
+ 18         Magische Handschuhe
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026   47
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Normale magische Mobs (18)
+
+ ID         Konzept
+
+ 01         Geisterfuchs
+
+ 02         Mondmotte
+
+ 03         Kristallschildkröte
+
+ 04         Himmelsqualle
+
+ 05         Hohle Rüstung
+
+ 06         Obsidianbestie
+
+ 07         Arkanes Auge
+
+ 08         Alchemist
+
+ 09         Runenwächter
+
+ 10         Artefakthändler
+
+ 11         Abtrünniger Magier
+
+ 12         Runendrohne
+
+ 13         Lebendes Buch
+
+ 14         Feldmanifestation
+
+ 15         Runenbaum
+
+ 16         Arkaner Hirsch
+
+ 17         Kristallwyrm
+
+ 18         Arkaner Koloss
+
+
+
+
+Bosse (10)
+
+ ID         Konzept
+
+ 01         Kristallmatriarchin
+
+ 02         Eidwächter
+
+ 03         Ur-Elementar
+
+ 04         Der Beobachter
+
+ 05         Waldwyrm
+
+ 06         Der Erste Hirsch
+
+ 07         Tiefenverschlinger
+
+ 08         Frostseher
+
+ 09         Sturmrochen
+
+ 10         Sternendrache
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026   48
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Weltgenerierung (23)
+
+ ID         Konzept
+
+ 01         Arkanwald
+
+ 02         Kristallhöhlen
+
+ 03         Nebelhain
+
+ 04         Äthergipfel
+
+ 05         Verlassener Magierturm
+
+ 06         Runenkreis
+
+ 07         Vergessener Tempel
+
+ 08         Alchemistenhütte
+
+ 09         Astrales Observatorium
+
+ 10         Vergessenes Forschungslabor
+
+ 11         Runenlabyrinth
+
+ 12         Versiegelte Schatzkammer
+
+ 13         Arkane Schmiede
+
+ 14         Versunkene Bibliothek
+
+ 15         Feldkristalladern
+
+ 16         Arkanerz
+
+ 17         Mondblüte
+
+ 18         Runenholz
+
+ 19         Ätherquelle
+
+ 20         Resonanzgeode
+
+ 21         Die Zersplitterung
+
+ 22         Arkane Stürme
+
+ 23         Feldanomalien
+
+
+
+
+Zauberfortschritt (8)
+
+ ID         Konzept
+
+ 01         Forschung und Entschlüsselung
+
+ 02         Lernen von NPCs
+
+ 03         Wissensbasierter Fortschritt
+
+ 04         Ausrüstungsbasierter Fortschritt
+
+ 05         Eigene Formeln entwickeln
+
+ 06         Formeln finden
+
+ 07         Formeln von NPCs erwerben
+
+ 08         Bestehende Formeln analysieren
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026         49
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Alchemie (10)
+
+ ID         Konzept
+
+ 01         Trankbrauen
+
+ 02         Essenzgewinnung
+
+ 03         Transmutation
+
+ 04         Materialveredelung
+
+ 05         Magische Elixiere
+
+ 06         Alchemistische Bomben
+
+ 07         Magische Tinten
+
+ 08         Homunkuli
+
+ 09         Katalysatoren
+
+ 10         Alchemistische Forschung
+
+
+
+
+Verzauberungen und Flüche (10)
+
+ ID         Konzept
+
+ 01         Runenverzauberung
+
+ 02         Lebewesenflüche
+
+ 03         Ortsflüche
+
+ 04         Fluchbrechung
+
+ 05         Seelenbindung
+
+ 06         Magische Siegel
+
+ 07         Temporäre Verstärkungen
+
+ 08         Magische Stabilität
+
+ 09         Verzauberungsanalyse
+
+ 10         Verzauberungsmodifikation
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026   50
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Automatisierung (15)
+
+ ID         Konzept
+
+ 01         Magische Sensoren
+
+ 02         Runenlogik
+
+ 03         Magische Zeitschaltungen
+
+ 04         Fernsteuerung
+
+ 05         Gegenstandstransport
+
+ 06         Magische Teleporter
+
+ 07         Schwebende Plattformen
+
+ 08         Magische Förderanlagen
+
+ 09         Automatisches Crafting
+
+ 10         Automatisierte Alchemie
+
+ 11         Magischer Bergbau
+
+ 12         Magische Landwirtschaft
+
+ 13         Magische Barrieren
+
+ 14         Automatische Verteidigung
+
+ 15         Magische Beleuchtung
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026   51
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Rituale und Beschwörungen (20)
+
+ ID         Konzept
+
+ 01         Beschwörungsrituale
+
+ 02         Transformationsrituale
+
+ 03         Schutzrituale
+
+ 04         Bindungsrituale
+
+ 05         Reinigungsrituale
+
+ 06         Wesenbeschwörung
+
+ 07         Bossbeschwörung
+
+ 08         Vertraute (Familiars)
+
+ 09         Temporäre Beschwörungen
+
+ 10         Dauerhafte Beschwörungen
+
+ 11         Mehrblock-Rituale
+
+ 12         Ritualkreise
+
+ 13         Ritualopfergaben
+
+ 14         Mehrspieler-Rituale
+
+ 15         Ritualbedingungen
+
+ 16         Portalsrituale
+
+ 17         Seelenrituale
+
+ 18         Astrale Rituale
+
+ 19         Ritualunterbrechung
+
+ 20         Ritualautomatisierung
+
+
+
+
+21 Anhang B – Normalisierte Spielwerte und
+Terminologie
+
+ Kürzel / Begriff       Bedeutung                                       Standardgrenze / Anmerkung
+
+ FL                     Feldladung, Verbrauchseinheit                   Integer; atomare Budgetreservierung.
+
+ FK                     Fokus, individuelle Wirkausdauer                100 FK Basis, 3 FK/s Regeneration.
+
+ ST                     Stabilität eines Artefakts oder Feldnetzes      0–100%; unter 25% Aktivierungssperre.
+
+ Q0–Q3                  Handwerks-/Reinheitsstufen                      Q0 roh, Q1 gereinigt, Q2 stabilisiert, Q3 kalibriert.
+
+ R3/R5/R7               Ritualklasse nach räumlichem Radius             Jeweils 3/5/7 Blöcke um Ritualsockel.
+
+ Signatur               Magische Identität von Ort, Gerät oder Formel   UUID + Typ + Frequenz; prüfbar.
+
+ Formelsnapshot         Unveränderliche Kopie einer Formelrevision      Wird im Handschuh/Platte/Ausrüstung abgelegt.
+
+ Runenknoten            Element im gerichteten Formelengraph            Max. 128 je Formel; max. Modultiefe 8.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                          52
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+     Kürzel / Begriff   Bedeutung                                        Standardgrenze / Anmerkung
+
+     Feldkristall       Leitfähiges Material, kein Speicher              Kabel, Konnektoren, Relais.
+
+     Feldspeicher       Separates Energiespeichermodul                   2.000 FL klein / 12.000 FL groß.
+
+     Ätherkollektor     Energiegewinnung aus natürlichem Feld            8 FL/t Basis bzw. 60 FL/t an Quelle.
+
+     Rune               Formaler Operator einer natürlichen Magieregel   35 Basisrunen als Erstbibliothek.
+
+     Ritualopfer        Explizit verbrauchtes Ritualmaterial             Erst bei festgelegter Ausführungsphase.
+
+     Arenakatalysator   Item für besondere oder wiederholte              Anti-Farm-Cooldown bleibt bestehen.
+                        Bossbegegnung
+
+     ACL                Besitzer-/Team-Berechtigungen                    Sehen, nutzen, konfigurieren, abbauen, kopieren.
+
+
+
+
+Richtwerte für Kostenformeln
+Einmalzauber kosten grundsätzlich FL = Grundkosten + ceil(Stärke × Reichweitenfaktor) + Zielaufschlag;
+Dauerzauber zusätzlich FL/s = Basisunterhalt × Flächenfaktor. Richtwerte: Punktziel Faktor 1, Kreis Radius 2
+Faktor 1,5, Kreis Radius 4 Faktor 3, Kugel Radius 4 Faktor 4. Schutzbarrieren mit Radius 8 verbrauchen
+beispielsweise 12 FL/s bei schwacher Ausführung und 40 FL/s unter Angriff. Ein Zauber wird nie durch eine Formel
+mit Stärke < 0 günstiger als Null; Werte werden vor Kostenrechnung strikt begrenzt.
+
+
+Datenbeispiel: Rezept als neutrales JSON
+Die tatsächliche Struktur hängt vom gewählten Modloader ab. Das folgende Format beschreibt die nötigen Daten
+semantisch und ist kein unmittelbar ladbares Minecraft-Rezept, solange kein eigener Serializer dafür
+implementiert wurde.
+
+{
+
+"id": "badspell:crystal_cable",
+
+"station": "badspell:arcane_workbench",
+
+"inputs": [
+
+{"item": "minecraft:copper_ingot", "count": 1},
+
+{"item": "badspell:field_crystal_shard", "count": 2},
+
+{"item": "badspell:conductive_paste", "count": 2}
+
+],
+
+"energy_fl": 0,
+
+"process_ticks": 40,
+
+"output": {"item": "badspell:crystal_cable", "count": 8},
+
+"min_tier": 1
+
+}
+
+
+
+Datenbeispiel: Rune-Graph als neutrale Struktur
+Eine LICHT-Formel verbindet den manuellen Impuls über Position und Licht-Wirkung zum Aktivierungsknoten. Jeder
+Knoten besitzt typisierte Ports, feste Parametergrenzen und eine eindeutige Effekt-ID. Der Server verwendet dafür
+registrierte Effekt-Implementierungen. Selbstentworfene Runenformen dürfen keinen Code in die Serverlaufzeit
+injizieren. Formular-Validierung und FL-Kostenberechnung sind vollständig deterministisch und werden auf dem
+Server wiederholt.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                      53
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Akzeptierte bewusste Vereinfachungen
+Aus Gründen der praktischen Umsetzung sind alle Prozent- und Spawnzahlen Defaultvorschläge; sie müssen in
+Datapacks/Config austauschbar sein. Nicht sämtliche Runenformeln für jeden Gegenstand sind im Dokument
+einzeln als Graph ausgeschrieben, weil alle Kategorien auf der beschriebenen Rune-Engine und den
+wiederverwendbaren Unterformeln basieren. Art-Assets, Sounds, Animationstimings und exakte
+Blockmodell-Geometrie werden als Produktionsassets spezifiziert, nicht als handgemalte Zeichnungen in diesem
+Konzeptdokument.
+
+Abschluss: Diese Fassung verbindet alle ausgewählten 161 Konzepte zu einem in sich zusammenhängenden
+Survival- und Entwicklungsentwurf. Die zusätzlichen Primitive-Rezepte beseitigen Start-Zirkelschlüsse; mehrere
+spezialisierte Stationen und craftbare Halbzeuge stellen die gewünschte mehrstufige Herstellung sicher. Die
+konkrete Minecraft-/Modloader-Version, endgültige Balancingwerte und visuelle Assets bleiben Gegenstand der
+technischen Produktion und der Abnahmetests.
+
+
+
+22 Anhang C – Vollständige
+Montagevorschriften für Ausrüstung
+
+Rezeptnotation und gemeinsame Regeln
+Die folgenden Tabellen schließen die konkrete Lücke zwischen Ausrüstungsbeschreibung und tatsächlich
+ausführbarer Herstellung. W → AT → AW → GS bedeutet, dass ein Rohteil an Station W gefertigt, am Alchemietisch
+behandelt, an der Arkanwerkbank montiert und zuletzt an der Gravurstation geprägt wird. Zutatenmengen gelten
+pro fertigem Gegenstand; wo vier Rüstungsteile ein Set bilden, besitzt jedes Einzelteil ein eigenes Rezept. Die an
+der Gravurstation benutzte Formel ist ein vorab angelegter Buchsnapshot und bleibt nach Aufbringen
+unveränderlich. Angegebene FL beziehen sich nur auf die jeweilige letzte Gravur und addieren sich zu früheren
+Verarbeitungsstufen.
+
+
+Waffen: fünf exakte Fertigungsketten
+ ID / Herstellung      Station / Eingaben                                                Ausgabe / Zweck
+
+ EQ-W01                AS: 2 Q1-Arkanbarren + 1 Quarz → Klingenrohling; AW: 1            1 Runenschwert Q1, 7 Schaden, 1
+ Runenschwert          Runenholzstab + 1 Runenharz + Klinge + 1 Splitter; GS: 1          Formelslot.
+                       Angriffsformel + 1 Siegel + 120 FL
+
+ EQ-W02 Magierstab     W: 2 Runenholzplanken → Stabrohling; AT: Rohling + 1 Harz + 1     1 Magierstab Q1, 2 Formelslots, -10%
+                       Mondessenz → behandelter Schaft; AW: 1 Kristallkern Q1 + 2        FK-Kosten.
+                       Kupfer → Stab; GS: 1 Formel + 90 FL
+
+ EQ-W03                W: 1 Buch + 2 Leder + 1 Runenharz → Einband; AT: 1 Runentinte +   1 Zauberbuch mit bis zu 3 Kurzformeln.
+ Zauberbuch            1 Leuchtfaser → Seitenprägung; AW: 1 Q1-Kern + Einband; GS: 1–3
+                       Formeln + 75 FL
+
+ EQ-W04 Magischer      W: 1 Bogen + 2 Runenholz → Rohbogen; AT: 1 Leuchtfaser + 1 Harz   1 magischer Bogen Q1.
+ Bogen                 → Sehnenlack; AW: Rohbogen + 1 Präzisionsspule + Sehnenlack;
+                       GS: 1 Projektilformel + 100 FL
+
+ EQ-W05 Arkaner        AS: 1 Q1-Arkanbarren + 1 Gold → Klingenrohling; AT: 1             1 Arkaner Dolch Q1, 4 Grundschaden.
+ Dolch                 Kristallessenz + 1 Runenharz → Griffbad; AW: 1 Runenholzstab +
+                       Klinge; GS: 1 Siegel + 1 Zielrune + 90 FL
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                            54
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Rüstung: Einzelteil- und Setherstellung
+ ID / Herstellung      Station / Eingaben                                                     Ausgabe / Zweck
+
+ EQ-A01 Robe Kopf      W: 2 Wolle + 1 Leder → Kapuze; AT: 1 Leuchtfaser + 1 Mondessenz        1 Magierkapuze (1 Rüstungspunkt).
+                       → Stoffbad; AW: Kapuze + Stoffbad; GS: 1 Schutzformel + 65 FL
+
+ EQ-A02 Robe Brust     W: 5 Wolle + 1 Leder → Mantel; AT: 2 Leuchtfaser + 1 Mondessenz;       1 Magierrobe (3 Rüstungspunkte).
+                       AW: Mantel + Stoffbad; GS: 1 Schutzformel + 100 FL
+
+ EQ-A03 Robe Beine     W: 4 Wolle + 1 Leder → Hose; AT: 1 Leuchtfaser + 1 Mondessenz;         1 Magierhose (2 Rüstungspunkte).
+                       GS: 1 Schutzformel + 80 FL
+
+ EQ-A04 Robe Füße      W: 2 Wolle + 1 Leder → Schuhe; AT: 1 Leuchtfaser + 1 Mondessenz;       1 Magierschuhe (2 Rüstungspunkte).
+                       GS: 1 Schutzformel + 65 FL
+
+ EQ-A05                AS: Q1-Arkanbarren → Formlinge; AW: Kopf 4 / Brust 8 / Beine 7 /       4 Runenrüstungsteile mit Gesamtwert 16.
+ Runenrüstung          Füße 4 Barren + je 1 Leitpaste + je 1 Runenplatte; GS: je 1 Siegel
+                       und Schutzformel, 100–220 FL pro Teil
+
+ EQ-A06                KS: je 1–2 gereinigte Q1-Kerne; AS: insgesamt 8 Resonanzglas; AT:      4 Kristallrüstungsteile, Gesamtwert 14.
+ Kristallrüstung       4 Kristallessenz; AW: 4/7/6/3 Panzerteile; GS: 1 Feldschutzformel je
+                       Teil, 120–240 FL
+
+ EQ-A07 Arkaner        W: 1 Schild + 1 Runenholzplanke → Verstärkung; AS: 2                   1 Arkaner Schild, aktive Projektilabwehr.
+ Schild                Q1-Arkanbarren + 1 Kupfer → Rahmen; AW: Rahmen + 1 Spule; GS:
+                       1 Schutzformel + 1 Siegel + 150 FL
+
+
+Rüstung Q2/Q3: Jede Q1-Komponente kann an den dafür vorgesehenen Stationen durch veredelte Gegenstücke
+ersetzt werden. Q2 erfordert mindestens einen Q2-Kern und ein Stabilisatorsiegel pro Teil; Q3 zusätzlich einen
+hochstufigen Katalysator und Ritualsockel-Kalibrierung. Der Spieler muss nicht viermal dieselbe Bossart besiegen:
+Katalysator-Fragmente sind teilbar, und es gibt wiederholbare, aber begrenzte Endgame-Prüfungen.
+
+
+Zubehör und Spezialausrüstung – exakte Rezepte
+ ID / Herstellung      Station / Eingaben                                                     Ausgabe / Zweck
+
+ EQ-Z01 Ring           W: 2 Goldnuggets + 1 Kupfer → Ringrohling; AT: 1 Kristallstaub + 1     1 Magischer Ring Q1, 1 Kleinformel.
+                       Harz → Fassung; AW: Rohling + Fassung; GS: kleine Formel + 40 FL
+
+ EQ-Z02 Amulett        AS: 1 Gold + 1 Resonanzglas → Fassung; AW: 1 Resonanzkern + 1          1 Amulett Q2.
+                       Runenharz + Fassung; GS: 1 Bindungs-/Schutzformel + 140 FL
+
+ EQ-Z03 Talisman       W: 3 Papier + 1 Runenharz → 3 Pergamentträger; AT: 1 Träger + 1        1 Verbrauchstalisman.
+                       Mondsalz + 1 Mondessenz; GS: 1 Reinigungsformel + 55 FL
+
+ EQ-Z04 Gürtel         W: 3 Leder + 2 Eisen → Gurt; AT: 1 Harz → Isolierung; AW: Gurt + 2     1 Magischer Gürtel, +2 Zellhalter.
+                       Präzisionsspulen + 2 Kupfer
+
+ EQ-Z05 Umhang         W: 5 Wolle + 2 Leuchtfaser → Stoff; AT: 1 Ätherlösung + 1              1 Magischer Umhang.
+                       Runenharz → Imprägnierung; AW: Stoff + Imprägnierung + 2
+                       Kupfer; GS: 1 Schubformel + 120 FL
+
+ EQ-S01                AS: 1 Resonanzkern + 2 Arkanlegierung + 1 Ätherlösung →                1 Paar Schwebestiefel Q2.
+ Schwebestiefel        Schwebekern; AW: 1 Lederstiefel + 1 Kern + 1 Spule; GS: 1
+                       SCHUB-Formel + Siegel + 180 FL
+
+ EQ-S02 Greifhaken     W: 3 Eisen + 1 Faden → Haken; AT: 1 Harz + 1 Leuchtfaser →             1 Magischer Greifhaken.
+                       Führungsstrang; AW: Haken + Strang + 1 Präzisionsspule; GS: 1
+                       Schubformel + 95 FL
+
+ EQ-S03 Köcher         W: 3 Leder + 2 Runenholz → Köcherrohling; AT: 1 Harz + 1               1 Arkaner Köcher.
+                       Leuchtfaser → Isolierung; AW: 1 Spule + Rohling + Isolierung; GS: 1
+                       Projektilformel + 80 FL
+
+ EQ-S04                W: 2 Leder + 2 Leuchtfaser → Handschuhe; AT: 1 Schutzlack + 1          1 Paar Magische Handschuhe (nicht
+ Handschuhe            Reinwasser → Beschichtung; AW: Handschuhe + Beschichtung + 1           Runenhandschuh).
+                       Splitter; GS optional 1 kleine Formel + 50 FL
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                    55
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+
+23 Anhang D – Zusätzliche Stations-, Block-
+und Netzrezepte
+
+Präzise Montage der zusätzlichen Infrastruktur
+ ID / Herstellung       Station / Eingaben                                                       Ausgabe / Zweck
+
+ INF-01 Sensor          KS: 1 Präzisionslinse; AW: 1 Linse + 1 Präzisionsspule + 1 Redstone      1 Magischer Sensor, Reichweite 2–12.
+                        + 1 Leitpaste; GS: 1 UMGEBUNG- oder ZIEL-Formel + 50 FL
+
+ INF-02 Zeitmodul       W: 1 Repeater + 1 Quarz; AW: 1 Spule + 1 Leere Runenplatte +             1 Zeitschaltmodul.
+                        Frühteil; GS: INTERVALL/VERZÖGERE + 45 FL
+
+ INF-03 Einlass         W: 1 Trichter + 1 Eisen; AW: 1 Kristallkabel + 1 Leitpaste + Trichter    1 Gegenstandseinlass; Portseite
+                                                                                                 konfigurierbar.
+
+ INF-04 Auslass         W: 1 Trichter + 1 Eisen; AW: 1 Kristallkabel + 1 Runenharz +             1 Gegenstandsauslass; Portseite
+                        Trichter                                                                 konfigurierbar.
+
+ INF-05 Sortierer       AW: 1 Komparator + 1 Spule + 1 leere Platte; GS: Filterformel + 80       1 Sortiermodul, bis 64 Items/min.
+                        FL
+
+ INF-06                 AS: 2 Arkanbarren + 1 Resonanzglas → Rahmen; AW: Rahmen + 1              1 Transportanker, bis 16 Items/2 s.
+ Transportanker         Spule + 2 Kristallkabel
+
+ INF-07 Teleporter      AW: 4 Arkanstein + 2 Arkanlegierung + 1 Resonanzkern →                   1 Teleporterrahmen; zwei Rahmen bilden
+                        Rahmen; GS: 1 SIGNА/BINDE-Formel + 150 FL; RS: 500 FL                    Paar.
+                        Erstkalibrierung
+
+ INF-08 Projektor       AW: 2 Arkanlegierung + 1 Präzisionslinse + 1 Spule + 1 leere             1 Barrierenprojektor.
+                        Platte; GS: SCHILD-Formel + 120 FL
+
+ INF-09 Verteidigung    AW: 1 Projektor + 1 Sensor + 2 Arkanbarren; GS: Zielprüfung +            1 automatische Verteidigungseinheit.
+                        zugelassene Effektformel + 190 FL
+
+ INF-10                 W: 1 Arkane Laterne; AW: 1 Sensor + 1 Leitpaste + Laterne; GS:           1 Magischer Lichtsteuerblock.
+ Lichtsteuerung         Lichtregel + 35 FL
+
+ INF-11 Ritualpylon     AW: 2 Kristallsäulen + 1 Resonanzglas + 1 Stabilisatorsiegel; GS: 1      1 Ritualpylon; R5 benötigt vier.
+                        Kreisbindung + 80 FL
+
+ INF-12                 AS: 3 Arkanlegierung + 2 Resonanzkerne + 1 Siegel → Q2-Kern;             1 Großer Feldspeicher, 12.000 FL.
+ Energiepuffer groß     AW: Q2-Kern + 1 Feldspeichergehäuse; GS: 1
+                        BEGRENZE/PRÜFE-Formel + 150 FL
+
+ INF-13 Runenblock      W: 4 Stein + 1 Feldkristallsplitter + 1 Kristallstaub → Steinkern; AW:   2 Runenblöcke, pro Seite 4×4 Raster.
+                        Steinkern + 1 Leitpaste
+
+ INF-14 Runenhalter     AW: 2 Q1-Arkanbarren + 1 Kupfer + 1 Leitpaste + 1 Kristallkabel          1 Runenhalter, 1 Plattenslot.
+
+ INF-15 Arkanstein      W: 4 Tiefenschiefer + 1 Kristallstaub + 1 Runenharz                      8 Arkanstein-Baublöcke.
+
+ INF-16 Kristallglas    AS: 2 Glas + 1 Resonanzsplitter + 1 Kristallstaub + 25 FL                4 Kristallglas-Baublöcke.
+
+ INF-17 Arkane          W: 1 Laterne + 2 Kristallstaub + 1 Kupfer; AW: 1 Leitpaste +             1 Arkane Laterne.
+ Laterne                Früheinheit
+
+ INF-18                 W: 6 Runenholzbretter + 3 Bücher + 1 Runenharz                           1 Runenbücherregal.
+ Runenbücherregal
+
+ INF-19 Kristallsäule   AW: 4 Arkanstein + 1 Resonanzglas + 1 Leitpaste                          2 Kristallsäulen.
+
+ INF-20                 AS: 2 Arkanbarren + 1 Resonanzglas → Gehäuse; AW: 2 Spulen + 1           1 Runendrohne, an Besitzer gebunden.
+ Runendrohne            Q1-Kern + Gehäuse; GS: 1 Transportformel + 120 FL; RS: 400 FL
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                                    56
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+
+Maschinen-Interfaceverhalten bei mehrstufigen Aufträgen
+Ein Produktionsauftrag speichert seine aufgelöste Materialliste bereits beim Start. Die Liste ist transitive
+Abhängigkeit aller Teilrezepte, z. B. Arkanlegierung benötigt Q1-Arkanbarren, welche Erzbrocken benötigen.
+Automatisierung darf Teilrezepte parallelisieren, aber nicht Quellmaterial vor dem Reservierungsschritt
+verbrauchen. Verfügbare Restmengen aus 2er-/4er-Batches verbleiben im Netzlager und werden transparent als
+Nebenbestand angezeigt. Ein fehlender Katalysator blockiert nur die betroffene Charge; bereits produzierte
+Rohlinge bleiben vorhanden.
+
+
+
+24 Anhang E – Zauberkatalog für erste
+spielbare Builds
+
+Zwölf vollständig designte Spieler- und Anlagenzauber
+ Formel / Stufe        Parameter und Ausführung                      Bedingung / Nutzen / Preis
+
+ Lichtfunke / T0       PUNKT → LICHT(Stärke 3, 30 s)                 12 Block Reichweite; 5 FK + 30 FL; Startzauber.
+
+ Kristallblick / T1    ZIEL → SEHEN(Signatur, ST, FL)                16 Blöcke, 8 FK + 10 FL, nur sichtbare öffentliche Daten.
+
+ Kleiner Schub / T1    ZIEL → SCHUB(Vektor, Stufe 1)                 16 Blöcke, 12 FK + 45 FL, max. 100-LP-Ziel.
+
+ Ruheglanz / T1        PUNKT → KREIS(R=2) → LICHT(Stufe 5, 60 s)     8 FK + 75 FL, höchstens 1 aktiver Kreis pro Spieler.
+
+ Wärmehauch / T1       ZIEL → WÄRME(Stufe 1, 5 s)                    5 FK + 25 FL, schmilzt nur zugelassene dünne
+                                                                     Schneeblöcke.
+
+ Frosthauch / T2       ZIEL → KÄLTE(Stufe 1, 6 s)                    7 FK + 30 FL, verlangsamt gewöhnliche Mobs 2 s.
+
+ Heilzeichen / T2      ZIEL(Spieler) → HEIL(4 LP)                    25 FK + 160 FL, Cooldown 30 s; keine Endlosheilung.
+
+ Kleiner Schild / T2   PUNKT → KREIS(R=2) → SCHILD(Stufe 1, 10 s)    15 FK + 140 FL, max. 2 schwache Projektile absorbiert.
+
+ Echo-Ortung / T2      SIGNА → SEHEN → Prüfergebnis                  12 FK + 70 FL, zeigt nächste Feldsignatur grob an.
+
+ Wächterlampe / T2     INTERVALL(40t) + UMGEBUNG → FALLS → LICHT     Dauerbetrieb 1 FL/s Sensor, 3 FL/s Licht; aktiviert bei
+                                                                     Dunkelheit.
+
+ Feldbrücke / T3       PFAD(≤8) → SCHILD(solid=false, trittfest) →   20 FK + 250 FL Start, 10 FL/s, 20 s, nicht in Fremdclaims.
+                       AKTIVIERE
+
+ Ortsreinigung / T3    KREIS(R=4) → PRÜFE(Fluch) → ABBRUCH/REINIGE   Nur Ritualsockel; 700 FL + Reinigungslösung für Fluch II.
+
+
+
+
+Zauberfreigabe und Wechselwirkungen
+REINIGE im letzten Zauber ist ein registrierter Effekttyp der Reinigungsritual-Familie und gehört nicht zur
+35-Runen-Startbibliothek; er wird in T3 als Erweiterungsrune gelehrt. solid=false bei Feldbrücke bedeutet kein
+eigener Block und keine Schattenduplikation; die Trittfläche entsteht als servervalidiertes temporäres
+Kollisionsfeld, das bei Energieausfall mit einer 3-s-Warnung verschwindet. Effekte, die auf andere Mods wirken,
+benötigen eigene Zieladapter und bleiben bis zu deren Implementierung deaktiviert.
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                            57
+BAD SPELL / GAME DESIGN DOCUMENT
+
+
+
+Energie- und Nutzungsbalance – Testprofile
+ Szenario                   Mit kleinem Speicher 2.000 FL          Erwartetes Ergebnis
+
+ Licht für einen            Wächterlampe 3 FL/s + Sensor 1 FL/s    Rund 500 s Dauerbetrieb ohne Nachladen.
+ Unterschlupf
+
+ Heilzeichen                160 FL pro 4 LP und 30 s Cooldown      12 Anwendungen nach FL, FK-Regeneration begrenzt
+                                                                   zusätzlich.
+
+ Kleine Schildkuppel        140 FL für 10 s                        14 Aktivierungen in Folge nur bei ausreichendem FK.
+
+ Ein einfacher Teleport     500 FL + Distanz                       Max. 3 sichere Aktivierungen plus Prüfreserve.
+
+ Runenplatte 24 Knoten      30 + 4×24 = 126 FL                     15 vollständige Gravuren aus vollem Speicher.
+
+ Automatisierter Bergbau    20 FL/Block ohne Härteaufschlag        Höchstens 100 weiche Blöcke bei sonst stillgelegtem Netz.
+
+
+
+
+Freigabestatus und nächster praktischer Umsetzungsschritt
+Freigabe als Designbasis: Alle 161 gewählten Konzepte sind dokumentiert, die neue Rohstoff- und
+Stationsökonomie besitzt einen beschriebenen Startpfad ohne zwingende Kreisabhängigkeit, und die wichtigsten
+Schnittstellen sind mit klaren Fehler- und Rückerstattungsregeln versehen. Diese Spezifikation ist für die Aufteilung
+in technische Tickets geeignet. Die Defaultwerte sind jedoch ausdrücklich noch nicht durch reale Mod-Builds
+oder Spieltests validiert.
+
+Erstes ausführbares Demo-Ziel: Ein Spieler baut die Arkanwerkbank, erhält über Primitive-Rezepte den
+Kristallschleifer, fertigt Runentinte, schreibt die gültige Formel „Lichtfunke“ im Formelbuch, importiert diese in den
+Runenhandschuh und aktiviert sie aus einer Startzelle. Danach verbindet er zwei Kristallkabel mit einem
+Feldspeicher, erstellt eine leere Runenplatte, graviert die Lichtformel und schaltet eine Arkane Laterne über einen
+Runenhalter ein. Erst wenn dieser Weg ohne Creative-Items, ohne Serverfehler und ohne Speicherexploit
+funktioniert, sollten große Maschinen, Dimensionsportale und Bosskämpfe integriert werden.
+
+Dokumentende · Bad Spell · Game-Design-Spezifikation 1.0
+
+
+
+
+Entwurfsfassung 1.0 · 23. Oktober 2026                                                                                     58
+

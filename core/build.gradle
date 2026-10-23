@@ -1,0 +1,18 @@
+plugins { id 'java-library' }
+java { toolchain.languageVersion = JavaLanguageVersion.of(25) }
+sourceSets {
+    coreTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+tasks.register('coreTest', JavaExec) {
+    dependsOn coreTestClasses
+    classpath = sourceSets.coreTest.runtimeClasspath
+    mainClass = 'com.badspell.CoreTests'
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs.addAll(['-Xlint:all', '-Werror'])
+}
+tasks.named('check') { dependsOn coreTest }

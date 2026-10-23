@@ -1,0 +1,49 @@
+Bad Spell validation — 2026-10-23
+Minecraft 26.2 / NeoForge 26.2.0.93 / ModDevGradle 2.0.148 / Gradle 9.2.1 / JDK 25.0.5.0.2
+
+Validated 4 item definitions/models/textures and 42 bilingual keys
+PASS F-01 deterministic graph and Lichtfunke costs
+PASS F-02 typed edges reject position at effect input
+PASS F-03 cyclic graph rejected
+PASS missing required port rejected
+PASS duplicate node and input diagnosed
+PASS unknown rune, node and port rejected
+PASS graph node limit enforced before recursion
+PASS negative, excessive and missing parameters rejected
+PASS disconnected runes are invalid
+PASS F-05 insufficient FK leaves both resources intact
+PASS insufficient FL leaves FK intact
+PASS successful activation debits exact resources once
+PASS ST thresholds are deterministic and rounded up
+PASS F-09 denied world host consumes no energy
+PASS range and dimension validation before host action
+PASS formula budget cannot be exceeded
+PASS effect failure before mutation rolls back debit
+PASS concurrent resource debits cannot overdraw
+PASS conditional evaluates only selected effect branch
+PASS F-10 immutable snapshot independent of source revisions
+PASS canonical bounded codec roundtrip and corruption checks
+PASS disk save reload, ACL and optimistic revisions
+PASS parameterized reusable module snapshot expansion
+PASS F-04 module depth 9 and recursive calls rejected
+PASS C-03 full output leaves inputs and FL intact
+PASS machine commit is atomic and job IDs are idempotent in memory
+PASS production planner preserves batch leftovers and totals
+PASS C-07 unbootstrapped production cycle and missing material rejected
+PASS: 28 tests; no Minecraft integration tests executed.
+[08:42:59] [Server thread/INFO] [minecraft/GameTestRunner]: Running test environment 'minecraft:default' batch 0 (1 tests)...
+[08:43:00] [Server thread/INFO] [minecraft/GameTestRunner]: Running test environment 'badspell:test_environment' batch 0 (5 tests)...
+[08:43:00] [Server thread/INFO] [minecraft/GameTestServer]: All 6 required tests passed :)
+BUILD SUCCESSFUL in 20s
+
+Graphical client + integrated server: book open/edit/typed-port rejection/undo/zoom/pan/layout/save/export/cast verified.
+Default cast: 100 -> 70 FL; edited strength 4: 100 -> 60 FL.
+Regular world save/reload: next edited cast 60 -> 20 FL; book ink retained at 60.
+Full mod/survival progression, multiple dedicated clients, crash consistency, and packaged-JAR installation remain unverified/incomplete.
+
+Previous session artifact (superseded): 8c288f83bd6528ab2f22073ca77144f0a635e34f8fd0c1a826fff2eb0ad92e4b
+
+Current continuation: build + 28 core tests + 9 Bad Spell GameTests (10 including vanilla) PASS.
+51 bilingual keys; four independent Q1 glove slots and history restore.
+Graphical development client: history open/restore/save and Shift+scroll slot selection/export/return verified.
+Current JAR checksum: 477e7a8c630d150145207db51e0a9c9997ed57a1f0c4a8cf10fba4e62233d9ba  build/libs/badspell-0.1.0-alpha.jar
