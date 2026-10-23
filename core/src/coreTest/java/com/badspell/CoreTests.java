@@ -251,8 +251,30 @@ public final class CoreTests {
         test("M1 recursive embedded identities are rejected",()->{
             var child=light();var call=FormulaCalls.call("call",child,0,0);var root=new Formula(child.id(),OWNER,1,"recursive",List.of(call),List.of(),"call",100);expect(IllegalArgumentException.class,()->ENGINE.plan(root,CONTEXT));
         });
-        test("M1 all nine templates are valid compositions",()->{
-            var context=new RuneRegistry.Context(TARGET,100,new Value.Entity(OWNER,TARGET),new Value.Vector(0,0,1000),Map.of("self",new Value.Entity(OWNER,TARGET),"light",new Value.Number(0)));
+        test("UX every registered rune has a stable public glyph",()->{
+            check(RuneGlyphs.code("badspell:light")==5,"existing glyph codes preserved");for(String id:RUNES.ids())check(RuneGlyphs.code(id)>0&&RuneGlyphs.code(id)<=64,"valid public glyph for "+id);
+        });
+        test("UX combined frost push has real components and summed costs",()->{
+            var self=new Value.Entity(OWNER,TARGET);var context=new RuneRegistry.Context(TARGET,100,self,new Value.Vector(0,0,1000),Map.of("self",self));var effect=ENGINE.plan(ExampleFormulas.template("frost_push",OWNER,TARGET),context);
+            check(effect.children().size()==2,"two world actions");check(effect.children().get(0).id().equals("badspell:cold")&&effect.children().get(1).id().equals("badspell:push"),"real cold and push");check(effect.fieldCost()==50&&effect.focusCost()==20,"sum of both effects");
+            check(effect.children().get(1).target().id().equals(OWNER),"same entity retained");check(effect.scheduled(new Value.Event(300)).children().equals(effect.children()),"schedule retains composite");
+        });
+        test("UX absent optional target never evaluates target entity",()->{
+            var effect=ENGINE.plan(ExampleFormulas.template("frost_push",OWNER,TARGET),CONTEXT);check(effect.id().equals("badspell:none")&&effect.fieldCost()==0,"safe empty branch");
+        });
+        test("UX adaptive ward chooses health-dependent real effects",()->{
+            for(int health:List.of(6,20)){var self=new Value.Entity(OWNER,TARGET);var c=new RuneRegistry.Context(TARGET,100,null,new Value.Vector(0,0,1000),Map.of("self",self,"health:"+OWNER,new Value.Number(health)));var e=ENGINE.plan(ExampleFormulas.template("adaptive_ward",OWNER,TARGET),c);check(e.id().equals(health<12?"badspell:heal":"badspell:shield"),"health selects effect");check(e.region().center().equals(TARGET),"effect is centered on self");}
+        });
+        test("UX composite limits and unsafe arithmetic are bounded",()->{
+            var operation=RUNES.get("badspell:combine").operation();Value.Effect part=ENGINE.plan(light(),CONTEXT),combined=part;
+            for(int count=1;count<8;count++)combined=(Value.Effect)operation.evaluate(Map.of("first",combined,"second",part),Map.of(),CONTEXT);
+            var eight=combined;expect(IllegalArgumentException.class,()->operation.evaluate(Map.of("first",eight,"second",part),Map.of(),CONTEXT));expect(ArithmeticException.class,()->RUNES.get("badspell:add").operation().evaluate(Map.of("a",new Value.Number(Long.MAX_VALUE),"b",new Value.Number(1)),Map.of(),CONTEXT));
+        });
+        test("UX entity-position conversion preserves dimension and coordinates",()->{
+            var entity=new Value.Entity(OWNER,TARGET);check(RUNES.get("badspell:entity_position").operation().evaluate(Map.of("target",entity),Map.of(),CONTEXT).equals(TARGET),"entity to position");check(RUNES.get("badspell:offset").operation().evaluate(Map.of("position",TARGET,"vector",new Value.Vector(0,2000,0)),Map.of(),CONTEXT).equals(new Value.Position(TARGET.dimension(),TARGET.x(),TARGET.y()+2,TARGET.z())),"offset in milliblocks");
+        });
+        test("M1 all templates are valid compositions",()->{
+            var context=new RuneRegistry.Context(TARGET,100,new Value.Entity(OWNER,TARGET),new Value.Vector(0,0,1000),Map.of("self",new Value.Entity(OWNER,TARGET),"light",new Value.Number(0),"health:"+OWNER,new Value.Number(20)));
             for(String kind:ExampleFormulas.TEMPLATES){var formula=ExampleFormulas.template(kind,OWNER,TARGET);check(new FormulaValidator(RUNES).validate(formula).isEmpty(),"template "+kind);var effect=ENGINE.plan(formula,context);check(effect.fieldCost()<=formula.energyBudget(),"template budget "+kind);}
         });
         test("M1 inactive interval branches only pay sensor fees",()->{

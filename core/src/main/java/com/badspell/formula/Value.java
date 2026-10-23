@@ -36,10 +36,11 @@ public sealed interface Value {
         public Type type(){return Type.EVENT;}
     }
     record Effect(String id,Region region,int strength,int durationTicks,long fieldCost,long focusCost,
-                  Entity target,Vector vector,Event event) implements Value {
+                  Entity target,Vector vector,Event event,List<Effect> children) implements Value {
+        public Effect(String id,Region region,int strength,int durationTicks,long fieldCost,long focusCost,Entity target,Vector vector,Event event){this(id,region,strength,durationTicks,fieldCost,focusCost,target,vector,event,List.of());}
         public Effect(String id,Region region,int strength,int durationTicks,long fieldCost,long focusCost){this(id,region,strength,durationTicks,fieldCost,focusCost,null,new Vector(0,0,0),new Event(0));}
-        public Effect {Objects.requireNonNull(id);Objects.requireNonNull(region);Objects.requireNonNull(vector);Objects.requireNonNull(event);if(strength<1||durationTicks<1||fieldCost<0||focusCost<0)throw new IllegalArgumentException("effect bounds");}
-        public Effect scheduled(Event trigger){return new Effect(id,region,strength,durationTicks,fieldCost,focusCost,target,vector,trigger);}
+        public Effect {Objects.requireNonNull(id);Objects.requireNonNull(region);Objects.requireNonNull(vector);Objects.requireNonNull(event);children=List.copyOf(children);if(children.size()>8||children.stream().anyMatch(e->!e.children().isEmpty()))throw new IllegalArgumentException("At most 8 flat effects");if(strength<1||durationTicks<1||fieldCost<0||focusCost<0)throw new IllegalArgumentException("effect bounds");}
+        public Effect scheduled(Event trigger){return new Effect(id,region,strength,durationTicks,fieldCost,focusCost,target,vector,trigger,children);}
         public Type type(){return Type.EFFECT;}
     }
 }

@@ -8,6 +8,15 @@ final class ExtendedRunes {
     private static RuneRegistry.Parameter n(long min,long max){return new RuneRegistry.Parameter(NUMBER,min,max);}
     private static long number(Map<String,Value> map,String key){return ((Value.Number)map.get(key)).value();}
     static void register(Map<String,RuneRegistry.Rune> r) {
+        r.put("badspell:entity_position",new RuneRegistry.Rune(Map.of("target",ENTITY),Map.of(),POSITION,(i,p,c)->((Value.Entity)i.get("target")).position()));
+        r.put("badspell:entity_health",new RuneRegistry.Rune(Map.of("target",ENTITY),Map.of(),NUMBER,(i,p,c)->{var e=(Value.Entity)i.get("target");var health=c.environment().get("health:"+e.id());if(health==null)throw new IllegalArgumentException("Entity health unavailable");return health;}));
+        r.put("badspell:has_target",new RuneRegistry.Rune(Map.of(),Map.of(),BOOLEAN,(i,p,c)->new Value.Bool(c.entity()!=null)));
+        r.put("badspell:offset",new RuneRegistry.Rune(Map.of("position",POSITION,"vector",VECTOR),Map.of(),POSITION,(i,p,c)->{var a=(Value.Position)i.get("position");var v=(Value.Vector)i.get("vector");return new Value.Position(a.dimension(),Math.addExact(a.x(),v.x()/1000),Math.addExact(a.y(),v.y()/1000),Math.addExact(a.z(),v.z()/1000));}));
+        for(String operation:List.of("add","subtract","multiply"))r.put("badspell:"+operation,new RuneRegistry.Rune(Map.of("a",NUMBER,"b",NUMBER),Map.of(),NUMBER,(i,p,c)->new Value.Number(switch(operation){case "add"->Math.addExact(number(i,"a"),number(i,"b"));case "subtract"->Math.subtractExact(number(i,"a"),number(i,"b"));default->Math.multiplyExact(number(i,"a"),number(i,"b"));})));
+        r.put("badspell:combine",new RuneRegistry.Rune(Map.of("first",EFFECT,"second",EFFECT),Map.of(),EFFECT,(i,p,c)->{
+            var a=(Value.Effect)i.get("first");var b=(Value.Effect)i.get("second");var parts=new ArrayList<Value.Effect>();parts.addAll(a.children().isEmpty()?List.of(a):a.children());parts.addAll(b.children().isEmpty()?List.of(b):b.children());
+            return new Value.Effect("badspell:combine",a.region(),1,Math.max(a.durationTicks(),b.durationTicks()),Math.addExact(a.fieldCost(),b.fieldCost()),Math.addExact(a.focusCost(),b.focusCost()),null,new Value.Vector(0,0,0),new Value.Event(c.start()),parts);
+        }));
         r.put("badspell:vector",new RuneRegistry.Rune(Map.of(),Map.of("x",n(-1000,1000),"y",n(-1000,1000),"z",n(-1000,1000)),VECTOR,(i,p,c)->new Value.Vector((int)number(p,"x"),(int)number(p,"y"),(int)number(p,"z"))));
         r.put("badspell:direction",new RuneRegistry.Rune(Map.of(),Map.of(),VECTOR,(i,p,c)->c.look()));
         r.put("badspell:target_entity",new RuneRegistry.Rune(Map.of("trigger",EVENT),Map.of(),ENTITY,(i,p,c)->{if(c.entity()==null)throw new IllegalArgumentException("No living entity targeted");return c.entity();}));

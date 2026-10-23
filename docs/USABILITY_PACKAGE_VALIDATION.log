@@ -1,0 +1,89 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttp.nonProxyHosts=localhost|127.* -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.2.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :createMinecraftArtifacts UP-TO-DATE
+> Task :core:compileJava UP-TO-DATE
+> Task :compileJava
+> Task :generateModMetadata UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes
+> Task :jarJar NO-SOURCE
+> Task :core:processResources NO-SOURCE
+> Task :core:classes UP-TO-DATE
+> Task :jar
+> Task :assemble
+> Task :compileTestJava NO-SOURCE
+> Task :processTestResources NO-SOURCE
+> Task :testClasses UP-TO-DATE
+> Task :core:jar UP-TO-DATE
+> Task :test NO-SOURCE
+
+> Task :validateResources
+Validated 76 item definitions and referenced models/textures; 507 bilingual keys
+
+> Task :core:compileCoreTestJava UP-TO-DATE
+> Task :core:processCoreTestResources NO-SOURCE
+> Task :core:coreTestClasses UP-TO-DATE
+
+> Task :core:coreTest
+Picked up JAVA_TOOL_OPTIONS:  -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttp.nonProxyHosts=localhost|127.* -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+PASS F-01 deterministic graph and Lichtfunke costs
+PASS F-02 typed edges reject position at effect input
+PASS F-03 cyclic graph rejected
+PASS missing required port rejected
+PASS duplicate node and input diagnosed
+PASS unknown rune, node and port rejected
+PASS graph node limit enforced before recursion
+PASS negative, excessive and missing parameters rejected
+PASS disconnected runes are invalid
+PASS F-05 insufficient FK leaves both resources intact
+PASS insufficient FL leaves FK intact
+PASS successful activation debits exact resources once
+PASS ST thresholds are deterministic and rounded up
+PASS F-09 denied world host consumes no energy
+PASS range and dimension validation before host action
+PASS formula budget cannot be exceeded
+PASS effect failure before mutation rolls back debit
+PASS concurrent resource debits cannot overdraw
+PASS conditional evaluates only selected effect branch
+PASS F-10 immutable snapshot independent of source revisions
+PASS canonical bounded codec roundtrip and corruption checks
+PASS disk save reload, ACL and optimistic revisions
+PASS parameterized reusable module snapshot expansion
+PASS F-04 module depth 9 and recursive calls rejected
+PASS C-03 full output leaves inputs and FL intact
+PASS machine commit is atomic and job IDs are idempotent in memory
+PASS production planner preserves batch leftovers and totals
+PASS C-07 unbootstrapped production cycle and missing material rejected
+PASS M1 vector/text literals keep canonical codec roundtrip
+PASS M1 delayed triggers never prepare or spend early
+PASS M1 interval limit and explicit abort remain bounded
+PASS M1 embedded modules execute and retain independent snapshots
+PASS M1 named typed module inputs change real effect costs
+PASS M1 recursive embedded identities are rejected
+PASS UX every registered rune has a stable public glyph
+PASS UX combined frost push has real components and summed costs
+PASS UX absent optional target never evaluates target entity
+PASS UX adaptive ward chooses health-dependent real effects
+PASS UX composite limits and unsafe arithmetic are bounded
+PASS UX entity-position conversion preserves dimension and coordinates
+PASS M1 all templates are valid compositions
+PASS M1 inactive interval branches only pay sensor fees
+PASS M1 typed scalar module output drives a real effect branch
+PASS M1 embedded depth is bounded before evaluation
+PASS M1 entity equality follows identity while positions remain values
+PASS: 45 tests; no Minecraft integration tests executed.
+
+> Task :core:compileTestJava NO-SOURCE
+> Task :core:processTestResources NO-SOURCE
+> Task :core:testClasses UP-TO-DATE
+> Task :core:test NO-SOURCE
+> Task :core:check
+> Task :check
+> Task :build
+> Task :core:assemble UP-TO-DATE
+> Task :core:build
+
+BUILD SUCCESSFUL in 13s
+10 actionable tasks: 4 executed, 6 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.2.1/userguide/configuration_cache_enabling.html

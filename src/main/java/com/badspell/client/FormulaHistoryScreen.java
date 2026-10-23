@@ -35,9 +35,9 @@ public final class FormulaHistoryScreen extends Screen {
         addRenderableWidget(new SpellButton(Math.max(100,width-110),height-30,90,20,Component.translatable("gui.badspell.back"),b->onClose(),true));
     }
     @Override public void extractRenderState(GuiGraphicsExtractor graphics,int mouseX,int mouseY,float partialTick) {
-        graphics.fill(0,0,width,height,0xff101820);
-        graphics.text(font,title,20,12,0xffe0f8ed,false);
-        graphics.text(font,Component.translatable(revisions.isEmpty()?"gui.badspell.history_empty":"gui.badspell.history_help"),20,32,0xffb0c0c0,false);
+        graphics.fill(0,0,width,height,SpellTheme.BG);
+        graphics.text(font,title,20,12,SpellTheme.PAPER,false);
+        graphics.text(font,Component.translatable(revisions.isEmpty()?"gui.badspell.history_empty":"gui.badspell.history_help"),20,32,SpellTheme.GOLD,false);
         super.extractRenderState(graphics,mouseX,mouseY,partialTick);
     }
     @Override public void onClose(){Minecraft.getInstance().gui.setScreen(new FormulaBookScreen(hand,current,ink));}

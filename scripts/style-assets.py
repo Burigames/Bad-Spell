@@ -6,14 +6,14 @@ import json, random, hashlib
 ROOT=Path(__file__).resolve().parents[1]; A=ROOT/'src/main/resources/assets/badspell'
 def write(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,indent=2)+'\n')
 def save(im,kind,name):p=A/f'textures/{kind}/{name}.png';p.parent.mkdir(parents=True,exist_ok=True);im.save(p)
-outline='#302e32'; iron=['#55565d','#92949b','#c8cbd1','#edf0ed']; gold=['#604727','#a17a36','#d3ae56','#f4d98a']; copper=['#573b32','#9d6650','#c68d64','#e9b284']; crystal=['#293e50','#467e91','#83bdc8','#d1e7df']; arcane=['#433b51','#716379','#a095ad','#d7cedc']; wood=['#3d3028','#69503b','#9a7753','#c5a275']
+outline='#36332c'; iron=['#5d6058','#92968a','#bfc3b4','#e3e5d5']; gold=['#695336','#9c7d48','#bba16a','#e1cf9a']; copper=['#664a35','#9b7350','#bc9367','#d7b186']; crystal=['#304b47','#4e7c72','#87b1a1','#cee0cc']; arcane=['#4b4652','#756b7a','#a298a8','#d9d0d7']; wood=['#423528','#70553b','#9a7950','#c2a77a']
 def art(name):
  im=Image.new('RGBA',(16,16));d=ImageDraw.Draw(im);rng=random.Random(name)
  pal=arcane if any(k in name for k in ['arcane','resonance']) else crystal
  if 'glove' in name:
   d.polygon([(4,14),(3,10),(1,7),(2,5),(4,7),(4,2),(6,1),(7,6),(7,1),(9,1),(9,6),(10,2),(12,3),(12,8),(13,6),(15,7),(13,12),(11,14)],fill=outline)
   d.rectangle((5,3,6,11),fill=wood[1]);d.rectangle((8,2,8,10),fill=wood[2]);d.rectangle((10,4,11,11),fill=wood[1]);d.rectangle((5,8,11,13),fill=wood[2]);d.line((2,6,5,10),fill=wood[2]);d.rectangle((4,13,11,15),fill=gold[1]);d.line((5,13,10,13),fill=gold[2]);d.rectangle((7,8,10,11),fill=crystal[0]);d.rectangle((8,8,9,10),fill=crystal[2]);d.point((8,8),fill=crystal[3])
- elif 'book' in name:
+ elif 'book' in name or 'codex' in name:
   d.polygon([(2,3),(10,1),(14,4),(14,13),(5,15),(1,12),(1,4)],fill=outline);d.polygon([(3,4),(11,2),(13,4),(5,6)],fill='#d9c9a0');d.polygon([(3,6),(5,7),(5,13),(3,12)],fill='#654934');d.polygon([(5,7),(13,5),(13,12),(5,14)],fill='#71523b');d.line((6,8,12,6),fill='#9b7950');d.rectangle((8,9,10,11),fill=gold[1]);d.line((9,8,9,11),fill=gold[3]);d.point((10,10),fill=crystal[2])
  elif name in ['rune_chisel','resonance_fork']:
   d.line((3,13,9,7),fill=outline,width=4);d.line((3,13,9,7),fill=wood[1],width=2);d.point((3,12),fill=wood[3])
@@ -70,7 +70,7 @@ for name in ['field_crystal_ore','arcane_ore','arcane_stone','resonance_crystal'
   for _ in range(65):x,y=rng.randrange(16),rng.randrange(16);im.putpixel((x,y),(0,0,0,0) if rng.randrange(3)==0 else (67,94,62,255))
  save(im,'block',name)
 # A separate, compact rune tile is used only on working surfaces.
-im=Image.new('RGBA',(16,16),'#76757a');d=ImageDraw.Draw(im);d.rectangle((1,1,14,14),outline='#535157');d.line((5,11,5,4,10,4,10,9,7,9),fill='#b0c8c2');d.line((6,5,9,5),fill='#dce3d4');save(im,'block','rune_tile')
+im=Image.new('RGBA',(16,16),'#77786d');d=ImageDraw.Draw(im);d.rectangle((0,0,15,15),outline='#55594f');d.line((1,1,14,1),fill='#9b9e8e');d.line((5,11,5,4,10,4,10,9,7,9),fill='#b4c6ab');d.point((11,3),fill='#dacb9e');save(im,'block','rune_tile')
 def box(a,b,texture,rotation=None):
  e={'from':a,'to':b,'faces':{side:{'texture':'#'+texture} for side in ['down','up','north','south','west','east']}}
  if rotation:e['rotation']=rotation
@@ -123,7 +123,7 @@ for name in ['moon_blossom','runewood_sapling','glow_moss']:
 im=Image.new('RGBA',(16,16));d=ImageDraw.Draw(im);d.line((4,13,4,3,11,3,11,10,7,10),fill='#e4ddbd',width=2);d.point((12,2),fill='#f0e8d0');save(im,'block','rune_mark')
 # Eight-pixel glyphs form a separate writing atlas; block material textures remain 16×16.
 im=Image.new('RGBA',(64,64));d=ImageDraw.Draw(im)
-for code in range(1,42):
+for code in range(1,50):
  x=(code-1)%8*8;y=(code-1)//8*8;color='#e4ddbd';d.line((x+2,y+1,x+2,y+6,x+4,y+6),fill=color)
  if code&1:d.line((x+2,y+1,x+5,y+1),fill=color)
  if code&2:d.line((x+2,y+3,x+5,y+3),fill=color)
@@ -132,6 +132,44 @@ for code in range(1,42):
  if code&16:d.line((x+4,y+6,x+6,y+5),fill=color)
  if code&32:d.point((x+6,y+1),fill=color)
 save(im,'block','rune_glyphs')
+# Unified workshop set: original compact material tiles, restrained brass and jade accents.
+for name,base in {'workshop_wood':(91,72,51),'workshop_top':(142,118,78),'workshop_stone':(88,91,86),'workshop_metal':(151,128,80),'workshop_crystal':(71,120,117),'workshop_glass':(131,164,158),'workshop_ink':(60,76,70)}.items():
+ im=Image.new('RGBA',(16,16),base+(255,));d=ImageDraw.Draw(im)
+ for y in range(16):
+  for x in range(16):
+   v=1 if (x*7+y*3)%17==0 else -2 if (x+y*5)%19==0 else 0
+   im.putpixel((x,y),tuple(c+v for c in base)+(255,))
+ if name=='workshop_wood':
+  for y in [3,7,11,15]:d.line((0,y,15,y),fill='#4a3c2b');d.line((1,y-1,14,y-1),fill='#655037')
+ elif name=='workshop_top':
+  d.rectangle((0,0,15,15),outline='#685336');d.line((1,1,14,1),fill='#aa8d5d');d.line((1,2,1,14),fill='#9a7e51')
+ elif name=='workshop_metal':d.line((0,0,15,0),fill='#bdab7c');d.line((0,1,0,15),fill='#aa955f');d.line((0,15,15,15),fill='#6e6042')
+ elif name=='workshop_crystal':d.line((3,2,10,2),fill='#a9c5b9');d.line((3,3,3,11),fill='#7ca99b');d.line((5,13,12,13),fill='#355e5c')
+ elif name=='workshop_glass':d.line((2,2,2,12),fill='#d7e2d1');d.point((3,2),fill='#edf0df')
+ save(im,'block',name)
+textures={key:'badspell:block/workshop_'+value for key,value in {'base':'wood','top':'top','stone':'stone','metal':'metal','crystal':'crystal','glass':'glass','ink':'ink'}.items()};textures['rune']='badspell:block/rune_tile';textures['front']='minecraft:block/furnace_front'
+for name in ['arcane_workbench','crystal_grinder','alchemy_table','arcane_smelter','rune_press','engraving_station','rune_holder']:
+ if name in ['arcane_workbench','alchemy_table','engraving_station']:
+  parts=[box([x,0,z],[x+2,10,z+2],'base') for x,z in [(1,1),(13,1),(1,13),(13,13)]]
+  parts.extend([box([1,4,2],[15,5,3],'base'),box([1,4,13],[15,5,14],'base'),box([0,9,0],[16,11,16],'base'),box([1,11,1],[15,12,15],'top')])
+  if name=='arcane_workbench':parts.extend([box([2,12,2],[9,12.5,9],'rune'),box([11,12,3],[13,13,9],'metal')])
+  elif name=='alchemy_table':parts.extend([box([2,12,3],[5,15,6],'glass'),box([3,15,4],[4,16,5],'metal'),box([10,12,8],[14,15,12],'crystal'),box([11,15,9],[13,16,11],'metal'),box([6,12,3],[9,12.5,9],'ink')])
+  else:parts.extend([box([3,12,5],[11,12.5,13],'rune'),box([12,12,2],[13,16,3],'metal'),box([8,15,2],[13,16,3],'metal'),box([7,14,2],[10,15,5],'glass')])
+ elif name=='crystal_grinder':parts=[box([1,0,1],[15,2,15],'base'),box([3,2,3],[13,10,13],'stone'),box([2,10,2],[14,12,14],'stone'),box([4,12,4],[12,14,12],'metal'),box([11,11,6],[16,12,8],'base'),box([14,12,6],[16,15,8],'metal')]
+ elif name=='arcane_smelter':parts=[box([1,0,1],[15,15,15],'stone'),box([0,0,0],[16,2,16],'metal'),box([0,13,0],[16,15,16],'metal'),box([3,4,0],[13,12,1],'front'),box([5,15,5],[11,16,11],'stone')]
+ elif name=='rune_press':parts=[box([0,0,0],[16,2,16],'base'),box([3,2,3],[13,3,13],'rune'),box([1,2,3],[3,15,13],'metal'),box([13,2,3],[15,15,13],'metal'),box([1,14,3],[15,16,13],'base'),box([7,8,7],[9,15,9],'metal'),box([4,7,4],[12,9,12],'stone')]
+ else:parts=[box([1,0,1],[15,2,15],'base'),box([4,2,4],[12,9,12],'stone'),box([2,9,2],[14,11,14],'metal'),box([3,11,3],[13,12,13],'rune'),box([6,12,6],[10,16,10],'crystal')]
+ model(name,textures,parts)
+# Matching workshop materials on tools and cells; tier rings are visible in-world.
+for name in ['rune_chisel','resonance_fork','field_cell','field_cell_q2','field_cell_q3']:
+ p=A/f'models/item/{name}.json';m=json.loads(p.read_text());m['textures'].update({'wood':textures['base'],'metal':textures['metal'],'gold':textures['metal'],'glass':textures['glass'],'crystal':textures['crystal']})
+ if name.endswith('_q2'):m['elements'].append(box([3.5,7,3.5],[12.5,8,12.5],'gold'))
+ if name.endswith('_q3'):
+  for y in [5,10]:m['elements'].append(box([3.5,y,3.5],[12.5,y+1,12.5],'gold'))
+ write(p,m)
+# The codex is identifiable beside the formula book, with a jade cover and pale bookmark.
+im=Image.new('RGBA',(16,16));d=ImageDraw.Draw(im);d.polygon([(2,2),(12,1),(14,3),(14,13),(4,15),(1,12),(1,3)],fill='#302d27');d.polygon([(3,3),(12,2),(13,3),(4,5)],fill='#e2d5b4');d.polygon([(4,5),(13,4),(13,13),(4,14)],fill='#416e62');d.line((2,4,2,12),fill='#997847');d.line((5,6,12,5),fill='#7ba18b');d.line((7,8,10,8,10,11,7,11,7,8),fill='#d3be87');d.line((11,2,11,6),fill='#c5a362');save(im,'item','arcane_codex')
+print('Applied coherent workshop materials, bounded models and quality markings.')
 # Collision/selection geometry is generated from the same cuboids as the visible stations.
 rows=[]
 for name in ['arcane_workbench','crystal_grinder','alchemy_table','arcane_smelter','rune_press','engraving_station','rune_holder']:

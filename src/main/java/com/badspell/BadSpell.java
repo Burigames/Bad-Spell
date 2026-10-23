@@ -19,6 +19,6 @@ public final class BadSpell {
         NeoForge.EVENT_BUS.addListener(LightFields::load);
         NeoForge.EVENT_BUS.addListener(LightFields::sendChunk);
         NeoForge.EVENT_BUS.addListener(com.badspell.lighting.FieldLightSources::unloadClientChunk);
-        NeoForge.EVENT_BUS.addListener(MagicActions::tick);NeoForge.EVENT_BUS.addListener(FormulaLibrary::clone);NeoForge.EVENT_BUS.addListener(ToolActions::tick);NeoForge.EVENT_BUS.addListener(RuneBoards::broken);NeoForge.EVENT_BUS.addListener(RuneBoards::tick);NeoForge.EVENT_BUS.addListener(RuneBoards::load);NeoForge.EVENT_BUS.addListener(RuneBoards::sendChunk);NeoForge.EVENT_BUS.addListener(WorldBindings::interact);NeoForge.EVENT_BUS.addListener(WorldBindings::breakBlock);
+        NeoForge.EVENT_BUS.addListener(MagicActions::tick);NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST,MagicActions::entityInteract);NeoForge.EVENT_BUS.addListener(FormulaLibrary::clone);NeoForge.EVENT_BUS.addListener(ToolActions::tick);NeoForge.EVENT_BUS.addListener(RuneBoards::broken);NeoForge.EVENT_BUS.addListener(RuneBoards::tick);NeoForge.EVENT_BUS.addListener(RuneBoards::load);NeoForge.EVENT_BUS.addListener(RuneBoards::sendChunk);NeoForge.EVENT_BUS.addListener(WorldBindings::interact);NeoForge.EVENT_BUS.addListener(WorldBindings::breakBlock);
     }
 }

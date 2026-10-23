@@ -16,14 +16,14 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 /** Responsive editor: one inspector, readable canvas, explicit validity and immutable server snapshots. */
 public final class FormulaBookScreen extends Screen {
     private static final RuneRegistry RUNES=RuneRegistry.standard();
-    private static final int BG=0xff0b131c,PANEL=0xff121f2a,LINE=0xff223743,TEXT=0xffe2eef1,MUTED=0xff8ba6ae,ACCENT=0xff65dcba;
-    private static final int NODE_W=110,TOP=60;
+    private static final int BG=SpellTheme.BG,PANEL=SpellTheme.PAPER,LINE=SpellTheme.EDGE,TEXT=SpellTheme.INK,MUTED=SpellTheme.MUTED,ACCENT=SpellTheme.ACCENT;
+    private static final int NODE_W=132,TOP=60;
     private final int hand;
     private net.minecraft.core.BlockPos boardPosition;private int boardFace;
     public boolean isBoard(net.minecraft.core.BlockPos at,int face){return at.equals(boardPosition)&&face==boardFace;}
     public static FormulaBookScreen board(int hand,Formula formula,int durability,net.minecraft.core.BlockPos at,int face){var screen=new FormulaBookScreen(hand,formula,durability);screen.boardPosition=at;screen.boardFace=face;return screen;}
 
-    private int ink,sideTab,paletteOffset,nextId=1;
+    private int ink,sideTab=1,paletteOffset,paramOffset,nextId=1;
     private Formula formula;
     private String savedChecksum,status="",search="",selected,connecting,dragging;
     private final Deque<Formula> undo=new ArrayDeque<>(),redo=new ArrayDeque<>();
@@ -57,19 +57,18 @@ public final class FormulaBookScreen extends Screen {
     }
     private SpellButton button(String key,int x,int y,int w,Runnable action){return button(tr(key),x,y,w,18,action,false);}
     @Override protected void init() {
-        invalidFields.clear();
-        sideW=Math.clamp(width/3,114,170);canvasX=sideW+20;canvasY=TOP+28;canvasW=Math.max(90,width-canvasX-10);canvasH=Math.max(50,height-canvasY-30);
-        if(boardPosition==null)button(Component.literal("+"),width-30,3,20,18,()->send(2),false).setTooltip(Tooltip.create(tr("gui.badspell.refill")));
-        int x=10;
-        var save=button(tr("gui.badspell.save"),x,32,64,20,()->send(0),true);saveButton=save;save.active=diagnostics.isEmpty();x+=68;
-        var export=button(boardPosition==null?"gui.badspell.export":"gui.badspell.from_book",x,33,80,()->{if(boardPosition==null)send(1);else importBoard();});exportButton=export;export.active=boardPosition!=null||diagnostics.isEmpty()&&!dirty();export.setTooltip(Tooltip.create(tr("gui.badspell.export_tip")));x+=84;
-        button("gui.badspell.check",x,33,60,()->{sideTab=2;validate();rebuildWidgets();});x+=64;
-        button("gui.badspell.history",x,33,64,()->send(3)).active=boardPosition==null;
-        if(boardPosition==null&&width>395)button("gui.badspell.library",x+68,33,64,()->{if(dirty()){status=tr("gui.badspell.history_save_first").getString();return;}ClientPacketDistributor.sendToServer(new Packets.LibraryAction(hand,0,new UUID(0,0),"","",0));});
-        button(Component.literal("<"),width-(width<365?162:66),width<365?5:33,25,18,()->history(undo,redo),false).active=!undo.isEmpty();
-        button(Component.literal(">"),width-(width<365?133:37),width<365?5:33,25,18,()->history(redo,undo),false).active=!redo.isEmpty();
-        int tab=(sideW-8)/3;
-        for(int i=0;i<3;i++) {final int selectedTab=i;button(tr("gui.badspell.tab_"+i),14+i*tab,TOP+5,tab-2,17,()->{sideTab=selectedTab;rebuildWidgets();},sideTab==i);}
+        sideW=width>=600?176:128;canvasX=sideW+20;canvasY=TOP+25;canvasW=Math.max(90,width-canvasX-10);canvasH=Math.max(50,height-canvasY-28);
+        if(boardPosition==null)button(Component.literal("+"),width-28,4,18,18,()->send(2),false).setTooltip(Tooltip.create(tr("gui.badspell.refill")));
+        saveButton=button(tr("gui.badspell.save"),10,32,46,20,()->send(0),true);
+        exportButton=button(boardPosition==null?"gui.badspell.export":"gui.badspell.from_book",60,33,68,()->{if(boardPosition==null)send(1);else importBoard();});
+        button(tr("ui.badspell.add"),132,32,68,20,()->openPicker(null,null),false);
+        button(tr("gui.badspell.library"),204,32,64,20,()->{if(boardPosition==null){if(dirty()){status=tr("gui.badspell.history_save_first").getString();return;}ClientPacketDistributor.sendToServer(new Packets.LibraryAction(hand,0,new UUID(0,0),"","",0));}},false).active=boardPosition==null;
+        button(tr("ui.badspell.codex"),272,32,48,20,()->minecraft.gui.setScreen(new CodexScreen(this)),false);
+        button(Component.literal("↶"),width-52,33,18,18,()->history(undo,redo),false).active=!undo.isEmpty();
+        button(Component.literal("↷"),width-30,33,18,18,()->history(redo,undo),false).active=!redo.isEmpty();
+        button(tr("ui.badspell.properties"),14,TOP+4,(sideW-8)/2,17,()->{sideTab=1;rebuildWidgets();},sideTab==1);
+        button(tr("gui.badspell.tab_2"),14+(sideW-8)/2,TOP+4,(sideW-8)/2,17,()->{sideTab=2;rebuildWidgets();},sideTab==2);
+        updateActions();
         if(sideTab==0) {
             searchBox=addRenderableWidget(new EditBox(font,16,TOP+29,sideW-12,18,tr("gui.badspell.search")));searchBox.setMaxLength(40);searchBox.setHint(tr("gui.badspell.search"));searchBox.setValue(search);
             searchBox.setResponder(value->{search=value;paletteOffset=0;refreshPalette();});
@@ -85,7 +84,7 @@ public final class FormulaBookScreen extends Screen {
                 updatingFields=false;
             } else {
                 int y=TOP+64;
-                for(var entry:new TreeMap<>(selectedNode.parameters()).entrySet()) {
+                for(var entry:new TreeMap<>(selectedNode.parameters()).entrySet().stream().skip(paramOffset).toList()) {
                     final String parameter=entry.getKey();if(y+18>height-50)break;
                     if(entry.getValue() instanceof Value.Number number) {
                         button(Component.literal("−"),16,y,20,18,()->adjust(parameter,-1),false);
@@ -104,7 +103,8 @@ public final class FormulaBookScreen extends Screen {
                     }
                     y+=36;
                 }
-                if(y+20<=height-30)button("gui.badspell.output",16,y,sideW-12,()->change(copy(formula.nodes(),formula.edges(),selectedNode.id())));
+                button("gui.badspell.output",16,height-49,sideW-12,()->change(copy(formula.nodes(),formula.edges(),selectedNode.id())));
+                button(Component.literal("?"),sideW-14,TOP+25,20,18,()->minecraft.gui.setScreen(new RuneReferenceScreen(this,selectedNode.rune().equals("badspell:call")?"badspell:return":selectedNode.rune())),false).setTooltip(Tooltip.create(RunePresentation.description(selectedNode.rune())));
             }
         } else if(!diagnostics.isEmpty()) {
             button("gui.badspell.find_error",16,height-55,sideW-12,()->{selected=diagnostics.getFirst().node();centerSelected();});
@@ -114,7 +114,7 @@ public final class FormulaBookScreen extends Screen {
         button("gui.badspell.fit",tx+64,TOP+4,60,this::fit);
         if(canvasW>205)button("gui.badspell.delete",tx+128,TOP+4,62,this::delete).active=selected!=null;
         if(canvasW>280)button("gui.badspell.output",tx+194,TOP+4,70,()->{if(selected!=null)change(copy(formula.nodes(),formula.edges(),selected));});
-        if(!fitted){fitted=true;panX=14;panY=18;}
+        if(!fitted){fitted=true;zoom=.85;panX=14;panY=18;}
     }
     private final List<SpellButton> paletteButtons=new ArrayList<>();
     private List<String> palette(){return RUNES.ids().stream().filter(id->runeName(id).toLowerCase(Locale.ROOT).contains(search.toLowerCase(Locale.ROOT))||id.contains(search.toLowerCase(Locale.ROOT))).sorted(Comparator.comparing(FormulaBookScreen::runeName)).toList();}
@@ -154,6 +154,8 @@ public final class FormulaBookScreen extends Screen {
         }
         status=tr("gui.badspell.no_import_book").getString();
     }
+    public void requestHistory(){send(3);}
+    public void requestTemplate(String template){if(dirty()){status=tr("gui.badspell.history_save_first").getString();return;}ClientPacketDistributor.sendToServer(new Packets.LibraryAction(hand,1,new UUID(0,0),"",template,0));}
     public UUID formulaId(){return formula.id();}
     public void addModule(Formula module) {
         if(module.id().equals(formula.id())||!module.owner().equals(formula.owner())){status=tr("gui.badspell.module_recursive").getString();return;}
@@ -169,6 +171,8 @@ public final class FormulaBookScreen extends Screen {
             if(nodes.size()>128)throw new IllegalArgumentException();selected=id;change(copy(nodes,edges,formula.output()));
         }catch(IOException|IllegalArgumentException error){status=tr("gui.badspell.module_invalid").getString();}
     }
+    private void openPicker(String destination,String port){Value.Type required=destination==null?null:RUNES.get(node(destination)).inputs().get(port);minecraft.gui.setScreen(new RunePickerScreen(this,required,rune->{add(rune);if(destination!=null){var source=node(selected);var to=node(destination);if(source==null||to==null)return;var edges=new ArrayList<>(formula.edges());edges.removeIf(e->e.to().equals(destination)&&e.port().equals(port));edges.add(new Formula.Edge(source.id(),destination,port));var nodes=new ArrayList<>(formula.nodes());if(boardPosition==null){int[] free=vacant(to.x()-164,to.y()+ports(to).indexOf(port)*90,source.id());nodes.set(nodes.indexOf(source),new Formula.Node(source.id(),source.rune(),free[0],free[1],source.parameters()));}change(copy(nodes,edges,formula.output()));centerSelected();}}));}
+    private int[] vacant(int x,int y,String ignore){for(int step=0;step<512;step++){int px=x+(step%4)*164,py=y+(step/4)*100;boolean free=true;for(var n:formula.nodes())if(!n.id().equals(ignore)&&px<n.x()+NODE_W+16&&px+NODE_W+16>n.x()&&py<n.y()+nodeHeight(n)+16&&py+100>n.y()){free=false;break;}if(free)return new int[]{px,py};}return new int[]{x,y+16000};}
     private void add(String rune) {
         if(formula.nodes().size()>=(boardPosition==null?128:16))return;
         String id;do{id="r"+nextId++;}while(node(id)!=null);
@@ -178,7 +182,7 @@ public final class FormulaBookScreen extends Screen {
             case BOOLEAN->new Value.Bool(true);case TEXT->new Value.Text(name.equals("name")?"parameter":"");case VECTOR->new Value.Vector(0,600,300);case POSITION->new Value.Position("minecraft:overworld",0,64,0);
             default->throw new IllegalStateException("Unsupported parameter type");
         }));
-        var nodes=new ArrayList<>(formula.nodes());int px=(int)((24-panX)/zoom),py=(int)((24-panY)/zoom);if(boardPosition!=null){for(int cell=0;cell<16;cell++){int cx=cell%4*154,cy=cell/4*100;if(nodes.stream().noneMatch(n->n.x()==cx&&n.y()==cy)){px=cx;py=cy;break;}}}nodes.add(new Formula.Node(id,rune,px,py,parameters));selected=id;change(copy(nodes,formula.edges(),formula.output()));
+        var nodes=new ArrayList<>(formula.nodes());int[] free=vacant((int)((24-panX)/zoom),(int)((24-panY)/zoom),"");int px=free[0],py=free[1];if(boardPosition!=null){for(int cell=0;cell<16;cell++){int cx=cell%4*154,cy=cell/4*100;if(nodes.stream().noneMatch(n->n.x()==cx&&n.y()==cy)){px=cx;py=cy;break;}}}nodes.add(new Formula.Node(id,rune,px,py,parameters));selected=id;paramOffset=0;invalidFields.clear();change(copy(nodes,formula.edges(),formula.output()));centerSelected();
     }
     private void layout() {
         if(diagnostics.stream().anyMatch(d->d.code()==FormulaValidator.Code.CYCLE))return;
@@ -205,18 +209,19 @@ public final class FormulaBookScreen extends Screen {
     private void adjust(String parameter,long delta){var n=node(selected);if(n==null)return;var p=new HashMap<>(n.parameters());var old=p.get(parameter);var bounds=RUNES.get(n).parameters().get(parameter);
         if(old instanceof Value.Number v)p.put(parameter,new Value.Number(Math.clamp(v.value()+delta,bounds.min(),bounds.max())));if(old instanceof Value.Bool v)p.put(parameter,new Value.Bool(!v.value()));
         var nodes=new ArrayList<>(formula.nodes());nodes.set(nodes.indexOf(n),new Formula.Node(n.id(),n.rune(),n.x(),n.y(),p));change(copy(nodes,formula.edges(),formula.output()));}
-    private void validate(){diagnostics=new FormulaValidator(RUNES).validateDefinition(formula);preview=null;if(diagnostics.isEmpty())try{preview=new FormulaEngine(RUNES).plan(formula,new RuneRegistry.Context(new Value.Position("minecraft:overworld",0,64,0),0,new Value.Entity(new UUID(0,1),new Value.Position("minecraft:overworld",0,64,0)),new Value.Vector(0,0,1000),Map.of("self",new Value.Entity(new UUID(0,1),new Value.Position("minecraft:overworld",0,64,0)))));}catch(IllegalArgumentException ignored){}}
+    private void validate(){diagnostics=new FormulaValidator(RUNES).validateDefinition(formula);preview=null;if(diagnostics.isEmpty())try{preview=new FormulaEngine(RUNES).plan(formula,new RuneRegistry.Context(new Value.Position("minecraft:overworld",0,64,0),0,new Value.Entity(new UUID(0,1),new Value.Position("minecraft:overworld",0,64,0)),new Value.Vector(0,0,1000),Map.of("self",new Value.Entity(new UUID(0,1),new Value.Position("minecraft:overworld",0,64,0)),"health:"+new UUID(0,1),new Value.Number(20))));}catch(IllegalArgumentException ignored){}}
     private int nodeHeight(Formula.Node n){return 34+RUNES.get(n).inputs().size()*16;}
     private List<String> ports(Formula.Node n){return new TreeSet<>(RUNES.get(n).inputs().keySet()).stream().toList();}
-    private int typeColor(Value.Type type){return switch(type){case EVENT->0xffe8bd73;case POSITION,REGION->0xff77bde8;case BOOLEAN->0xffd8a5eb;case NUMBER->0xff9ad484;case VECTOR->0xfff0a986;case ENTITY->0xffe696ab;case TEXT->0xffb6b6db;case EFFECT->ACCENT;};}
+    private int typeColor(Value.Type type){return RunePresentation.color(type);}
+
     private void text(GuiGraphicsExtractor g,Component value,int x,int y,int max,int color){g.text(font,font.plainSubstrByWidth(value.getString(),Math.max(0,max)),x,y,color,false);}
     @Override public void extractRenderState(GuiGraphicsExtractor g,int mx,int my,float partial) {
         g.fill(0,0,width,height,BG);g.fill(0,0,width,25,PANEL);g.fill(0,24,width,25,LINE);
         g.text(font,"BAD SPELL",12,8,ACCENT,false);text(g,Component.literal(formula.title()),88,8,width-(width<365?250:190),TEXT);
-        text(g,tr(boardPosition==null?"gui.badspell.ink":"gui.badspell.durability",ink),width-96,8,boardPosition==null?62:86,0xffe4c68c);
+        text(g,tr(boardPosition==null?"gui.badspell.ink":"gui.badspell.durability",ink),width-96,8,boardPosition==null?62:86,SpellTheme.MUTED);
         g.fill(10,TOP,sideW+10,height-28,PANEL);g.fill(canvasX,TOP,width-10,height-28,PANEL);
-        g.fill(canvasX,canvasY,width-10,height-28,0xff0d1923);g.enableScissor(canvasX,canvasY,canvasX+canvasW,canvasY+canvasH);
-        int spacing=Math.max(12,(int)(24*zoom));for(int x=canvasX+(int)(panX%spacing);x<canvasX+canvasW;x+=spacing)for(int y=canvasY+(int)(panY%spacing);y<canvasY+canvasH;y+=spacing)g.fill(x,y,x+1,y+1,0xff233441);
+        g.fill(canvasX,canvasY,width-10,height-28,0xffd4c7a6);g.enableScissor(canvasX,canvasY,canvasX+canvasW,canvasY+canvasH);
+        int spacing=Math.max(12,(int)(24*zoom));for(int x=canvasX+(int)(panX%spacing);x<canvasX+canvasW;x+=spacing)for(int y=canvasY+(int)(panY%spacing);y<canvasY+canvasH;y+=spacing)g.fill(x,y,x+1,y+1,0xffbcae8e);
         g.pose().pushMatrix();g.pose().translate((float)(canvasX+panX),(float)(canvasY+panY));g.pose().scale((float)zoom,(float)zoom);
         for(var e:formula.edges()) {var from=node(e.from());var to=node(e.to());if(from==null||to==null)continue;int index=ports(to).indexOf(e.port());if(index<0)continue;
             int x1=from.x()+NODE_W,y1=from.y()+14,x2=to.x(),y2=to.y()+39+index*16,mid=(x1+x2)/2,color=typeColor(RUNES.get(from).output());
@@ -224,29 +229,34 @@ public final class FormulaBookScreen extends Screen {
         }
         for(var n:formula.nodes()) {
             boolean error=diagnostics.stream().anyMatch(d->d.node().equals(n.id()));int border=error?0xffe68c8c:n.id().equals(selected)?ACCENT:LINE;
-            g.fill(n.x()-1,n.y()-1,n.x()+NODE_W+1,n.y()+nodeHeight(n)+1,border);g.fill(n.x(),n.y(),n.x()+NODE_W,n.y()+nodeHeight(n),0xff172b37);
-            g.fill(n.x(),n.y(),n.x()+NODE_W,n.y()+28,0xff213c49);g.text(font,font.plainSubstrByWidth(runeName(n.rune()),NODE_W-18),n.x()+7,n.y()+6,TEXT,false);
-            g.text(font,n.id(),n.x()+7,n.y()+18,MUTED,false);if(n.id().equals(formula.output()))g.text(font,"*",n.x()+NODE_W-16,n.y()+6,ACCENT,false);
+            g.fill(n.x()-1,n.y()-1,n.x()+NODE_W+1,n.y()+nodeHeight(n)+1,border);g.fill(n.x(),n.y(),n.x()+NODE_W,n.y()+nodeHeight(n),SpellTheme.CARD);
+            g.fill(n.x(),n.y(),n.x()+NODE_W,n.y()+28,0xffd9caab);g.text(font,font.plainSubstrByWidth(runeName(n.rune()),NODE_W-18),n.x()+7,n.y()+6,TEXT,false);
+            g.text(font,RunePresentation.type(RUNES.get(n).output()),n.x()+7,n.y()+18,RunePresentation.color(RUNES.get(n).output()),false);if(n.id().equals(formula.output()))g.text(font,"*",n.x()+NODE_W-16,n.y()+6,ACCENT,false);
             int color=typeColor(RUNES.get(n).output());g.fill(n.x()+NODE_W-3,n.y()+10,n.x()+NODE_W+4,n.y()+18,n.id().equals(connecting)?0xffffffff:color);
-            int y=n.y()+35;for(String port:ports(n)){g.fill(n.x()-4,y,n.x()+3,y+8,typeColor(RUNES.get(n).inputs().get(port)));g.text(font,port,n.x()+8,y,MUTED,false);y+=16;}
+            int y=n.y()+35;for(String port:ports(n)){g.fill(n.x()-4,y,n.x()+3,y+8,connecting!=null&&RUNES.get(node(connecting)).output()!=RUNES.get(n).inputs().get(port)?SpellTheme.EDGE:typeColor(RUNES.get(n).inputs().get(port)));g.text(font,font.plainSubstrByWidth(RunePresentation.port(port).getString()+" · "+RunePresentation.type(RUNES.get(n).inputs().get(port)).getString(),NODE_W-12),n.x()+8,y,MUTED,false);y+=16;}
         }
         g.pose().popMatrix();g.disableScissor();
         if(sideTab==0)text(g,tr("gui.badspell.rune_count",RUNES.ids().size()),16,height-42,sideW-12,MUTED);
         if(sideTab==1) {
             var n=node(selected);
             if(n==null){text(g,tr("gui.badspell.name"),16,TOP+29,sideW-12,MUTED);text(g,tr("gui.badspell.budget_label"),16,TOP+67,sideW-12,MUTED);}
-            else {text(g,Component.literal(runeName(n.rune())),16,TOP+30,sideW-12,ACCENT);text(g,Component.literal(n.id()),16,TOP+43,sideW-12,MUTED);int y=TOP+64;
-                for(var entry:new TreeMap<>(n.parameters()).entrySet()){if(y+18>height-50)break;text(g,tr("parameter.badspell."+entry.getKey()),16,y-11,sideW-12,MUTED);y+=36;}}
+            else {text(g,Component.literal(runeName(n.rune())),16,TOP+30,sideW-12,ACCENT);text(g,RunePresentation.type(RUNES.get(n).output()),16,TOP+43,sideW-12,ACCENT);int y=TOP+64;
+                for(var entry:new TreeMap<>(n.parameters()).entrySet().stream().skip(paramOffset).toList()){if(y+18>height-50)break;text(g,tr("parameter.badspell."+entry.getKey()),16,y-11,sideW-12,MUTED);y+=36;}}
         }
         if(sideTab==2) {
             int y=TOP+32;boolean valid=diagnostics.isEmpty();text(g,tr(valid?"gui.badspell.valid":"gui.badspell.errors",diagnostics.size()),16,y,sideW-12,valid?ACCENT:0xffe68c8c);y+=20;
             if(preview!=null){text(g,tr("gui.badspell.cost",preview.fieldCost(),preview.focusCost()),16,y,sideW-12,TEXT);y+=18;text(g,tr("gui.badspell.duration",preview.durationTicks()/20.0),16,y,sideW-12,MUTED);y+=18;
-                boolean supported=Set.of("badspell:light","badspell:heat","badspell:cold","badspell:shield","badspell:heal","badspell:push","badspell:see").contains(preview.id());text(g,tr(supported?"gui.badspell.point_ready":"gui.badspell.effect_unavailable"),16,y,sideW-12,supported?ACCENT:0xffe8bd73);}
+                boolean supported=Set.of("badspell:light","badspell:heat","badspell:cold","badspell:shield","badspell:heal","badspell:push","badspell:see","badspell:combine","badspell:none","badspell:bind","badspell:transfer","badspell:transfer_energy","badspell:seal").contains(preview.id());text(g,tr(supported?"gui.badspell.point_ready":"gui.badspell.effect_unavailable"),16,y,sideW-12,supported?ACCENT:0xffe8bd73);}
             for(var d:diagnostics){if(y>height-72)break;text(g,tr("diagnostic.badspell."+d.code().name().toLowerCase(Locale.ROOT)),16,y,sideW-12,0xffe68c8c);y+=12;text(g,Component.literal(d.node()+" · "+d.port()),16,y,sideW-12,MUTED);y+=20;}
         }
-        String footer=!status.isBlank()?status:diagnostics.isEmpty()?tr("gui.badspell.canvas_status",formula.nodes().size(),formula.revision(),(int)(zoom*100)).getString():tr("gui.badspell.errors",diagnostics.size()).getString();
-        text(g,Component.literal((dirty()?"● ":"")+footer),12,height-21,width-24,diagnostics.isEmpty()?MUTED:0xffe68c8c);
+        String footer=connecting!=null?tr("ui.badspell.connect_hint",RunePresentation.type(RUNES.get(node(connecting)).output())).getString():!status.isBlank()?status:diagnostics.isEmpty()?tr("gui.badspell.canvas_status",formula.nodes().size(),formula.revision(),(int)(zoom*100)).getString():tr("gui.badspell.errors",diagnostics.size()).getString();
+        text(g,Component.literal((dirty()?"● ":"")+footer),12,height-21,width-24,diagnostics.isEmpty()?0xffc7b99c:0xffe68c8c);
         super.extractRenderState(g,mx,my,partial);
+        if(onCanvas(mx,my)&&dragging==null){double hx=(mx-canvasX-panX)/zoom,hy=(my-canvasY-panY)/zoom;for(var n:formula.nodes().reversed())if(hx>=n.x()-5&&hx<=n.x()+NODE_W+5&&hy>=n.y()&&hy<n.y()+nodeHeight(n)){
+            if(hy>=n.y()+33){int index=(int)((hy-n.y()-33)/16);if(index>=0&&index<ports(n).size()){String port=ports(n).get(index);var lines=new ArrayList<net.minecraft.util.FormattedCharSequence>();lines.addAll(font.split(Component.literal(RunePresentation.port(port).getString()+": "+RunePresentation.type(RUNES.get(n).inputs().get(port)).getString()),200));lines.addAll(font.split(tr("ui.badspell.socket_hint"),200));g.setTooltipForNextFrame(lines,mx,my);}}
+            else if(hx>=n.x()+NODE_W-8)g.setTooltipForNextFrame(tr("ui.badspell.output",RunePresentation.type(RUNES.get(n).output())),mx,my);break;
+        }}
+
     }
     private static void line(GuiGraphicsExtractor g,int x1,int y1,int x2,int y2,int color){g.fill(Math.min(x1,x2),Math.min(y1,y2),Math.max(x1,x2)+1,Math.max(y1,y2)+1,color);}
     private boolean onCanvas(double x,double y){return x>=canvasX&&x<=canvasX+canvasW&&y>=canvasY&&y<=canvasY+canvasH;}
@@ -255,15 +265,16 @@ public final class FormulaBookScreen extends Screen {
         if(e.button()==2){dragging="@pan";return true;}
         double x=(e.x()-canvasX-panX)/zoom,y=(e.y()-canvasY-panY)/zoom;
         for(var n:formula.nodes().reversed())if(x>=n.x()-5&&x<=n.x()+NODE_W+5&&y>=n.y()&&y<=n.y()+nodeHeight(n)) {
-            selected=n.id();
-            if(e.button()==1){int index=(int)((y-n.y()-33)/16);if(x<n.x()+8&&y>=n.y()+33&&index>=0&&index<ports(n).size()){String port=ports(n).get(index);var edges=new ArrayList<>(formula.edges());edges.removeIf(edge->edge.to().equals(n.id())&&edge.port().equals(port));change(copy(formula.nodes(),edges,formula.output()));}else {connecting=null;sideTab=1;rebuildWidgets();}return true;}
+            if(!n.id().equals(selected)){paramOffset=0;invalidFields.clear();}selected=n.id();
+            if(e.button()==1){int index=(int)((y-n.y()-33)/16);if(x<n.x()+NODE_W-8&&y>=n.y()+33&&index>=0&&index<ports(n).size()){String port=ports(n).get(index);var edges=new ArrayList<>(formula.edges());edges.removeIf(edge->edge.to().equals(n.id())&&edge.port().equals(port));change(copy(formula.nodes(),edges,formula.output()));}else {connecting=null;sideTab=1;rebuildWidgets();}return true;}
             if(x>=n.x()+NODE_W-7&&y<=n.y()+24){connecting=n.id();rebuildWidgets();return true;}
             int portIndex=(int)((y-n.y()-33)/16);
-            if(x<n.x()+8&&y>=n.y()+33&&portIndex>=0&&portIndex<ports(n).size()) {
+            if(x<n.x()+NODE_W-8&&y>=n.y()+33&&portIndex>=0&&portIndex<ports(n).size()) {
                 String port=ports(n).get(portIndex);
                 if(connecting!=null){var from=node(connecting);if(from!=null&&RUNES.get(from).output()==RUNES.get(n).inputs().get(port)){
                     var edges=new ArrayList<>(formula.edges());edges.removeIf(edge->edge.to().equals(n.id())&&edge.port().equals(port));edges.add(new Formula.Edge(connecting,n.id(),port));connecting=null;change(copy(formula.nodes(),edges,formula.output()));
                 }else status=tr("gui.badspell.type_error").getString();return true;}
+                openPicker(n.id(),port);return true;
             }
             sideTab=1;dragging=n.id();beforeDrag=formula;rebuildWidgets();return true;
         }
@@ -271,8 +282,8 @@ public final class FormulaBookScreen extends Screen {
     }
     @Override public boolean mouseDragged(MouseButtonEvent e,double dx,double dy){if("@pan".equals(dragging)){panX+=dx;panY+=dy;return true;}var n=node(dragging);if(n!=null){var nodes=new ArrayList<>(formula.nodes());nodes.set(nodes.indexOf(n),new Formula.Node(n.id(),n.rune(),n.x()+(int)Math.round(dx/zoom),n.y()+(int)Math.round(dy/zoom),n.parameters()));formula=copy(nodes,formula.edges(),formula.output());return true;}return super.mouseDragged(e,dx,dy);}
     @Override public boolean mouseReleased(MouseButtonEvent e){if(boardPosition!=null&&beforeDrag!=null){var snapped=new ArrayList<Formula.Node>();for(var n:formula.nodes())snapped.add(new Formula.Node(n.id(),n.rune(),Math.clamp((int)Math.round(n.x()/154.0),0,3)*154,Math.clamp((int)Math.round(n.y()/100.0),0,3)*100,n.parameters()));formula=copy(snapped,formula.edges(),formula.output());}if(beforeDrag!=null&&!beforeDrag.equals(formula)){undo.addLast(beforeDrag);while(undo.size()>100)undo.removeFirst();redo.clear();validate();updateActions();}beforeDrag=null;dragging=null;return super.mouseReleased(e);}
-    @Override public boolean mouseScrolled(double x,double y,double sx,double sy){if(x<sideW+10&&y>TOP&&sideTab==0){paletteOffset-=(int)Math.signum(sy);refreshPalette();return true;}if(onCanvas(x,y)){double old=zoom;zoom=Math.clamp(zoom*Math.pow(1.15,sy),.25,4);panX=x-canvasX-(x-canvasX-panX)*zoom/old;panY=y-canvasY-(y-canvasY-panY)*zoom/old;return true;}return super.mouseScrolled(x,y,sx,sy);}
-    @Override public boolean keyPressed(KeyEvent e){if(e.hasControlDown()&&e.key()==83){send(0);return true;}if(super.keyPressed(e))return true;if(e.hasControlDown()&&e.key()==90){history(undo,redo);return true;}if(e.hasControlDown()&&e.key()==89){history(redo,undo);return true;}if(e.key()==261){delete();return true;}return false;}
+    @Override public boolean mouseScrolled(double x,double y,double sx,double sy){if(x<sideW+10&&y>TOP&&sideTab==1&&selected!=null){paramOffset=Math.clamp(paramOffset-(int)Math.signum(sy),0,Math.max(0,node(selected).parameters().size()-1));rebuildWidgets();return true;}if(x<sideW+10&&y>TOP&&sideTab==0){paletteOffset-=(int)Math.signum(sy);refreshPalette();return true;}if(onCanvas(x,y)){double old=zoom;zoom=Math.clamp(zoom*Math.pow(1.15,sy),.25,4);panX=x-canvasX-(x-canvasX-panX)*zoom/old;panY=y-canvasY-(y-canvasY-panY)*zoom/old;return true;}return super.mouseScrolled(x,y,sx,sy);}
+    @Override public boolean keyPressed(KeyEvent e){if(e.key()==256&&connecting!=null){connecting=null;rebuildWidgets();return true;}if(e.hasControlDown()&&e.key()==83){send(0);return true;}if(super.keyPressed(e))return true;if(e.hasControlDown()&&e.key()==90){history(undo,redo);return true;}if(e.hasControlDown()&&e.key()==89){history(redo,undo);return true;}if(e.key()==261){delete();return true;}return false;}
     @Override public void onClose(){if(dirty())minecraft.gui.setScreen(new ConfirmScreen(yes->{if(yes)minecraft.gui.setScreen(null);else minecraft.gui.setScreen(this);},tr("gui.badspell.unsaved"),tr("gui.badspell.discard_question")));else super.onClose();}
     @Override public boolean isPauseScreen(){return false;}
 }

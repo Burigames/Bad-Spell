@@ -50,7 +50,7 @@ public final class RuneRegistry {
             cost=Math.multiplyExact(cost,1L+region.radius());
             return new Value.Effect("badspell:light",region,strength,ticks,cost,5);
         }));
-        r.put("badspell:activate",new Rune(Map.of("effect",EFFECT,"trigger",EVENT),Map.of(),EFFECT,(i,p,c)->{var effect=(Value.Effect)i.get("effect");var event=(Value.Event)i.get("trigger");return new Value.Effect(effect.id(),effect.region(),effect.strength(),effect.durationTicks(),Math.addExact(effect.fieldCost(),event.interval()/20),effect.focusCost(),effect.target(),effect.vector(),event);}));
+        r.put("badspell:activate",new Rune(Map.of("effect",EFFECT,"trigger",EVENT),Map.of(),EFFECT,(i,p,c)->{var effect=(Value.Effect)i.get("effect");var event=(Value.Event)i.get("trigger");return new Value.Effect(effect.id(),effect.region(),effect.strength(),effect.durationTicks(),Math.addExact(effect.fieldCost(),event.interval()/20),effect.focusCost(),effect.target(),effect.vector(),event,effect.children());}));
         ExtendedRunes.register(r);
         return new RuneRegistry(r);
     }

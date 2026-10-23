@@ -15,6 +15,7 @@ import net.neoforged.neoforge.registries.*;
 
 public final class ModItems {
     public static final DeferredRegister.Items ITEMS=DeferredRegister.createItems(BadSpell.MOD_ID);
+    public static final DeferredItem<Item> CODEX=ITEMS.registerItem("arcane_codex",p->new MagicItem(p,2),p->p.stacksTo(1));
     public static final DeferredItem<Item> FORMULA_BOOK=ITEMS.registerItem("formula_book",p->new MagicItem(p,0),p->p.stacksTo(1));
     public static final DeferredItem<Item> RUNE_GLOVE=ITEMS.registerItem("rune_glove",p->new MagicItem(p,1),p->p.stacksTo(1));
     public static final DeferredItem<Item> FIELD_CELL=ITEMS.registerItem("field_cell",InfoItem::new,p->p.stacksTo(1));
@@ -63,7 +64,8 @@ public final class ModItems {
         MagicItem(Properties properties,int action) { super(properties);this.action=action; }
         @Override public InteractionResult use(Level level,Player player,InteractionHand hand) {
             if(player instanceof ServerPlayer serverPlayer) {
-                if(action==0)MagicActions.openBook(serverPlayer,hand);
+                if(action==2)net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(serverPlayer,new com.badspell.network.Packets.OpenCodex());
+                else if(action==0)MagicActions.openBook(serverPlayer,hand);
                 else MagicActions.cast(serverPlayer,hand);
             }
             return InteractionResult.SUCCESS;

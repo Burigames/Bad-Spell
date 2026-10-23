@@ -1,5 +1,11 @@
 # Implementierungsstatus – Bad Spell
 
+## Neue Runenwerkstatt und bebilderter Kodex
+
+Aktuelle Bedienung: [USABILITY_REWORK.md](docs/USABILITY_REWORK.md). Runenauswahl mit Beschreibungs-/Port-/Typsuche, kompatible Quellen direkt aus Eingangszeilen, stationsspezifische Arbeitszonen und Rezeptansichten, gemeinsamer Workshop-Assetstil. G oder Arkaner Kodex öffnet neun bebilderte Tutorialkapitel.
+
+Neue Runen: Wesenposition, Wesen-Gesundheit, Ziel vorhanden, Versatz, Addieren, Subtrahieren, Multiplizieren, Effekte bündeln. Neue Vorlagen: Eigenlicht, Froststoß, Wachsamer Schutz. Direktinteraktion mit Kreaturen wird als Handschuhzauber behandelt; Heilablehnungen werden konkret erklärt. Netzwerkprotokoll 3 erfordert denselben Build auf Client und Server. Die Gesamtmod und M1 bleiben unvollständig.
+
 Ziel: Minecraft Java 26.2 · NeoForge · JDK 25 · com.badspell · 0.1.0-alpha.
 Aktueller M1-Entwicklungsstand: erweiterte typisierte Runensprache, Formelmodule/Bibliothek, zusätzliche Zauberwirkungen und Werkzeuge, Q2/Q3-Ausbau sowie überarbeitete Vanilla-nahe Assets. Sieben Produktionsstationen; 54 Verarbeitungsrezepte. **Keine vollständige Mod; vollständiger Survival-Durchlauf noch nicht geprüft.** Stand: 23.10.2026.
 

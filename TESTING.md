@@ -1,5 +1,13 @@
 # Tests und Abnahme
 
+## Runenwerkstatt/Kodex: aktuelle Prüfung
+
+`./gradlew --offline --no-daemon build runGameTestServer --max-workers=2`: **erfolgreich; 45 Kerntests und 38 erforderliche Server-GameTests**. Protokoll: [USABILITY_VALIDATION.log](docs/USABILITY_VALIDATION.log). Zusätzlich 67 JSON-Rezepte strukturell erreichbar; alle 90 registrierten Runen besitzen DE/EN-Namen, Beschreibungen und gültige Glyphencodes.
+
+Neue Regressionen prüfen Selbstheilung und kostenfreie Ablehnung bei voller Gesundheit, Entity-Raycasts vor/hinter einer Wand, direkte Entity-Interaktion mit dem Handschuh, echte kombinierte Kälte/Bewegung einschließlich sofortiger Kältewirkung, Vorabablehnung eines fehlerhaften Effekts ohne Weltmutation, bedingte Gesundheitslogik, fehlende optionale Ziele, Rechen-/Bündelgrenzen und unterschiedliche sichere Stations-Slotlayouts.
+
+Grafischer Entwicklungsclient: Kodex per G, Runensuche nach Entity, Alchemietisch und dessen Rezeptansicht geöffnet. Screenshots und weiterer Bedienungsumfang: [USABILITY_REWORK.md](docs/USABILITY_REWORK.md). Getrennte echte Mehrspielerclients, alle Auflösungen/Stationen und ein vollständiger Survivaldurchlauf bleiben offen. Kein vollständiger M1-Abschluss.
+
 ## M1-Entwicklungsstand vom 23.10.2026
 
 Dieser Abschnitt ersetzt widersprechende Angaben älterer Fortschrittsnotizen weiter unten. M1 ist noch **nicht vollständig abgenommen**. Die neue Clientdarstellung und ein vollständiger Survival-/Mehrspieler-Durchlauf sind offen.
@@ -158,3 +166,7 @@ Strukturelle Rezeptprüfung: alle 66 JSON-Rezepte erreichbar unter Annahme verf�
 Am 23.10.2026 wurde der Entwicklungsclient mit denselben kompilierten Klassen/Ressourcen gestartet und die bestehende QA-Welt geladen. Formelbuch und Bibliothek geöffnet; Stoß-Vorlage über die Bibliothek angelegt und als Graph zurück in den Editor geladen; Schreibpunkte sanken von 52 auf 47. Die Canvas-Funktion „Fit view“ ließ sich auslösen. Ein vorhandener 3D-Schleifer und die Feldzelle wurden dargestellt. Das prüft weder sämtliche Modelle noch Oberflächenglyphen oder alle Clientinteraktionen. Dieser Kurztest verwendet die Entwicklungsumgebung, nicht eine separat installierte JAR.
 
 Im Xvfb-Client wurde einmal `X11: Standard cursor shape unavailable` gemeldet; die UI ließ sich anschließend weiter bedienen. Ein Produktionsclient-Test bleibt offen.
+
+### Abschließender grafischer Test der Runenwerkstatt
+
+Aktueller Entwicklungsclient: Typfilter über eine Eingangszeile, Suche nach Selbst und automatisches Verbinden mit Heilung geprüft. Neu eingefügte Knoten werden frei platziert und sichtbar zentriert. Der absichtlich unvollständige Entwurf wurde nicht gespeichert. Kodex-Schaubild für zwei kombinierte Effekte kontrolliert. Abschließendes `build` nach der Layoutkorrektur erfolgreich; die davor ausgeführten 45 Kern-/38 Serverprüfungen betreffen denselben unveränderten Spielkern. Separate Produktionsinstallation und vollständige Mehrspieler-Abnahme bleiben offen.

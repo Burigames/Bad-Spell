@@ -43,9 +43,17 @@ public final class FormulaEngine {
             var environment=new HashMap<>(context.environment());values.forEach((name,value)->environment.put("input:"+name,value));
             var result=run(child,new RuneRegistry.Context(context.target(),context.tick(),context.entity(),context.look(),environment),operations,depth+1,active);cache.put(id,result);return result;
         }
-        Value value=rune.operation().evaluate(Map.copyOf(values),node.parameters(),context);
+        Value value;
+        try{value=rune.operation().evaluate(Map.copyOf(values),node.parameters(),context);}
+        catch(IllegalArgumentException|ArithmeticException error){throw new EvaluationFailure(node.id(),node.rune(),error);}
+
         if(value==null || value.type()!=rune.output()) throw new IllegalStateException("Registered rune returned incorrect type: "+node.rune());
         cache.put(id,value); return value;
+    }
+    public static final class EvaluationFailure extends IllegalArgumentException {
+        private static final long serialVersionUID=1L;
+        public final String node,rune;
+        EvaluationFailure(String node,String rune,RuntimeException cause){super(cause.getMessage(),cause);this.node=node;this.rune=rune;}
     }
     public static final class InvalidFormula extends IllegalArgumentException {
         private static final long serialVersionUID = 1L;

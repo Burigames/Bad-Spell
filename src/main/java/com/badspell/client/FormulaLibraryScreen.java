@@ -26,10 +26,9 @@ public final class FormulaLibraryScreen extends Screen {
     private int visible(){return Math.max(1,(height-140)/29);}
     private Formula selected(){for(var entry:page.entries())try{var formula=FormulaCodec.decode(entry.formula());if(formula.id().equals(selected))return formula;}catch(java.io.IOException ignored){}return null;}
     @Override protected void init() {
-        search=addRenderableWidget(new EditBox(font,16,33,Math.max(80,width-252),20,tr("search")));search.setMaxLength(96);search.setValue(query);search.setHint(tr("library_query"));search.setResponder(value->query=value);
-        button(width-232,33,64,tr("search"),()->send(0,new UUID(0,0),query,"",0),false);
-        button(width-162,33,82,Component.translatable("template.badspell."+ExampleFormulas.TEMPLATES.get(preset)),()->{preset=(preset+1)%ExampleFormulas.TEMPLATES.size();rebuildWidgets();},false);
-        button(width-74,33,58,tr("new_formula"),()->send(1,new UUID(0,0),query,ExampleFormulas.TEMPLATES.get(preset),0),true);
+        search=addRenderableWidget(new EditBox(font,16,33,Math.max(80,width-172),20,tr("search")));search.setMaxLength(96);search.setValue(query);search.setHint(tr("library_query"));search.setResponder(value->query=value);
+        button(width-162,33,64,Component.translatable("ui.badspell.find"),()->send(0,new UUID(0,0),query,"",0),false);
+        button(width-92,33,76,Component.translatable("ui.badspell.templates"),()->net.minecraft.client.Minecraft.getInstance().gui.setScreen(new TemplatePickerScreen(this,parent)),true);
         int count=visible();offset=Math.clamp(offset,0,Math.max(0,page.entries().size()-count));
         for(int row=0;row<count&&row+offset<page.entries().size();row++) {
             var entry=page.entries().get(row+offset);try {
@@ -46,9 +45,10 @@ public final class FormulaLibraryScreen extends Screen {
         button(16,height-35,32,Component.literal("<"),()->send(0,new UUID(0,0),query,"",Math.max(0,page.page()-1)),false);
         button(52,height-35,32,Component.literal(">"),()->send(0,new UUID(0,0),query,"",Math.min(31,page.page()+1)),false);
         button(94,height-35,66,tr("delete"),()->{if(current!=null&&!current.id().equals(parent.formulaId()))Minecraft.getInstance().gui.setScreen(new net.minecraft.client.gui.screens.ConfirmScreen(yes->{Minecraft.getInstance().gui.setScreen(this);if(yes)send(3,current.id(),query,"",page.page());},tr("delete"),Component.literal(current.title())));},false);
+        button(170,height-35,82,tr("history"),()->{Minecraft.getInstance().gui.setScreen(parent);parent.requestHistory();},false);
         button(width-90,height-35,74,tr("back"),this::onClose,false);
     }
-    @Override public void extractRenderState(GuiGraphicsExtractor g,int mx,int my,float partial){g.fill(0,0,width,height,0xff0b131c);g.text(font,title,16,12,0xff65dcba,false);g.text(font,Component.literal((page.page()+1)+" / "+Math.max(1,(page.total()+7)/8)+" · "+page.total()),width-130,12,0xff8ba6ae,false);super.extractRenderState(g,mx,my,partial);}
+    @Override public void extractRenderState(GuiGraphicsExtractor g,int mx,int my,float partial){g.fill(0,0,width,height,SpellTheme.BG);SpellTheme.panel(g,8,8,width-16,height-16);g.text(font,title,16,12,SpellTheme.INK,false);g.text(font,Component.literal((page.page()+1)+" / "+Math.max(1,(page.total()+7)/8)+" · "+page.total()),width-130,12,SpellTheme.MUTED,false);super.extractRenderState(g,mx,my,partial);}
     @Override public boolean mouseScrolled(double x,double y,double sx,double sy){offset-=(int)Math.signum(sy);rebuildWidgets();return true;}
     @Override public void onClose(){Minecraft.getInstance().gui.setScreen(parent);}
     @Override public boolean isPauseScreen(){return false;}

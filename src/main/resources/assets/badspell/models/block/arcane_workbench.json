@@ -1,15 +1,15 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "particle": "minecraft:block/spruce_planks",
-    "base": "minecraft:block/spruce_planks",
-    "metal": "minecraft:block/iron_block",
-    "stone": "minecraft:block/stone",
-    "dark": "minecraft:block/polished_deepslate",
+    "particle": "badspell:block/workshop_wood",
+    "base": "badspell:block/workshop_wood",
+    "top": "badspell:block/workshop_top",
+    "stone": "badspell:block/workshop_stone",
+    "metal": "badspell:block/workshop_metal",
+    "crystal": "badspell:block/workshop_crystal",
+    "glass": "badspell:block/workshop_glass",
+    "ink": "badspell:block/workshop_ink",
     "rune": "badspell:block/rune_tile",
-    "crystal": "minecraft:block/amethyst_block",
-    "glass": "minecraft:block/glass",
-    "top": "minecraft:block/crafting_table_top",
     "front": "minecraft:block/furnace_front"
   },
   "elements": [
@@ -20,9 +20,9 @@
         1
       ],
       "to": [
-        4,
-        12,
-        4
+        3,
+        10,
+        3
       ],
       "faces": {
         "down": {
@@ -47,14 +47,14 @@
     },
     {
       "from": [
-        12,
+        13,
         0,
         1
       ],
       "to": [
         15,
-        12,
-        4
+        10,
+        3
       ],
       "faces": {
         "down": {
@@ -81,11 +81,11 @@
       "from": [
         1,
         0,
-        12
+        13
       ],
       "to": [
-        4,
-        12,
+        3,
+        10,
         15
       ],
       "faces": {
@@ -111,13 +111,13 @@
     },
     {
       "from": [
-        12,
+        13,
         0,
-        12
+        13
       ],
       "to": [
         15,
-        12,
+        10,
         15
       ],
       "faces": {
@@ -143,13 +143,77 @@
     },
     {
       "from": [
+        1,
+        4,
+        2
+      ],
+      "to": [
+        15,
+        5,
+        3
+      ],
+      "faces": {
+        "down": {
+          "texture": "#base"
+        },
+        "up": {
+          "texture": "#base"
+        },
+        "north": {
+          "texture": "#base"
+        },
+        "south": {
+          "texture": "#base"
+        },
+        "west": {
+          "texture": "#base"
+        },
+        "east": {
+          "texture": "#base"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        4,
+        13
+      ],
+      "to": [
+        15,
+        5,
+        14
+      ],
+      "faces": {
+        "down": {
+          "texture": "#base"
+        },
+        "up": {
+          "texture": "#base"
+        },
+        "north": {
+          "texture": "#base"
+        },
+        "south": {
+          "texture": "#base"
+        },
+        "west": {
+          "texture": "#base"
+        },
+        "east": {
+          "texture": "#base"
+        }
+      }
+    },
+    {
+      "from": [
         0,
-        11,
+        9,
         0
       ],
       "to": [
         16,
-        14,
+        11,
         16
       ],
       "faces": {
@@ -176,12 +240,12 @@
     {
       "from": [
         1,
-        14,
+        11,
         1
       ],
       "to": [
         15,
-        15,
+        12,
         15
       ],
       "faces": {
@@ -202,6 +266,70 @@
         },
         "east": {
           "texture": "#top"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        12,
+        2
+      ],
+      "to": [
+        9,
+        12.5,
+        9
+      ],
+      "faces": {
+        "down": {
+          "texture": "#rune"
+        },
+        "up": {
+          "texture": "#rune"
+        },
+        "north": {
+          "texture": "#rune"
+        },
+        "south": {
+          "texture": "#rune"
+        },
+        "west": {
+          "texture": "#rune"
+        },
+        "east": {
+          "texture": "#rune"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        12,
+        3
+      ],
+      "to": [
+        13,
+        13,
+        9
+      ],
+      "faces": {
+        "down": {
+          "texture": "#metal"
+        },
+        "up": {
+          "texture": "#metal"
+        },
+        "north": {
+          "texture": "#metal"
+        },
+        "south": {
+          "texture": "#metal"
+        },
+        "west": {
+          "texture": "#metal"
+        },
+        "east": {
+          "texture": "#metal"
         }
       }
     }

@@ -32,9 +32,9 @@ public final class StationBlockEntity extends BlockEntity implements WorldlyCont
     private ProcessingRecipe cachedRecipe;
     private boolean powered;
     public final ContainerData data=new ContainerData(){
-        public int get(int i){return switch(i){case 0->progress;case 1->total;case 2->charge();case 3->status;default->0;};}
+        public int get(int i){return switch(i){case 0->progress;case 1->total;case 2->charge();case 3->status;case 4->StationMenu.KINDS.indexOf(station());case 5->energyCapacity();default->0;};}
         public void set(int i,int value){switch(i){case 0->progress=value;case 1->total=value;case 3->status=value;default->{}}}
-        public int getCount(){return 4;}
+        public int getCount(){return 6;}
     };
     public StationBlockEntity(BlockPos pos,BlockState state){super(ProductionRegistries.STATION.get(),pos,state);}
     public String station(){return BuiltInRegistries.BLOCK.getKey(getBlockState().getBlock()).getPath();}

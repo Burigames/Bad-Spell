@@ -14,3 +14,7 @@ Verbindliche Richtung für neue und überarbeitete Inhalte: Minecraft-nahe Pixel
 Reproduzierbare Pipeline: `generate-production-assets.py`, danach `generate-m1-assets.py`, zuletzt `style-assets.py`. Die letzte Stufe ist die maßgebliche visuelle Gestaltung und darf nicht durch den älteren Grundgenerator überschrieben werden.
 
 Abnahme: Modelle und Texturen im echten Client bei Tageslicht, Dunkelheit, im Inventar und in der Hand betrachten. Ressourcenprüfung und PNG-Abmessungen allein belegen keine gute Darstellung.
+
+## Einheitlicher Workshop-Satz
+
+Eigene 16×16-Materialien `workshop_wood`, `workshop_top`, `workshop_stone`, `workshop_metal`, `workshop_crystal`, `workshop_glass` und `workshop_ink` werden von Stationen und 3D-Werkzeugen geteilt. Palette: warmes Holz/Messing, neutrales Gestein, gedämpftes Jadegrün. Modelle bleiben in 0–16; Qualitätsringe unterscheiden höhere Feldzellen sichtbar. Generierung: `python3 scripts/generate-usability-assets.py` und danach `python3 scripts/style-assets.py`.

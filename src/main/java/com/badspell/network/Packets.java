@@ -90,8 +90,14 @@ public final class Packets {
         public static final StreamCodec<RegistryFriendlyByteBuf,LibraryPage> CODEC=CustomPacketPayload.codec((p,b)->{b.writeVarInt(p.hand);b.writeVarInt(p.page);b.writeVarInt(p.total);b.writeVarInt(p.entries.size());for(var e:p.entries){b.writeByteArray(e.formula);b.writeUtf(e.tags,256);}},b->{int hand=b.readVarInt(),page=b.readVarInt(),total=b.readVarInt(),count=b.readVarInt();if(count<0||count>8)throw new IllegalArgumentException("Page limit");var entries=new java.util.ArrayList<LibraryEntry>();for(int i=0;i<count;i++)entries.add(new LibraryEntry(b.readByteArray(MAX_FORMULA_BYTES),b.readUtf(256)));return new LibraryPage(hand,page,total,java.util.List.copyOf(entries));});
         public Type<LibraryPage> type(){return TYPE;}
     }
+    public record OpenCodex() implements CustomPacketPayload {
+        public static final Type<OpenCodex> TYPE=new Type<>(Identifier.fromNamespaceAndPath("badspell","open_codex"));
+        public static final StreamCodec<RegistryFriendlyByteBuf,OpenCodex> CODEC=StreamCodec.unit(new OpenCodex());
+        public Type<OpenCodex> type(){return TYPE;}
+    }
     public static void register(RegisterPayloadHandlersEvent event) {
-        var registrar=event.registrar("2");
+        var registrar=event.registrar("3");
+        registrar.playToClient(OpenCodex.TYPE,OpenCodex.CODEC);
         registrar.playToServer(MonocleToggle.TYPE,MonocleToggle.CODEC,(p,c)->{if(c.player() instanceof net.minecraft.server.level.ServerPlayer player)com.badspell.server.ToolActions.toggleMonocle(player);});
         registrar.playToClient(BoardMarks.TYPE,BoardMarks.CODEC);
         registrar.playToClient(BoardView.TYPE,BoardView.CODEC);registrar.playToClient(ScanInfo.TYPE,ScanInfo.CODEC);

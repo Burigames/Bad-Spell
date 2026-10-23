@@ -25,8 +25,9 @@ public final class SpellFields extends SavedData {
     public static final SavedDataType<SpellFields> TYPE=new SavedDataType<>(Identifier.fromNamespaceAndPath("badspell","spell_fields"),()->new SpellFields(List.of()),CODEC);
     private SpellFields(List<Field> fields){this.fields=new ArrayList<>(fields);}
     public static SpellFields get(ServerLevel level){return level.getDataStorage().computeIfAbsent(TYPE);}
-    public boolean canAdd(){return fields.size()<128;}
-    public void add(UUID owner,Value.Effect effect,long tick){fields.add(new Field(owner,effect.id(),SpellEffects.positions(effect.region()),effect.strength(),tick+effect.durationTicks(),tick,effect.region().shape()==Value.Shape.PATH));setDirty();}
+    public boolean canAdd(){return canAdd(1);}
+    public boolean canAdd(int count){return count>=0&&fields.size()+count<=128;}
+    public Field add(UUID owner,Value.Effect effect,long tick){var field=new Field(owner,effect.id(),SpellEffects.positions(effect.region()),effect.strength(),tick+effect.durationTicks(),tick,effect.region().shape()==Value.Shape.PATH);fields.add(field);setDirty();return field;}
     public static void incoming(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
         if(!(event.getEntity().level() instanceof ServerLevel level)||!(event.getSource().getDirectEntity() instanceof Projectile))return;
         var at=event.getEntity().blockPosition();for(var field:get(level).fields)if(field.effect().equals("badspell:shield")&&field.owner().equals(event.getEntity().getUUID())&&field.expiry()>level.getGameTime()&&(field.cells().contains(at)||field.cells().contains(at.below()))){event.setCanceled(true);return;}

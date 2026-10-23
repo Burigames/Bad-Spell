@@ -115,7 +115,13 @@ public final class MagicActions {
         return ItemStack.EMPTY;
     }
     private static ItemStack findGlove(ServerPlayer player){for(int i=0;i<player.getInventory().getContainerSize();i++){var stack=player.getInventory().getItem(i);if(ModItems.isGlove(stack))return stack;}return ItemStack.EMPTY;}
-    public static void cast(ServerPlayer player,InteractionHand hand) {
+    public static void entityInteract(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.EntityInteract event){
+        if(!ModItems.isGlove(event.getItemStack())||!(event.getTarget() instanceof net.minecraft.world.entity.LivingEntity target))return;
+        event.setCanceled(true);event.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);
+        if(event.getEntity() instanceof ServerPlayer player)cast(player,event.getHand(),target);
+    }
+    public static void cast(ServerPlayer player,InteractionHand hand){cast(player,hand,null);}
+    public static void cast(ServerPlayer player,InteractionHand hand,net.minecraft.world.entity.LivingEntity clicked) {
         var glove=player.getItemInHand(hand);if(!ModItems.isGlove(glove))return;
         if(player.isShiftKeyDown()){ScheduledSpells.cancel(player);try{if(!GloveFormulas.current(player,glove))GloveFormulas.restore(player,glove);}catch(IOException error){message(player,"invalid");}message(player,"cancelled");return;}
         long tick=player.level().getGameTime();if(tick-player.getPersistentData().getLongOr(LAST_CAST,-1000)<1){message(player,"rate_limit");return;}
@@ -124,12 +130,16 @@ public final class MagicActions {
             if(!GloveFormulas.occupied(glove,GloveFormulas.selected(glove))){message(player,"empty_slot");return;}
             Formula formula=GloveFormulas.read(glove);if(!formula.owner().equals(player.getUUID())){message(player,"owner");return;}
             var hit=player.pick(12,1,false);BlockPos target=hit instanceof BlockHitResult block?block.getBlockPos().relative(block.getDirection()):BlockPos.containing(hit.getLocation());
-            var context=SpellEffects.context(player,target,tick);var plan=new FormulaEngine(RUNES).plan(formula,context);
+            var context=SpellEffects.context(player,target,tick);
+            if(clicked!=null){if(clicked.level()!=player.level()||clicked.distanceToSqr(player)>144||!player.hasLineOfSight(clicked))throw new SpellEffects.Failure("target_unavailable");var entity=new Value.Entity(clicked.getUUID(),SpellEffects.position(player.level(),clicked.blockPosition()));var environment=new HashMap<>(context.environment());environment.put("entity:"+entity.id(),entity);environment.put("health:"+entity.id(),new Value.Number((long)clicked.getHealth()));context=new RuneRegistry.Context(context.target(),context.tick(),entity,context.look(),environment);}
+            var plan=new FormulaEngine(RUNES).plan(formula,context);
             if((plan.event().interval()>0||plan.event().tick()>tick)&&!ScheduledSpells.canAdd(player)){message(player,"schedule_limit");return;}
             var result=execute(player,formula,context);
             if((result==ActivationService.Result.WAITING||result==ActivationService.Result.APPLIED||result==ActivationService.Result.SKIPPED)&&plan.event().remaining()!=0&&(plan.event().tick()>tick||plan.event().interval()>0))ScheduledSpells.add(player,formula,context,plan.event(),result==ActivationService.Result.APPLIED||result==ActivationService.Result.SKIPPED);
             else if(result==ActivationService.Result.APPLIED)GloveFormulas.backup(player,glove);
-        }catch(IOException|IllegalArgumentException|IllegalStateException error){message(player,"invalid");}
+        }catch(SpellEffects.Failure error){message(player,"cast_"+error.reason);}
+        catch(FormulaEngine.EvaluationFailure error){String key=error.rune.equals("badspell:target_entity")?"message.badspell.cast_no_target":"message.badspell.rune_failed";player.sendSystemMessage(Component.translatable(key,Component.translatable("rune.badspell."+error.rune.substring(9)),error.node),false);}
+        catch(IOException|IllegalArgumentException|IllegalStateException error){message(player,"invalid");}
     }
     public static ActivationService.Result execute(ServerPlayer player,Formula formula,RuneRegistry.Context context) {
         var state=player.getPersistentData();var cells=new ArrayList<ItemStack>();int fl=0,capacity=0;
@@ -138,7 +148,11 @@ public final class MagicActions {
         int focus=Math.clamp(state.getIntOr(FOCUS,100),0,100);var account=new EnergyAccount(capacity,100,fl,focus);
         String dim=player.level().dimension().identifier().toString();var origin=SpellEffects.position(player.level(),player.blockPosition());
         int stability=context.environment().get("stability") instanceof Value.Number n?(int)Math.clamp(n.value(),0,100):100;
-        var result=ACTIVATIONS.activate(formula,context,origin,stability,account,effect->SpellEffects.prepare(player,effect));
+        ActivationService.Result result;
+        try{result=ACTIVATIONS.activate(formula,context,origin,stability,account,effect->SpellEffects.prepare(player,effect));}
+        catch(SpellEffects.Failure error){message(player,"cast_"+error.reason);return ActivationService.Result.DENIED;}
+        catch(FormulaEngine.EvaluationFailure error){player.sendSystemMessage(Component.translatable(error.rune.equals("badspell:target_entity")?"message.badspell.cast_no_target":"message.badspell.rune_failed",Component.translatable("rune.badspell."+error.rune.substring(9)),error.node),false);return ActivationService.Result.DENIED;}
+
         if(result==ActivationService.Result.APPLIED||result==ActivationService.Result.SKIPPED){int spent=fl-(int)account.balance().field();for(var cell:cells){int charge=Math.clamp(tag(cell).getIntOr("badspell_fl",ModItems.cellCapacity(cell)),0,ModItems.cellCapacity(cell));int amount=Math.min(charge,spent);spent-=amount;int left=charge-amount;CustomData.update(DataComponents.CUSTOM_DATA,cell,t->t.putInt("badspell_fl",left));}state.putInt(FOCUS,(int)account.balance().focus());if(result==ActivationService.Result.APPLIED)state.putLong(LAST_CAST,player.level().getGameTime());}
         player.sendSystemMessage(Component.translatable("message.badspell.cast",Component.translatable("result.badspell."+result.name().toLowerCase(Locale.ROOT)),account.balance().field(),account.balance().focus()),true);return result;
     }

@@ -5,9 +5,10 @@ import java.util.*;
 /** Reference graph, not a special-cased spell in the interpreter. */
 public final class ExampleFormulas {
     private ExampleFormulas() {}
-    public static final List<String> TEMPLATES=List.of("light","heal","push","heat","cold","shield","see","night_lamp","signature");
+    public static final List<String> TEMPLATES=List.of("light","heal","push","heat","cold","shield","see","night_lamp","signature","self_light","frost_push","adaptive_ward");
     public static Formula template(String kind,UUID owner,Value.Position anchor) {
         if(!TEMPLATES.contains(kind)||kind.equals("light"))return light(owner);
+        if(List.of("self_light","frost_push","adaptive_ward").contains(kind))return advanced(kind,owner);
         var nodes=new ArrayList<Formula.Node>();var edges=new ArrayList<Formula.Edge>();
         boolean entity=List.of("heal","push","see").contains(kind);boolean interval=kind.equals("night_lamp");
         nodes.add(new Formula.Node("impulse",interval?"badspell:interval":"badspell:impulse",0,0,interval?Map.of("ticks",new Value.Number(40)):Map.of()));
@@ -27,6 +28,19 @@ public final class ExampleFormulas {
         nodes.add(new Formula.Node("activate","badspell:activate",0,300,Map.of()));edges.add(new Formula.Edge(result,"activate","effect"));edges.add(new Formula.Edge("impulse","activate","trigger"));
         String title=switch(kind){case "heal"->"Behutsame Heilung";case "push"->"Behutsamer Schub";case "heat"->"Wärmefeld";case "cold"->"Kältefeld";case "shield"->"Schutzkreis";case "see"->"Feldblick";case "night_lamp"->"Nachtlampe";case "signature"->"Signaturlicht";default->kind;};
         return new Formula(UUID.nameUUIDFromBytes(("badspell:"+kind).getBytes(java.nio.charset.StandardCharsets.UTF_8)),owner,1,title,nodes,edges,"activate",1000);
+    }
+    private static Formula advanced(String kind,UUID owner){
+        var nodes=new ArrayList<Formula.Node>();var edges=new ArrayList<Formula.Edge>();
+        class Graph {
+            void node(String id,String rune,int x,int y,Map<String,Value> p){nodes.add(new Formula.Node(id,"badspell:"+rune,x,y,p));}
+            void node(String id,String rune,int x,int y){node(id,rune,x,y,Map.of());}
+            void wire(String from,String to,String port){edges.add(new Formula.Edge(from,to,port));}
+        }
+        var g=new Graph();g.node("impulse","impulse",0,0);boolean aimed=kind.equals("frost_push");g.node("actor",aimed?"target_entity":"self",0,100);if(aimed)g.wire("impulse","actor","trigger");g.node("position","entity_position",164,100);g.wire("actor","position","target");g.node("region",kind.equals("adaptive_ward")?"circle":"point",328,100,kind.equals("adaptive_ward")?Map.of("radius",new Value.Number(1)):Map.of());g.wire("position","region","position");String result;
+        if(kind.equals("self_light")){g.node("effect","light",492,100,Map.of("strength",new Value.Number(5),"duration_ticks",new Value.Number(200)));g.wire("region","effect","region");result="effect";}
+        else if(aimed){g.node("cold","cold",492,100,Map.of("strength",new Value.Number(1),"duration_ticks",new Value.Number(100)));g.wire("region","cold","region");g.node("direction","direction",164,220);g.node("push","push",328,220,Map.of("strength",new Value.Number(1)));g.wire("actor","push","target");g.wire("direction","push","vector");g.node("combine","combine",656,100);g.wire("cold","combine","first");g.wire("push","combine","second");g.node("available","has_target",492,260);g.node("none","none",656,260);g.node("choose","if_effect",820,100);g.wire("available","choose","condition");g.wire("combine","choose","yes");g.wire("none","choose","no");result="choose";}
+        else {g.node("health","entity_health",164,220);g.wire("actor","health","target");g.node("threshold","number",164,320,Map.of("value",new Value.Number(12)));g.node("injured","greater",328,220);g.wire("threshold","injured","a");g.wire("health","injured","b");g.node("heal","heal",492,220,Map.of("points",new Value.Number(2)));g.wire("actor","heal","target");g.node("shield","shield",492,100,Map.of("strength",new Value.Number(1),"duration_ticks",new Value.Number(100)));g.wire("region","shield","region");g.node("choose","if_effect",656,100);g.wire("injured","choose","condition");g.wire("heal","choose","yes");g.wire("shield","choose","no");result="choose";}
+        g.node("activate","activate",aimed?984:820,100);g.wire(result,"activate","effect");g.wire("impulse","activate","trigger");return new Formula(UUID.nameUUIDFromBytes(("badspell:"+kind).getBytes(java.nio.charset.StandardCharsets.UTF_8)),owner,1,switch(kind){case "self_light"->"Eigenlicht";case "frost_push"->"Froststoß";default->"Wachsamer Schutz";},nodes,edges,"activate",1000);
     }
     public static Formula light(UUID owner) {
         return new Formula(UUID.fromString("919339fc-53d3-4215-a960-c3a03a201001"),owner,1,"Lichtfunke",List.of(

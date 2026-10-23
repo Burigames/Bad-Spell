@@ -1,3 +1,15 @@
+# Runenwerkstatt und Kodex – 23.10.2026
+
+- Bebilderter DE/EN-Kodex: Taste G, neues herstellbares Buch und Editorhilfe.
+- Runenauswahl mit Beschreibungs-/Port-/Typsuche und passenden Quellen direkt aus Eingangszeilen.
+- Gemeinsamer Pergamentstil, eigene Workshop-Materialien und stationsspezifische Arbeitsbereiche mit Rezeptbildern.
+- Selbst-/Entity-Ziele, konkrete Heilablehnungen, Zielvorschau und direkte Kreatur-Interaktionen mit Handschuh.
+- Wesenposition, Zielgesundheit, Versatz, Rechenoperatoren und bis zu acht kombinierte Effekte; Froststoß und bedingter Schutz als echte Graphen.
+
+Build erfolgreich, 45 Kerntests und 38 Server-GameTests bestanden. Getrennte Multiplayer-/Survival-Abnahme offen. **Netzwerkprotokoll 3: Client und Server gemeinsam aktualisieren.** Minecraft 26.2 / NeoForge 26.2.0.93 / Java 25.
+
+SHA256: `d9693e7b603b13c41310a97cbc67916ef92facfd0a2c93993d331259ed9f2d96`
+
 # M1 development snapshot – 23.10.2026
 
 Erweiterte Runensprache, Bibliothek/Module, neue Zauberwirkungen und Werkzeuge, Q2/Q3 sowie Vanilla-nahe Texturen und 3D-Modelle. 54 Verarbeitungsrezepte.

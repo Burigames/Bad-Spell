@@ -21,9 +21,11 @@ public final class ActivationService {
         Value.Effect effect=engine.plan(formula,context);
         if(effect.event().cancelled()||effect.event().remaining()==0)return Result.CANCELLED;
         if(context.tick()<effect.event().tick())return Result.WAITING;
-        var target=effect.region().center();
+        for(var part:effect.children().isEmpty()?java.util.List.of(effect):effect.children()){
+        var target=part.region().center();
         double dx=(double)origin.x()-target.x(),dy=(double)origin.y()-target.y(),dz=(double)origin.z()-target.z();
-        if(!origin.dimension().equals(target.dimension()) || dx*dx+dy*dy+dz*dz>(effect.id().equals("badspell:light")?144:256)) return Result.OUT_OF_RANGE;
+        if(!origin.dimension().equals(target.dimension()) || dx*dx+dy*dy+dz*dz>(part.id().equals("badspell:light")?144:256)) return Result.OUT_OF_RANGE;
+        }
         long fieldCost=effect.fieldCost();
         if(stability<50) fieldCost=Math.addExact(fieldCost,Math.floorDiv(Math.addExact(fieldCost,3),4));
         if(fieldCost>formula.energyBudget()) return Result.BUDGET;
