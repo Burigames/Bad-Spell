@@ -1,0 +1,22 @@
+{
+  "type": "badspell:processing",
+  "station": "engraving_station",
+  "inputs": [
+    {
+      "ingredient": "badspell:raw_field_compass",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:inscribed_rune_plate",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:field_compass",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 80
+}

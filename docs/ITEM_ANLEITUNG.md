@@ -1,12 +1,24 @@
-# Bad Spell – Anleitung für die vier vorhandenen Items
+# Bad Spell – Item-Anleitung
 
 **Gültig für:** Bad Spell 0.1.0-alpha, Minecraft Java 26.2, NeoForge 26.2.0.93, Java 25.
 
-Dieser Build enthält die vier ursprünglichen Werkzeuge plus 37 Material-/Plattenitems und 17 Blöcke einschließlich sieben Stationen. Du kannst eine Punktlichtformel bearbeiten, speichern, in einen Handschuh kopieren, gravieren und wirken. Die erste Herstellungskette ist implementiert; weitere Zauberwirkungen, Mobs und Dimensionen fehlen. Siehe [Herstellung](HERSTELLUNG.md).
+Dieser Entwicklungsbuild erweitert die ursprünglichen Werkzeuge um weitere Zaubereffekte, Bibliothek, Module und Qualitätsstufen. Die neuen grafischen Abläufe sind noch nicht im Client abgenommen.
+
+## Neue M1-Werkzeuge und Vorlagen
+
+- **Formelbuch:** Über die Bibliothek Vorlagen wie Licht, Heilung, Stoß, Hitze, Kälte, Schild, Zielinformation, Nachtlampe oder Signatur auswählen. Bearbeiten, speichern und an einen eigenen Handschuh exportieren. Module sind eingefrorene Kopien einer eigenen Formel; Änderungen am Original aktualisieren bestehende Aufrufe nicht automatisch.
+- **Handschuh:** Rechtsklick wirkt die gewählte Formel. Umschalt+Mausrad wechselt den Slot. Umschalt+Rechtsklick beendet laufende geplante Formeln. Q1/Q2/Q3 besitzen 4/8/12 Slots.
+- **Feldzellen:** 100/300/600 FL für Q1/Q2/Q3; Ladungen mehrerer Zellen im Inventar werden zusammen verwendet. Wiederaufladerezepte verbrauchen die Eingabezelle einschließlich vorhandener Restladung.
+- **Runenmeißel:** Auf eine feste volle Blockseite rechtsklicken. Bis zu 16 Runen im 4×4-Raster platzieren oder aus dem eigenen Buch übernehmen, verbinden und speichern. Erst bestätigte Änderungen verbrauchen Haltbarkeit. Abbrechen schreibt nichts. Beim Entfernen/Ersetzen des Trägerblocks erlischt seine Gravur.
+- **Resonanzgabel:** Rechtsklick in die Luft schaltet Diagnose/Aktivierung um. Rechtsklick auf eine eigene Gravur aktiviert bzw. untersucht sie. Erfolgreiche Aktivierung kostet Haltbarkeit und reguläre Zauberenergie.
+- **Feldkompass:** Umschalt+Rechtsklick auf einen Block bindet eine neue ortsfeste Signatur. Normaler Rechtsklick zeigt Richtung und Signalstärke. Q3 erhöht die Reichweite; eine Kopie behält ihre bisherige Bindung.
+- **Arkanes Monokel:** Im Kopfslot tragen und eigene Runenfelder/Stationen ansehen. Taste M wechselt die Intensität einschließlich Aus. Ein aktiver Scan kostet alle fünf Sekunden 1 FK.
+
+Heilung, Stoß und Zielinformation benötigen ein gültiges Ziel; auf andere Spieler wirken eingeschränkte Rechte. Hitze/Kälte/Schild und Licht sind zeitlich begrenzt. Automatische Formeln zahlen bei jeder Ausführung; Energiemangel pausiert den Auftrag. Diese Mechaniken sind Komponenten-/Servertests unterzogen, neue Bedienabläufe noch ohne grafischen Test.
 
 ## Korrektur für den ersten veröffentlichten Build
 
-Wenn FL/FK sinkt, aber kein Licht erscheint, kann noch die erste fehlerhafte JAR installiert sein. Dieser Fehler wurde nachgewiesen: Der gespeicherte Lichteintrag erzeugte allein keine Emission in Luft. Die aktuelle JAR im Repository enthält die Korrektur und einen kurzen Partikeleffekt. Ersetze die alte Datei im Mods-Ordner und starte das Spiel bzw. den Server neu; auf einem Server auch die Clients aktualisieren. Nur eine Bad-Spell-JAR gleichzeitig installieren. Bereits exportierte Formeln bleiben gültig. Andere Effekte als Punktlicht werden durch diesen Hotfix nicht ergänzt.
+Wenn FL/FK sinkt, aber kein Licht erscheint, kann noch die erste fehlerhafte JAR installiert sein. Dieser Fehler wurde nachgewiesen: Der gespeicherte Lichteintrag erzeugte allein keine Emission in Luft. Die aktuelle JAR im Repository enthält die Korrektur und einen kurzen Partikeleffekt. Ersetze die alte Datei im Mods-Ordner und starte das Spiel bzw. den Server neu; auf einem Server auch die Clients aktualisieren. Nur eine Bad-Spell-JAR gleichzeitig installieren. Bereits exportierte Formeln bleiben gültig. Die nachstehenden historischen Hotfix-Hinweise betreffen den ursprünglichen Lichtfehler.
 
 ## Items erhalten
 
@@ -21,7 +33,7 @@ Alternativ mit Befehlsberechtigung:
 /give @s badspell:rune_ink 4
 ```
 
-Verwende für den Einstieg nur einen Handschuh und eine Feldzelle im Inventar. Bei mehreren Exemplaren verwendet der Buch-Export den zuerst gefundenen Handschuh; beim Wirken wird die zuerst gefundene Feldzelle verwendet. Restladungen mehrerer Zellen werden nicht addiert.
+Verwende für den Einstieg nur einen Handschuh und eine Feldzelle im Inventar. Bei mehreren Exemplaren verwendet der Buch-Export den zuerst gefundenen Handschuh; beim Wirken werden die verfügbaren Ladungen aller Feldzellen verwendet.
 
 ## Schnellstart: das erste Licht
 

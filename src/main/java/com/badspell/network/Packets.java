@@ -55,8 +55,49 @@ public final class Packets {
             (p,b)->{b.writeBlockPos(p.position);b.writeVarInt(p.strength);},b->new LightUpdate(b.readBlockPos(),b.readVarInt()));
         public Type<LightUpdate> type(){return TYPE;}
     }
+    public record LibraryAction(int hand,int action,java.util.UUID id,String title,String tags,int page) implements CustomPacketPayload {
+        public static final Type<LibraryAction> TYPE=new Type<>(Identifier.fromNamespaceAndPath("badspell","library_action"));
+        public static final StreamCodec<RegistryFriendlyByteBuf,LibraryAction> CODEC=CustomPacketPayload.codec((p,b)->{b.writeVarInt(p.hand);b.writeVarInt(p.action);b.writeUUID(p.id);b.writeUtf(p.title,96);b.writeUtf(p.tags,256);b.writeVarInt(p.page);},b->new LibraryAction(b.readVarInt(),b.readVarInt(),b.readUUID(),b.readUtf(96),b.readUtf(256),b.readVarInt()));
+        public Type<LibraryAction> type(){return TYPE;}
+    }
+    public record BoardAction(int hand,BlockPos position,int face,byte[] formula) implements CustomPacketPayload {
+        public static final Type<BoardAction> TYPE=new Type<>(Identifier.fromNamespaceAndPath("badspell","board_action"));
+        public static final StreamCodec<RegistryFriendlyByteBuf,BoardAction> CODEC=CustomPacketPayload.codec((p,b)->{b.writeVarInt(p.hand);b.writeBlockPos(p.position);b.writeVarInt(p.face);b.writeByteArray(p.formula);},b->new BoardAction(b.readVarInt(),b.readBlockPos(),b.readVarInt(),b.readByteArray(MAX_FORMULA_BYTES)));
+        public Type<BoardAction> type(){return TYPE;}
+    }
+    public record BoardView(int hand,BlockPos position,int face,byte[] formula,int durability) implements CustomPacketPayload {
+        public static final Type<BoardView> TYPE=new Type<>(Identifier.fromNamespaceAndPath("badspell","board_view"));
+        public static final StreamCodec<RegistryFriendlyByteBuf,BoardView> CODEC=CustomPacketPayload.codec((p,b)->{b.writeVarInt(p.hand);b.writeBlockPos(p.position);b.writeVarInt(p.face);b.writeByteArray(p.formula);b.writeVarInt(p.durability);},b->new BoardView(b.readVarInt(),b.readBlockPos(),b.readVarInt(),b.readByteArray(MAX_FORMULA_BYTES),b.readVarInt()));
+        public Type<BoardView> type(){return TYPE;}
+    }
+    public record BoardMarks(BlockPos position,int face,byte[] glyphs) implements CustomPacketPayload {
+        public static final Type<BoardMarks> TYPE=new Type<>(Identifier.fromNamespaceAndPath("badspell","board_marks"));
+        public static final StreamCodec<RegistryFriendlyByteBuf,BoardMarks> CODEC=CustomPacketPayload.codec((p,b)->{b.writeBlockPos(p.position);b.writeVarInt(p.face);b.writeByteArray(p.glyphs);},b->new BoardMarks(b.readBlockPos(),b.readVarInt(),b.readByteArray(16)));
+        public Type<BoardMarks> type(){return TYPE;}
+    }
+    public record MonocleToggle() implements CustomPacketPayload {
+        public static final Type<MonocleToggle> TYPE=new Type<>(Identifier.fromNamespaceAndPath("badspell","monocle_toggle"));
+        public static final StreamCodec<RegistryFriendlyByteBuf,MonocleToggle> CODEC=StreamCodec.unit(new MonocleToggle());public Type<MonocleToggle> type(){return TYPE;}
+    }
+    public record ScanInfo(BlockPos position,String text,int intensity) implements CustomPacketPayload {
+        public static final Type<ScanInfo> TYPE=new Type<>(Identifier.fromNamespaceAndPath("badspell","scan_info"));
+        public static final StreamCodec<RegistryFriendlyByteBuf,ScanInfo> CODEC=CustomPacketPayload.codec((p,b)->{b.writeBlockPos(p.position);b.writeUtf(p.text,512);b.writeVarInt(p.intensity);},b->new ScanInfo(b.readBlockPos(),b.readUtf(512),b.readVarInt()));
+        public Type<ScanInfo> type(){return TYPE;}
+    }
+    public record LibraryEntry(byte[] formula,String tags){}
+    public record LibraryPage(int hand,int page,int total,java.util.List<LibraryEntry> entries) implements CustomPacketPayload {
+        public static final Type<LibraryPage> TYPE=new Type<>(Identifier.fromNamespaceAndPath("badspell","library_page"));
+        public static final StreamCodec<RegistryFriendlyByteBuf,LibraryPage> CODEC=CustomPacketPayload.codec((p,b)->{b.writeVarInt(p.hand);b.writeVarInt(p.page);b.writeVarInt(p.total);b.writeVarInt(p.entries.size());for(var e:p.entries){b.writeByteArray(e.formula);b.writeUtf(e.tags,256);}},b->{int hand=b.readVarInt(),page=b.readVarInt(),total=b.readVarInt(),count=b.readVarInt();if(count<0||count>8)throw new IllegalArgumentException("Page limit");var entries=new java.util.ArrayList<LibraryEntry>();for(int i=0;i<count;i++)entries.add(new LibraryEntry(b.readByteArray(MAX_FORMULA_BYTES),b.readUtf(256)));return new LibraryPage(hand,page,total,java.util.List.copyOf(entries));});
+        public Type<LibraryPage> type(){return TYPE;}
+    }
     public static void register(RegisterPayloadHandlersEvent event) {
-        var registrar=event.registrar("1");
+        var registrar=event.registrar("2");
+        registrar.playToServer(MonocleToggle.TYPE,MonocleToggle.CODEC,(p,c)->{if(c.player() instanceof net.minecraft.server.level.ServerPlayer player)com.badspell.server.ToolActions.toggleMonocle(player);});
+        registrar.playToClient(BoardMarks.TYPE,BoardMarks.CODEC);
+        registrar.playToClient(BoardView.TYPE,BoardView.CODEC);registrar.playToClient(ScanInfo.TYPE,ScanInfo.CODEC);
+        registrar.playToServer(BoardAction.TYPE,BoardAction.CODEC,(p,c)->{if(c.player() instanceof net.minecraft.server.level.ServerPlayer player)com.badspell.server.ToolActions.handle(player,p);});
+        registrar.playToClient(LibraryPage.TYPE,LibraryPage.CODEC);
+        registrar.playToServer(LibraryAction.TYPE,LibraryAction.CODEC,(p,c)->{if(c.player() instanceof net.minecraft.server.level.ServerPlayer player)com.badspell.server.FormulaLibrary.handle(player,p);});
         registrar.playToClient(OpenBook.TYPE,OpenBook.CODEC);
         registrar.playToClient(BookHistory.TYPE,BookHistory.CODEC);
         registrar.playToServer(GloveSlot.TYPE,GloveSlot.CODEC,(packet,context)->{

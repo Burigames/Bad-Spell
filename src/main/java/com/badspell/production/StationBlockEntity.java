@@ -40,7 +40,10 @@ public final class StationBlockEntity extends BlockEntity implements WorldlyCont
     public String station(){return BuiltInRegistries.BLOCK.getKey(getBlockState().getBlock()).getPath();}
     public void claim(Player player){if(owner==null){owner=player.getUUID();setChanged();}}
     public boolean canUse(Player player){return owner==null||owner.equals(player.getUUID());}
-    private int charge(){var stack=items.get(6);return stack.is(ModItems.FIELD_CELL.get())?Math.clamp(stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getIntOr("badspell_fl",100),0,100):0;}
+    private int charge(){var stack=items.get(6);return ModItems.isCell(stack)?Math.clamp(stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getIntOr("badspell_fl",ModItems.cellCapacity(stack)),0,ModItems.cellCapacity(stack)):0;}
+    public int energyStored(){return charge();}
+    public int energyCapacity(){return ModItems.cellCapacity(items.get(6));}
+    public void changeEnergy(int delta){int next=charge()+delta;if(next<0||next>energyCapacity())throw new IllegalArgumentException("Energy bounds");CustomData.update(DataComponents.CUSTOM_DATA,items.get(6),t->t.putInt("badspell_fl",next));setChanged();}
     private void spend(int amount){if(amount>0)CustomData.update(DataComponents.CUSTOM_DATA,items.get(6),t->t.putInt("badspell_fl",charge()-amount));}
     private boolean ready(int energy){if(energy>0&&!items.get(11).is(ModContent.item("cell_adapter"))){status=4;return false;}if(charge()<energy){status=2;return false;}return true;}
     private List<ItemStack> outputsAfter(List<ItemStack> outputs) {
@@ -64,24 +67,30 @@ public final class StationBlockEntity extends BlockEntity implements WorldlyCont
         if(chosen==null){if(self.progress!=0)self.setChanged();self.progress=0;self.total=0;self.recipeId="";self.cachedRecipe=null;self.status=1;return;}
         var recipe=chosen.value();String id=chosen.id().identifier().toString();
         if(self.cachedRecipe!=recipe){int hash=ProcessingRecipe.CODEC.codec().encodeStart(server.registryAccess().createSerializationContext(JsonOps.INSTANCE),recipe).getOrThrow().toString().hashCode();if(!id.equals(self.recipeId)||hash!=self.recipeHash)self.progress=0;self.recipeHash=hash;self.recipeId=id;self.cachedRecipe=recipe;}
-        self.total=recipe.ticks();var output=self.outputsAfter(recipe.outputs().stream().map(ItemStackTemplate::create).toList());if(output==null){self.status=3;return;}if(!self.ready(recipe.energy()))return;
+        self.total=recipe.ticks();var products=recipe.outputs().stream().map(ItemStackTemplate::create).toList();
+        for(var product:products)if(ModItems.isGlove(product))for(int slot=0;slot<6;slot++)if(ModItems.isGlove(self.items.get(slot))){if(self.owner==null){self.status=5;return;}try{if(!com.badspell.item.GloveFormulas.ownedBy(self.items.get(slot),self.owner)){self.status=5;return;}}catch(java.io.IOException error){self.status=5;return;}product.set(DataComponents.CUSTOM_DATA,self.items.get(slot).getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY));break;}
+        for(var product:products)if(product.is(ModItems.FIELD_COMPASS_Q3.get()))for(int slot=0;slot<6;slot++)if(self.items.get(slot).is(ModItems.FIELD_COMPASS.get())){product.set(DataComponents.CUSTOM_DATA,self.items.get(slot).getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY));break;}
+        for(var product:products)if(product.is(ModItems.FIELD_COMPASS.get())||product.is(ModItems.RESONANCE_FORK.get())&&self.items.stream().anyMatch(stack->stack.is(ModContent.item("raw_resonance_fork")))){
+            boolean qualified=false;for(int slot=0;slot<6;slot++)if(self.items.get(slot).getItem() instanceof RunePlateItem)try{var formula=FormulaCodec.decode(self.items.get(slot).getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getByteArray("badspell_formula").orElseThrow());if(self.owner!=null&&formula.owner().equals(self.owner)&&formula.nodes().stream().anyMatch(n->product.is(ModItems.FIELD_COMPASS.get())?n.rune().equals("badspell:sign"):n.rune().equals("badspell:check")||n.rune().equals("badspell:impulse")))qualified=true;}catch(java.io.IOException|java.util.NoSuchElementException error){}if(!qualified){self.status=5;return;}
+        }
+        var output=self.outputsAfter(products);if(output==null){self.status=3;return;}if(!self.ready(recipe.energy()))return;
         self.status=0;self.progress+=5;if(self.progress>=self.total)self.commit(recipe.allocation(self),output,recipe.energy());else if(self.progress%20==0)self.setChanged();
     }
     private boolean engrave(ServerLevel server) {
-        int plate=-1,book=-1;for(int i=0;i<6;i++){if(items.get(i).is(ModContent.item("blank_rune_plate")))plate=i;if(items.get(i).is(ModItems.FORMULA_BOOK.get()))book=i;}
+        int plate=-1,book=-1;for(int i=0;i<6;i++){if(items.get(i).is(ModContent.item("blank_rune_plate"))||items.get(i).is(ModContent.item("blank_rune_plate_q2"))||items.get(i).is(ModContent.item("blank_rune_plate_q3")))plate=i;if(items.get(i).is(ModItems.FORMULA_BOOK.get()))book=i;}
         if(plate<0||book<0)return false;
         try {
             var bytes=items.get(book).getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getByteArray("badspell_formula").orElseThrow();
             if(bytes.length>com.badspell.network.Packets.MAX_FORMULA_BYTES)throw new IllegalArgumentException();var formula=FormulaCodec.decode(bytes);
-            if(owner==null||!owner.equals(formula.owner())||formula.nodes().size()>24||!new FormulaValidator(RuneRegistry.standard()).validate(formula).isEmpty()){status=5;return true;}
-            var output=new ItemStack(ModContent.item("inscribed_rune_plate"));CustomData.update(DataComponents.CUSTOM_DATA,output,t->{t.putByteArray("badspell_formula",bytes);t.putString("badspell_checksum",new FormulaSnapshot(formula).checksum());});
+            if(owner==null||!owner.equals(formula.owner())||formula.nodes().size()>(items.get(plate).is(ModContent.item("blank_rune_plate_q3"))?128:items.get(plate).is(ModContent.item("blank_rune_plate_q2"))?64:24)||!new FormulaValidator(RuneRegistry.standard()).validate(formula).isEmpty()){status=5;return true;}
+            var output=new ItemStack(ModContent.item(items.get(plate).is(ModContent.item("blank_rune_plate_q3"))?"inscribed_rune_plate_q3":items.get(plate).is(ModContent.item("blank_rune_plate_q2"))?"inscribed_rune_plate_q2":"inscribed_rune_plate"));CustomData.update(DataComponents.CUSTOM_DATA,output,t->{t.putByteArray("badspell_formula",bytes);t.putString("badspell_checksum",new FormulaSnapshot(formula).checksum());});
             var slots=outputsAfter(List.of(output));if(slots==null){status=3;return true;}int energy=Math.min(500,30+4*formula.nodes().size());if(!ready(energy))return true;
             String id="engrave:"+new FormulaSnapshot(formula).checksum();if(!recipeId.equals(id)){progress=0;recipeId=id;cachedRecipe=null;}
             total=80;status=0;progress+=5;if(progress>=total){int[] used=new int[6];used[plate]=1;commit(used,slots,energy);}else if(progress%20==0)setChanged();return true;
         }catch(java.io.IOException|IllegalArgumentException|NoSuchElementException error){status=5;return true;}
     }
     public boolean activatePlate(ServerLevel server) {
-        if(owner==null||!items.get(0).is(ModContent.item("inscribed_rune_plate"))){status=5;return false;}
+        if(owner==null||!(items.get(0).getItem() instanceof RunePlateItem)){status=5;return false;}
         try {
             var tag=items.get(0).getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();var bytes=tag.getByteArray("badspell_formula").orElseThrow();if(bytes.length>30000)throw new IllegalArgumentException();
             var formula=FormulaCodec.decode(bytes);if(!formula.owner().equals(owner)||!new FormulaSnapshot(formula).verifies(tag.getStringOr("badspell_checksum",""))){status=5;return false;}
@@ -89,7 +98,7 @@ public final class StationBlockEntity extends BlockEntity implements WorldlyCont
             var context=new RuneRegistry.Context(position,server.getGameTime());var plan=new FormulaEngine(RuneRegistry.standard()).plan(formula,context);
             if(!ready((int)plan.fieldCost()))return false;
             // Device activations draw FL only; FK is reserved for direct player casting.
-            var account=new EnergyAccount(100,Long.MAX_VALUE,charge(),Long.MAX_VALUE);
+            var account=new EnergyAccount(600,Long.MAX_VALUE,charge(),Long.MAX_VALUE);
             var result=new ActivationService(new FormulaEngine(RuneRegistry.standard())).activate(formula,context,position,100,account,effect->{
                 if(!effect.id().equals("badspell:light")||effect.region().radius()!=0)return null;var p=effect.region().center();var at=new BlockPos(p.x(),p.y(),p.z());
                 if(!p.dimension().equals(dimension)||server.isOutsideBuildHeight(at)||!server.getChunkSource().hasChunk(at.getX()>>4,at.getZ()>>4)||!server.getWorldBorder().isWithinBounds(at)||!server.getBlockState(at).isAir())return null;
@@ -111,6 +120,6 @@ public final class StationBlockEntity extends BlockEntity implements WorldlyCont
     @Override public boolean stillValid(Player player){return level!=null&&level.getBlockEntity(worldPosition)==this&&player.distanceToSqr(worldPosition.getX()+.5,worldPosition.getY()+.5,worldPosition.getZ()+.5)<=64&&canUse(player);}
     @Override public void clearContent(){items.clear();setChanged();}
     @Override public int[] getSlotsForFace(Direction side){return side==Direction.DOWN?new int[]{7,8,9,10}:side==Direction.UP?new int[]{0,1,2,3,4,5}:new int[]{6,11};}
-    @Override public boolean canPlaceItemThroughFace(int slot,ItemStack stack,Direction side){return slot<6||slot==6&&stack.is(ModItems.FIELD_CELL.get())||slot==11&&stack.is(ModContent.item("cell_adapter"));}
+    @Override public boolean canPlaceItemThroughFace(int slot,ItemStack stack,Direction side){return slot<6||slot==6&&ModItems.isCell(stack)||slot==11&&stack.is(ModContent.item("cell_adapter"));}
     @Override public boolean canTakeItemThroughFace(int slot,ItemStack stack,Direction side){return slot>=7&&slot<11;}
 }

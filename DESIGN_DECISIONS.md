@@ -1,5 +1,19 @@
 # Designentscheidungen
 
+## M1-Entwicklungsstand vom 23.10.2026
+
+Dieser Abschnitt ersetzt widersprechende Angaben älterer Fortschrittsnotizen weiter unten. M1 ist noch **nicht vollständig abgenommen**. Die neue Clientdarstellung und ein vollständiger Survival-/Mehrspieler-Durchlauf sind offen.
+
+- Typisierte Vektor-, Text-, Entity-, Ereignis- und Regionswerte; verschachtelte Snapshot-Module, benannte Eingaben, typisierte Rückgaben, Bedingungen, Vergleich und begrenzte Auswertung.
+- Lichtfelder einschließlich Kugel/Pfad, Heilung, Stoß, Hitze, Kälte, Schild und Zielinformation; verzögerte/begrenzte/periodische Aktivierung mit Energieprüfung je Ausführung. Endliche Felder und Spieleraufträge werden gespeichert.
+- Private Formel-Bibliothek mit Suche, Tags und neun komponierten Vorlagen. Eigene Formelmodule lassen sich als Knoten einfügen. Oberflächengravur ist auf 16 Runen je Blockseite begrenzt; nur Glyphen werden öffentlich übertragen.
+- Runenmeißel, Resonanzgabel, Feldkompass/Q3, Monokel sowie Q2/Q3-Handschuhe, Zellen und Platten. Handschuhe besitzen 4/8/12 Slots, Zellen 100/300/600 FL. Zellladungen im Inventar werden zusammen verwendet.
+- Lokale Bindungen, versiegelte Blöcke sowie begrenzte Item-/Energieübertragung. Offizielle Interaktionsereignisse können Weltaktionen verweigern.
+- 54 datengetriebene Verarbeitungsrezepte plus 12 Vanilla-Rezepte. Sieben eigene Stationsmodelle, überarbeitete 16px-Texturen und 3D-Werkzeuge/Zellen. Stilregeln: [ASSET_STYLE.md](docs/ASSET_STYLE.md).
+
+**Grenzen:** Der Runenhalter führt weiterhin nur Punktlicht aus. Umfangreiche Maschinensteuerung, Forschung, Mobs, Bosse, Dimensionen und vollständige Weltgenerierung sind nicht fertig. Kompatibilität mit einzelnen Schutzmods und echte Netzwerkclients sind mit den neuen Abläufen noch nicht geprüft. Keine Behauptung einer vollständigen Umsetzung aller PDF-Features.
+
+
 1. Die direkten technischen Nutzervorgaben überschreiben die versionsoffene Plattformempfehlung der PDF: ausschließlich Minecraft 26.2, NeoForge, Java/JDK 25, Gradle/ModDevGradle. Kein Forge-/Fabric-Fallback und kein Versionswechsel.
 2. Die PDF bleibt Designquelle; ihr abschließendes „Demo-Ziel“ reduziert den Auftrag nicht. Alle 161 Konzepte plus Anhänge bleiben offen, bis ihre Gameplayfunktionen tatsächlich implementiert und geprüft sind.
 3. Die erste implementierte Schicht ist ein von Minecraft unabhängiger, servergeeigneter Domänenkern. So konnten Typregeln, Kosten und Fehlerfälle während der anfänglichen Mojang-Sperre geprüft werden. Nach Behebung des Zugriffs wurden echte 26.2-Adapter implementiert und serverseitig getestet. Der Core ersetzt weiterhin keine vollständige Ingame-Abnahme.

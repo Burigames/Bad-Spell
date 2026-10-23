@@ -1,6 +1,177 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/block",
   "textures": {
-    "all": "badspell:block/rune_holder"
-  }
+    "particle": "minecraft:block/spruce_planks",
+    "base": "minecraft:block/spruce_planks",
+    "metal": "minecraft:block/iron_block",
+    "stone": "minecraft:block/stone",
+    "dark": "minecraft:block/polished_deepslate",
+    "rune": "badspell:block/rune_tile",
+    "crystal": "minecraft:block/amethyst_block",
+    "glass": "minecraft:block/glass",
+    "top": "minecraft:block/crafting_table_top",
+    "front": "minecraft:block/furnace_front"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0.0,
+        1
+      ],
+      "to": [
+        15,
+        2.526,
+        15
+      ],
+      "faces": {
+        "down": {
+          "texture": "#dark"
+        },
+        "up": {
+          "texture": "#dark"
+        },
+        "north": {
+          "texture": "#dark"
+        },
+        "south": {
+          "texture": "#dark"
+        },
+        "west": {
+          "texture": "#dark"
+        },
+        "east": {
+          "texture": "#dark"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        2.526,
+        4
+      ],
+      "to": [
+        12,
+        9.263,
+        12
+      ],
+      "faces": {
+        "down": {
+          "texture": "#stone"
+        },
+        "up": {
+          "texture": "#stone"
+        },
+        "north": {
+          "texture": "#stone"
+        },
+        "south": {
+          "texture": "#stone"
+        },
+        "west": {
+          "texture": "#stone"
+        },
+        "east": {
+          "texture": "#stone"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        8.421,
+        2
+      ],
+      "to": [
+        14,
+        10.947,
+        14
+      ],
+      "faces": {
+        "down": {
+          "texture": "#dark"
+        },
+        "up": {
+          "texture": "#dark"
+        },
+        "north": {
+          "texture": "#dark"
+        },
+        "south": {
+          "texture": "#dark"
+        },
+        "west": {
+          "texture": "#dark"
+        },
+        "east": {
+          "texture": "#dark"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        10.947,
+        4
+      ],
+      "to": [
+        12,
+        11.789,
+        12
+      ],
+      "faces": {
+        "down": {
+          "texture": "#rune"
+        },
+        "up": {
+          "texture": "#rune"
+        },
+        "north": {
+          "texture": "#rune"
+        },
+        "south": {
+          "texture": "#rune"
+        },
+        "west": {
+          "texture": "#rune"
+        },
+        "east": {
+          "texture": "#rune"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        11.789,
+        6
+      ],
+      "to": [
+        10,
+        16.0,
+        10
+      ],
+      "faces": {
+        "down": {
+          "texture": "#crystal"
+        },
+        "up": {
+          "texture": "#crystal"
+        },
+        "north": {
+          "texture": "#crystal"
+        },
+        "south": {
+          "texture": "#crystal"
+        },
+        "west": {
+          "texture": "#crystal"
+        },
+        "east": {
+          "texture": "#crystal"
+        }
+      }
+    }
+  ]
 }

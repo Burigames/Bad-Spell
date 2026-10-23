@@ -1,0 +1,30 @@
+{
+  "type": "badspell:processing",
+  "station": "engraving_station",
+  "inputs": [
+    {
+      "ingredient": "badspell:rune_glove",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:precision_coil",
+      "count": 2
+    },
+    {
+      "ingredient": "badspell:arcane_alloy",
+      "count": 2
+    },
+    {
+      "ingredient": "badspell:stabilizer_seal",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:rune_glove_q2",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 100
+}

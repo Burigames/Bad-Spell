@@ -18,7 +18,9 @@ public final class StationBlock extends BaseEntityBlock {
     public static final MapCodec<StationBlock> CODEC=simpleCodec(StationBlock::new);
     public StationBlock(Properties properties){super(properties);}
     @Override public MapCodec<StationBlock> codec(){return CODEC;}
+    @Override protected net.minecraft.world.phys.shapes.VoxelShape getShape(BlockState state,net.minecraft.world.level.BlockGetter level,BlockPos pos,net.minecraft.world.phys.shapes.CollisionContext context){return StationShapes.shape(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(this).getPath());}
     @Override public BlockEntity newBlockEntity(BlockPos pos,BlockState state){return new StationBlockEntity(pos,state);}
+    @Override protected InteractionResult useItemOn(ItemStack stack,BlockState state,Level level,BlockPos pos,Player player,net.minecraft.world.InteractionHand hand,BlockHitResult hit){return com.badspell.server.ToolActions.utility(stack)?InteractionResult.PASS:super.useItemOn(stack,state,level,pos,player,hand,hit);}
     @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit) {
         if(level instanceof ServerLevel&&level.getBlockEntity(pos) instanceof StationBlockEntity station){if(station.canUse(player)){station.claim(player);player.openMenu(station);}else if(player instanceof net.minecraft.server.level.ServerPlayer server)server.sendSystemMessage(net.minecraft.network.chat.Component.translatable("message.badspell.machine_private"),true);}
         return InteractionResult.SUCCESS;

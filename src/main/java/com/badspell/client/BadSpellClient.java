@@ -13,19 +13,29 @@ import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlers
 
 @Mod(value=BadSpell.MOD_ID,dist=Dist.CLIENT)
 public final class BadSpellClient {
-    public BadSpellClient(IEventBus bus) { bus.addListener(BadSpellClient::register);bus.addListener(BadSpellClient::menus); net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(BadSpellClient::scroll); }
+    private static final net.minecraft.client.KeyMapping.Category KEYS=new net.minecraft.client.KeyMapping.Category(net.minecraft.resources.Identifier.fromNamespaceAndPath("badspell","controls"));
+    private static final net.minecraft.client.KeyMapping MONOCLE=new net.minecraft.client.KeyMapping("key.badspell.monocle",77,KEYS);
+    private static void keys(net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent event){event.registerCategory(KEYS);event.register(MONOCLE);}
+    private static void tick(net.neoforged.neoforge.client.event.ClientTickEvent.Post event){var game=Minecraft.getInstance();while(MONOCLE.consumeClick())if(game.player!=null&&game.gui.screen()==null&&game.player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD).is(com.badspell.content.ModItems.ARCANE_MONOCLE.get()))net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new Packets.MonocleToggle());}
+    public BadSpellClient(IEventBus bus) { bus.addListener(BadSpellClient::register);bus.addListener(BadSpellClient::keys);net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(BadSpellClient::tick);bus.addListener(BadSpellClient::menus);net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(RuneSurfaceRenderer::extract);net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(RuneSurfaceRenderer::submit);net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(RuneSurfaceRenderer::unload);net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(MonocleOverlay::render); net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(BadSpellClient::scroll); }
     private static void menus(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event){event.register(com.badspell.production.ProductionRegistries.MENU.get(),StationScreen::new);}
     private static void scroll(net.neoforged.neoforge.client.event.InputEvent.MouseScrollingEvent event) {
         var game=Minecraft.getInstance();var player=game.player;
         if(player==null || !game.options.keyShift.isDown() || event.getScrollDeltaY()==0)return;
-        int hand=player.getMainHandItem().is(com.badspell.content.ModItems.RUNE_GLOVE.get())?0:
-            player.getOffhandItem().is(com.badspell.content.ModItems.RUNE_GLOVE.get())?1:-1;
+        int hand=com.badspell.content.ModItems.isGlove(player.getMainHandItem())?0:
+            com.badspell.content.ModItems.isGlove(player.getOffhandItem())?1:-1;
         if(hand<0)return;
         event.setCanceled(true);
         if(event.getAccumulatedScrollY()!=0)net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(
             new Packets.GloveSlot(hand,event.getAccumulatedScrollY()>0?-1:1));
     }
     private static void register(RegisterClientPayloadHandlersEvent event) {
+        event.register(Packets.BoardMarks.TYPE,(packet,context)->RuneSurfaceRenderer.accept(packet));
+        event.register(Packets.ScanInfo.TYPE,(packet,context)->MonocleOverlay.accept(packet));
+        event.register(Packets.BoardView.TYPE,(packet,context)->{try{var game=Minecraft.getInstance();var formula=FormulaCodec.decode(packet.formula());if(game.gui.screen() instanceof FormulaBookScreen current&&current.isBoard(packet.position(),packet.face()))current.acceptServer(formula,packet.durability());else game.gui.setScreen(FormulaBookScreen.board(packet.hand(),formula,packet.durability(),packet.position(),packet.face()));}catch(IOException error){context.disconnect(net.minecraft.network.chat.Component.translatable("message.badspell.invalid"));}});
+        event.register(Packets.LibraryPage.TYPE,(packet,context)->{
+            var game=Minecraft.getInstance();if(game.gui.screen() instanceof FormulaLibraryScreen library)library.accept(packet);else if(game.gui.screen() instanceof FormulaBookScreen book)game.gui.setScreen(new FormulaLibraryScreen(book,packet));
+        });
         event.register(Packets.OpenBook.TYPE,(packet,context)->{
             try {
                 var game=Minecraft.getInstance();var formula=FormulaCodec.decode(packet.formula());

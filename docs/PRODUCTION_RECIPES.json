@@ -1,194 +1,32 @@
 {
-  "cell_casing": {
+  "aether_solution": {
     "type": "badspell:processing",
-    "station": "arcane_workbench",
+    "station": "alchemy_table",
     "inputs": [
       {
-        "ingredient": "minecraft:copper_ingot",
-        "count": 1
-      },
-      {
-        "ingredient": "minecraft:glass",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:empty_field_cell",
-        "count": 1
-      }
-    ],
-    "ticks": 40,
-    "energy": 0
-  },
-  "starter_cell": {
-    "type": "badspell:processing",
-    "station": "arcane_workbench",
-    "inputs": [
-      {
-        "ingredient": "minecraft:redstone",
+        "ingredient": "badspell:moon_blossom",
         "count": 2
       },
       {
-        "ingredient": "badspell:field_crystal_shard_q0",
+        "ingredient": "badspell:crystal_dust",
         "count": 1
       },
       {
-        "ingredient": "minecraft:coal",
-        "count": 1
-      },
-      {
-        "ingredient": "badspell:empty_field_cell",
+        "ingredient": "badspell:pure_water",
         "count": 1
       }
     ],
     "outputs": [
       {
-        "id": "badspell:field_cell",
-        "count": 1
-      }
-    ],
-    "ticks": 40,
-    "energy": 0
-  },
-  "cell_recharge": {
-    "type": "badspell:processing",
-    "station": "arcane_workbench",
-    "inputs": [
-      {
-        "ingredient": "minecraft:redstone",
-        "count": 2
-      },
-      {
-        "ingredient": "badspell:field_crystal_shard",
+        "id": "badspell:aether_solution",
         "count": 1
       },
       {
-        "ingredient": "minecraft:coal",
-        "count": 1
-      },
-      {
-        "ingredient": "badspell:empty_field_cell",
+        "id": "minecraft:glass_bottle",
         "count": 1
       }
     ],
-    "outputs": [
-      {
-        "id": "badspell:field_cell",
-        "count": 1
-      }
-    ],
-    "ticks": 40,
-    "energy": 0
-  },
-  "cell_adapter": {
-    "type": "badspell:processing",
-    "station": "arcane_workbench",
-    "inputs": [
-      {
-        "ingredient": "minecraft:copper_ingot",
-        "count": 1
-      },
-      {
-        "ingredient": "badspell:field_crystal_shard_q0",
-        "count": 1
-      },
-      {
-        "ingredient": "minecraft:redstone",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:cell_adapter",
-        "count": 1
-      }
-    ],
-    "ticks": 40,
-    "energy": 0
-  },
-  "primitive_grinder": {
-    "type": "badspell:processing",
-    "station": "arcane_workbench",
-    "inputs": [
-      {
-        "ingredient": "minecraft:iron_ingot",
-        "count": 3
-      },
-      {
-        "ingredient": "minecraft:quartz_block",
-        "count": 1
-      },
-      {
-        "ingredient": "minecraft:copper_ingot",
-        "count": 2
-      },
-      {
-        "ingredient": "badspell:coarse_crystal_shard",
-        "count": 2
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:crystal_grinder",
-        "count": 1
-      }
-    ],
-    "ticks": 100,
-    "energy": 0
-  },
-  "crystal_split": {
-    "type": "badspell:processing",
-    "station": "crystal_grinder",
-    "inputs": [
-      {
-        "ingredient": "badspell:raw_field_crystal",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:field_crystal_shard",
-        "count": 3
-      }
-    ],
-    "ticks": 80,
-    "energy": 20
-  },
-  "crystal_dust": {
-    "type": "badspell:processing",
-    "station": "crystal_grinder",
-    "inputs": [
-      {
-        "ingredient": "badspell:field_crystal_shard",
-        "count": 2
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:crystal_dust",
-        "count": 4
-      }
-    ],
-    "ticks": 60,
-    "energy": 10
-  },
-  "raw_core": {
-    "type": "badspell:processing",
-    "station": "crystal_grinder",
-    "inputs": [
-      {
-        "ingredient": "badspell:field_crystal_shard",
-        "count": 4
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:raw_crystal_core",
-        "count": 1
-      }
-    ],
-    "ticks": 100,
+    "ticks": 120,
     "energy": 20
   },
   "alchemy_table": {
@@ -224,337 +62,6 @@
     ],
     "ticks": 100,
     "energy": 0
-  },
-  "pure_water": {
-    "type": "badspell:processing",
-    "station": "alchemy_table",
-    "inputs": [
-      {
-        "ingredient": {
-          "neoforge:ingredient_type": "neoforge:components",
-          "items": "minecraft:potion",
-          "components": {
-            "minecraft:potion_contents": {
-              "potion": "minecraft:water"
-            }
-          },
-          "strict": false
-        },
-        "count": 1
-      },
-      {
-        "ingredient": "minecraft:charcoal",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:pure_water",
-        "count": 1
-      }
-    ],
-    "ticks": 200,
-    "energy": 0
-  },
-  "rune_resin": {
-    "type": "badspell:processing",
-    "station": "alchemy_table",
-    "inputs": [
-      {
-        "ingredient": "badspell:runewood_log",
-        "count": 2
-      },
-      {
-        "ingredient": "badspell:pure_water",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:rune_resin",
-        "count": 2
-      },
-      {
-        "id": "minecraft:glass_bottle",
-        "count": 1
-      }
-    ],
-    "ticks": 100,
-    "energy": 10
-  },
-  "conductive_paste": {
-    "type": "badspell:processing",
-    "station": "alchemy_table",
-    "inputs": [
-      {
-        "ingredient": "badspell:crystal_dust",
-        "count": 2
-      },
-      {
-        "ingredient": "minecraft:redstone",
-        "count": 1
-      },
-      {
-        "ingredient": "badspell:rune_resin",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:conductive_paste",
-        "count": 4
-      }
-    ],
-    "ticks": 80,
-    "energy": 10
-  },
-  "precision_coil": {
-    "type": "badspell:processing",
-    "station": "arcane_workbench",
-    "inputs": [
-      {
-        "ingredient": "minecraft:copper_ingot",
-        "count": 2
-      },
-      {
-        "ingredient": "badspell:conductive_paste",
-        "count": 2
-      },
-      {
-        "ingredient": "badspell:field_crystal_shard",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:precision_coil",
-        "count": 1
-      }
-    ],
-    "ticks": 40,
-    "energy": 0
-  },
-  "crystal_core": {
-    "type": "badspell:processing",
-    "station": "alchemy_table",
-    "inputs": [
-      {
-        "ingredient": "badspell:raw_crystal_core",
-        "count": 1
-      },
-      {
-        "ingredient": "badspell:pure_water",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:crystal_core",
-        "count": 1
-      },
-      {
-        "id": "minecraft:glass_bottle",
-        "count": 1
-      }
-    ],
-    "ticks": 100,
-    "energy": 25
-  },
-  "moon_brew": {
-    "type": "badspell:processing",
-    "station": "alchemy_table",
-    "inputs": [
-      {
-        "ingredient": "badspell:moon_blossom",
-        "count": 2
-      },
-      {
-        "ingredient": "badspell:pure_water",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:moon_brew",
-        "count": 2
-      },
-      {
-        "id": "minecraft:glass_bottle",
-        "count": 1
-      }
-    ],
-    "ticks": 160,
-    "energy": 15
-  },
-  "moon_salt": {
-    "type": "badspell:processing",
-    "station": "alchemy_table",
-    "inputs": [
-      {
-        "ingredient": "badspell:moon_brew",
-        "count": 2
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:moon_salt",
-        "count": 1
-      }
-    ],
-    "ticks": 240,
-    "energy": 20
-  },
-  "moon_essence": {
-    "type": "badspell:processing",
-    "station": "alchemy_table",
-    "inputs": [
-      {
-        "ingredient": "badspell:moon_brew",
-        "count": 2
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:moon_essence",
-        "count": 1
-      }
-    ],
-    "ticks": 200,
-    "energy": 20
-  },
-  "aether_solution": {
-    "type": "badspell:processing",
-    "station": "alchemy_table",
-    "inputs": [
-      {
-        "ingredient": "badspell:moon_blossom",
-        "count": 2
-      },
-      {
-        "ingredient": "badspell:crystal_dust",
-        "count": 1
-      },
-      {
-        "ingredient": "badspell:pure_water",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:aether_solution",
-        "count": 1
-      },
-      {
-        "id": "minecraft:glass_bottle",
-        "count": 1
-      }
-    ],
-    "ticks": 120,
-    "energy": 20
-  },
-  "rune_ink": {
-    "type": "badspell:processing",
-    "station": "alchemy_table",
-    "inputs": [
-      {
-        "ingredient": "badspell:crystal_dust",
-        "count": 2
-      },
-      {
-        "ingredient": "badspell:moon_brew",
-        "count": 1
-      },
-      {
-        "ingredient": "minecraft:ink_sac",
-        "count": 1
-      },
-      {
-        "ingredient": "minecraft:glass_bottle",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:rune_ink",
-        "count": 1
-      }
-    ],
-    "ticks": 100,
-    "energy": 10
-  },
-  "formula_book": {
-    "type": "badspell:processing",
-    "station": "alchemy_table",
-    "inputs": [
-      {
-        "ingredient": "badspell:raw_formula_book",
-        "count": 1
-      },
-      {
-        "ingredient": "badspell:rune_ink",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:formula_book",
-        "count": 1
-      }
-    ],
-    "ticks": 80,
-    "energy": 0
-  },
-  "arcane_smelter": {
-    "type": "badspell:processing",
-    "station": "arcane_workbench",
-    "inputs": [
-      {
-        "ingredient": "minecraft:blast_furnace",
-        "count": 1
-      },
-      {
-        "ingredient": "badspell:arcane_ingot_q0",
-        "count": 4
-      },
-      {
-        "ingredient": "badspell:conductive_paste",
-        "count": 2
-      },
-      {
-        "ingredient": "badspell:precision_coil",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:arcane_smelter",
-        "count": 1
-      }
-    ],
-    "ticks": 160,
-    "energy": 0
-  },
-  "arcane_ingot": {
-    "type": "badspell:processing",
-    "station": "arcane_smelter",
-    "inputs": [
-      {
-        "ingredient": "badspell:raw_arcane_ore",
-        "count": 2
-      },
-      {
-        "ingredient": "minecraft:coal",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:arcane_ingot",
-        "count": 1
-      }
-    ],
-    "ticks": 160,
-    "energy": 40
   },
   "arcane_alloy": {
     "type": "badspell:processing",
@@ -600,31 +107,914 @@
     "ticks": 80,
     "energy": 30
   },
-  "resonance_glass": {
+  "arcane_ingot": {
     "type": "badspell:processing",
     "station": "arcane_smelter",
     "inputs": [
       {
-        "ingredient": "badspell:resonance_shard",
+        "ingredient": "badspell:raw_arcane_ore",
         "count": 2
       },
       {
-        "ingredient": "minecraft:glass",
-        "count": 2
-      },
-      {
-        "ingredient": "badspell:arcane_dust",
+        "ingredient": "minecraft:coal",
         "count": 1
       }
     ],
     "outputs": [
       {
-        "id": "badspell:resonance_glass",
-        "count": 2
+        "id": "badspell:arcane_ingot",
+        "count": 1
       }
     ],
     "ticks": 160,
-    "energy": 50
+    "energy": 40
+  },
+  "arcane_monocle": {
+    "type": "badspell:processing",
+    "station": "engraving_station",
+    "inputs": [
+      {
+        "ingredient": "badspell:monocle_frame",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:stabilizer_seal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:arcane_monocle",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 60
+  },
+  "arcane_smelter": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "minecraft:blast_furnace",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:arcane_ingot_q0",
+        "count": 4
+      },
+      {
+        "ingredient": "badspell:conductive_paste",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:precision_coil",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:arcane_smelter",
+        "count": 1
+      }
+    ],
+    "ticks": 160,
+    "energy": 0
+  },
+  "binding_compound": {
+    "type": "badspell:processing",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "ingredient": "badspell:rune_resin",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:moon_salt",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:binding_compound",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 10
+  },
+  "blank_rune_plate": {
+    "type": "badspell:processing",
+    "station": "rune_press",
+    "inputs": [
+      {
+        "ingredient": "badspell:arcane_ingot",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:conductive_paste",
+        "count": 2
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:blank_rune_plate",
+        "count": 2
+      }
+    ],
+    "ticks": 100,
+    "energy": 40
+  },
+  "blank_rune_plate_q2": {
+    "type": "badspell:processing",
+    "station": "rune_press",
+    "inputs": [
+      {
+        "ingredient": "badspell:arcane_alloy",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:conductive_paste",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:resonance_glass",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:blank_rune_plate_q2",
+        "count": 2
+      }
+    ],
+    "ticks": 100,
+    "energy": 80
+  },
+  "blank_rune_plate_q3": {
+    "type": "badspell:processing",
+    "station": "rune_press",
+    "inputs": [
+      {
+        "ingredient": "badspell:blank_rune_plate_q2",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:calibrated_coil",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:resonance_core",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:blank_rune_plate_q3",
+        "count": 2
+      }
+    ],
+    "ticks": 100,
+    "energy": 200
+  },
+  "calibrated_coil": {
+    "type": "badspell:processing",
+    "station": "arcane_smelter",
+    "inputs": [
+      {
+        "ingredient": "badspell:precision_coil",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:resonance_core",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:arcane_alloy",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:calibrated_coil",
+        "count": 1
+      }
+    ],
+    "ticks": 240,
+    "energy": 180
+  },
+  "cell_adapter": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "minecraft:copper_ingot",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:field_crystal_shard_q0",
+        "count": 1
+      },
+      {
+        "ingredient": "minecraft:redstone",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:cell_adapter",
+        "count": 1
+      }
+    ],
+    "ticks": 40,
+    "energy": 0
+  },
+  "cell_casing": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "minecraft:copper_ingot",
+        "count": 1
+      },
+      {
+        "ingredient": "minecraft:glass",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:empty_field_cell",
+        "count": 1
+      }
+    ],
+    "ticks": 40,
+    "energy": 0
+  },
+  "cell_recharge": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "minecraft:redstone",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:field_crystal_shard",
+        "count": 1
+      },
+      {
+        "ingredient": "minecraft:coal",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:empty_field_cell",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_cell",
+        "count": 1
+      }
+    ],
+    "ticks": 40,
+    "energy": 0
+  },
+  "conductive_paste": {
+    "type": "badspell:processing",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "ingredient": "badspell:crystal_dust",
+        "count": 2
+      },
+      {
+        "ingredient": "minecraft:redstone",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:rune_resin",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:conductive_paste",
+        "count": 4
+      }
+    ],
+    "ticks": 80,
+    "energy": 10
+  },
+  "crystal_core": {
+    "type": "badspell:processing",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "ingredient": "badspell:raw_crystal_core",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:pure_water",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:crystal_core",
+        "count": 1
+      },
+      {
+        "id": "minecraft:glass_bottle",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 25
+  },
+  "crystal_dust": {
+    "type": "badspell:processing",
+    "station": "crystal_grinder",
+    "inputs": [
+      {
+        "ingredient": "badspell:field_crystal_shard",
+        "count": 2
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:crystal_dust",
+        "count": 4
+      }
+    ],
+    "ticks": 60,
+    "energy": 10
+  },
+  "crystal_split": {
+    "type": "badspell:processing",
+    "station": "crystal_grinder",
+    "inputs": [
+      {
+        "ingredient": "badspell:raw_field_crystal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_crystal_shard",
+        "count": 3
+      }
+    ],
+    "ticks": 80,
+    "energy": 20
+  },
+  "engraving_station": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "badspell:arcane_alloy",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:precision_coil",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:precision_lens",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:crystal_core",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:engraving_station",
+        "count": 1
+      }
+    ],
+    "ticks": 160,
+    "energy": 0
+  },
+  "field_cell_q2": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "badspell:empty_field_cell",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:crystal_core",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:conductive_paste",
+        "count": 2
+      },
+      {
+        "ingredient": "minecraft:redstone",
+        "count": 4
+      },
+      {
+        "ingredient": "minecraft:coal",
+        "count": 3
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_cell_q2",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0
+  },
+  "field_cell_q3": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "badspell:empty_field_cell",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:resonance_core",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:arcane_alloy",
+        "count": 2
+      },
+      {
+        "ingredient": "minecraft:redstone",
+        "count": 8
+      },
+      {
+        "ingredient": "minecraft:coal",
+        "count": 6
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_cell_q3",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0
+  },
+  "field_compass": {
+    "type": "badspell:processing",
+    "station": "engraving_station",
+    "inputs": [
+      {
+        "ingredient": "badspell:raw_field_compass",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:inscribed_rune_plate",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_compass",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 80
+  },
+  "field_compass_q3": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "badspell:field_compass",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:calibrated_coil",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:resonance_core",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_compass_q3",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 100
+  },
+  "fork_repair": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "badspell:resonance_fork",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:rune_resin",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:field_crystal_shard",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:resonance_fork",
+        "count": 1
+      }
+    ],
+    "ticks": 80,
+    "energy": 0
+  },
+  "formula_book": {
+    "type": "badspell:processing",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "ingredient": "badspell:raw_formula_book",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:rune_ink",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:formula_book",
+        "count": 1
+      }
+    ],
+    "ticks": 80,
+    "energy": 0
+  },
+  "monocle_frame": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "minecraft:gold_ingot",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:precision_lens",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:resonance_glass",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:rune_resin",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:monocle_frame",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0
+  },
+  "moon_brew": {
+    "type": "badspell:processing",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "ingredient": "badspell:moon_blossom",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:pure_water",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:moon_brew",
+        "count": 2
+      },
+      {
+        "id": "minecraft:glass_bottle",
+        "count": 1
+      }
+    ],
+    "ticks": 160,
+    "energy": 15
+  },
+  "moon_essence": {
+    "type": "badspell:processing",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "ingredient": "badspell:moon_brew",
+        "count": 2
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:moon_essence",
+        "count": 1
+      }
+    ],
+    "ticks": 200,
+    "energy": 20
+  },
+  "moon_salt": {
+    "type": "badspell:processing",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "ingredient": "badspell:moon_brew",
+        "count": 2
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:moon_salt",
+        "count": 1
+      }
+    ],
+    "ticks": 240,
+    "energy": 20
+  },
+  "precision_coil": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "minecraft:copper_ingot",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:conductive_paste",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:field_crystal_shard",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:precision_coil",
+        "count": 1
+      }
+    ],
+    "ticks": 40,
+    "energy": 0
+  },
+  "precision_lens": {
+    "type": "badspell:processing",
+    "station": "crystal_grinder",
+    "inputs": [
+      {
+        "ingredient": "badspell:resonance_glass",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:field_crystal_shard",
+        "count": 2
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:precision_lens",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 45
+  },
+  "primitive_grinder": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "minecraft:iron_ingot",
+        "count": 3
+      },
+      {
+        "ingredient": "minecraft:quartz_block",
+        "count": 1
+      },
+      {
+        "ingredient": "minecraft:copper_ingot",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:coarse_crystal_shard",
+        "count": 2
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:crystal_grinder",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0
+  },
+  "pure_water": {
+    "type": "badspell:processing",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "ingredient": {
+          "neoforge:ingredient_type": "neoforge:components",
+          "items": "minecraft:potion",
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:water"
+            }
+          },
+          "strict": false
+        },
+        "count": 1
+      },
+      {
+        "ingredient": "minecraft:charcoal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:pure_water",
+        "count": 1
+      }
+    ],
+    "ticks": 200,
+    "energy": 0
+  },
+  "raw_core": {
+    "type": "badspell:processing",
+    "station": "crystal_grinder",
+    "inputs": [
+      {
+        "ingredient": "badspell:field_crystal_shard",
+        "count": 4
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:raw_crystal_core",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 20
+  },
+  "raw_field_compass": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "minecraft:compass",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:resonance_core",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:conductive_paste",
+        "count": 2
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:raw_field_compass",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0
+  },
+  "raw_resonance_fork": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "badspell:arcane_ingot",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:field_crystal_shard",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:precision_coil",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:raw_resonance_fork",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0
+  },
+  "raw_rune_glove": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "minecraft:leather",
+        "count": 2
+      },
+      {
+        "ingredient": "minecraft:gold_ingot",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:precision_coil",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:crystal_core",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:raw_rune_glove",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0
+  },
+  "recharge_cell_q2": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "badspell:field_cell_q2",
+        "count": 1
+      },
+      {
+        "ingredient": "minecraft:redstone",
+        "count": 4
+      },
+      {
+        "ingredient": "minecraft:coal",
+        "count": 3
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_cell_q2",
+        "count": 1
+      }
+    ],
+    "ticks": 80,
+    "energy": 0
+  },
+  "recharge_cell_q3": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "badspell:field_cell_q3",
+        "count": 1
+      },
+      {
+        "ingredient": "minecraft:redstone",
+        "count": 8
+      },
+      {
+        "ingredient": "minecraft:coal",
+        "count": 6
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_cell_q3",
+        "count": 1
+      }
+    ],
+    "ticks": 120,
+    "energy": 0
   },
   "resonance_blank": {
     "type": "badspell:processing",
@@ -666,101 +1056,225 @@
     "ticks": 200,
     "energy": 100
   },
-  "precision_lens": {
+  "resonance_fork": {
     "type": "badspell:processing",
-    "station": "crystal_grinder",
+    "station": "engraving_station",
     "inputs": [
       {
-        "ingredient": "badspell:resonance_glass",
+        "ingredient": "badspell:raw_resonance_fork",
         "count": 1
       },
       {
-        "ingredient": "badspell:field_crystal_shard",
-        "count": 2
+        "ingredient": "badspell:inscribed_rune_plate",
+        "count": 1
       }
     ],
     "outputs": [
       {
-        "id": "badspell:precision_lens",
+        "id": "badspell:resonance_fork",
         "count": 1
       }
     ],
     "ticks": 100,
     "energy": 45
   },
-  "binding_compound": {
+  "resonance_glass": {
     "type": "badspell:processing",
-    "station": "alchemy_table",
+    "station": "arcane_smelter",
     "inputs": [
       {
-        "ingredient": "badspell:rune_resin",
-        "count": 1
+        "ingredient": "badspell:resonance_shard",
+        "count": 2
       },
       {
-        "ingredient": "badspell:moon_salt",
+        "ingredient": "minecraft:glass",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:arcane_dust",
         "count": 1
       }
     ],
     "outputs": [
       {
-        "id": "badspell:binding_compound",
-        "count": 1
+        "id": "badspell:resonance_glass",
+        "count": 2
       }
     ],
-    "ticks": 100,
-    "energy": 10
+    "ticks": 160,
+    "energy": 50
   },
-  "engraving_station": {
+  "rune_chisel": {
     "type": "badspell:processing",
     "station": "arcane_workbench",
     "inputs": [
       {
-        "ingredient": "badspell:arcane_alloy",
+        "ingredient": "minecraft:iron_ingot",
         "count": 2
+      },
+      {
+        "ingredient": "badspell:arcane_ingot",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:conductive_paste",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:field_crystal_shard",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:rune_chisel",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0
+  },
+  "rune_glove": {
+    "type": "badspell:processing",
+    "station": "engraving_station",
+    "inputs": [
+      {
+        "ingredient": "badspell:raw_rune_glove",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:stabilizer_seal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:rune_glove",
+        "count": 1
+      }
+    ],
+    "ticks": 160,
+    "energy": 60
+  },
+  "rune_glove_q2": {
+    "type": "badspell:processing",
+    "station": "engraving_station",
+    "inputs": [
+      {
+        "ingredient": "badspell:rune_glove",
+        "count": 1
       },
       {
         "ingredient": "badspell:precision_coil",
         "count": 2
       },
       {
-        "ingredient": "badspell:precision_lens",
-        "count": 1
+        "ingredient": "badspell:arcane_alloy",
+        "count": 2
       },
       {
-        "ingredient": "badspell:crystal_core",
+        "ingredient": "badspell:stabilizer_seal",
         "count": 1
       }
     ],
     "outputs": [
       {
-        "id": "badspell:engraving_station",
+        "id": "badspell:rune_glove_q2",
         "count": 1
       }
     ],
-    "ticks": 160,
-    "energy": 0
+    "ticks": 100,
+    "energy": 100
   },
-  "stabilizer_seal": {
+  "rune_glove_q3": {
     "type": "badspell:processing",
     "station": "engraving_station",
     "inputs": [
       {
-        "ingredient": "badspell:binding_compound",
+        "ingredient": "badspell:rune_glove_q2",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:calibrated_coil",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:resonance_core",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:stabilizer_seal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:rune_glove_q3",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 300
+  },
+  "rune_holder": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "badspell:arcane_ingot",
+        "count": 2
+      },
+      {
+        "ingredient": "minecraft:copper_ingot",
         "count": 1
       },
       {
         "ingredient": "badspell:conductive_paste",
         "count": 1
+      },
+      {
+        "ingredient": "badspell:precision_coil",
+        "count": 1
       }
     ],
     "outputs": [
       {
-        "id": "badspell:stabilizer_seal",
+        "id": "badspell:rune_holder",
         "count": 1
       }
     ],
     "ticks": 100,
-    "energy": 30
+    "energy": 0
+  },
+  "rune_ink": {
+    "type": "badspell:processing",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "ingredient": "badspell:crystal_dust",
+        "count": 2
+      },
+      {
+        "ingredient": "badspell:moon_brew",
+        "count": 1
+      },
+      {
+        "ingredient": "minecraft:ink_sac",
+        "count": 1
+      },
+      {
+        "ingredient": "minecraft:glass_bottle",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:rune_ink",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 10
   },
   "rune_press": {
     "type": "badspell:processing",
@@ -792,108 +1306,82 @@
     "ticks": 160,
     "energy": 0
   },
-  "blank_rune_plate": {
+  "rune_resin": {
     "type": "badspell:processing",
-    "station": "rune_press",
+    "station": "alchemy_table",
     "inputs": [
       {
-        "ingredient": "badspell:arcane_ingot",
+        "ingredient": "badspell:runewood_log",
         "count": 2
       },
       {
-        "ingredient": "badspell:conductive_paste",
-        "count": 2
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:blank_rune_plate",
-        "count": 2
-      }
-    ],
-    "ticks": 100,
-    "energy": 40
-  },
-  "raw_rune_glove": {
-    "type": "badspell:processing",
-    "station": "arcane_workbench",
-    "inputs": [
-      {
-        "ingredient": "minecraft:leather",
-        "count": 2
-      },
-      {
-        "ingredient": "minecraft:gold_ingot",
-        "count": 1
-      },
-      {
-        "ingredient": "badspell:precision_coil",
-        "count": 2
-      },
-      {
-        "ingredient": "badspell:crystal_core",
+        "ingredient": "badspell:pure_water",
         "count": 1
       }
     ],
     "outputs": [
       {
-        "id": "badspell:raw_rune_glove",
+        "id": "badspell:rune_resin",
+        "count": 2
+      },
+      {
+        "id": "minecraft:glass_bottle",
         "count": 1
       }
     ],
     "ticks": 100,
-    "energy": 0
+    "energy": 10
   },
-  "rune_glove": {
+  "stabilizer_seal": {
     "type": "badspell:processing",
     "station": "engraving_station",
     "inputs": [
       {
-        "ingredient": "badspell:raw_rune_glove",
-        "count": 1
-      },
-      {
-        "ingredient": "badspell:stabilizer_seal",
-        "count": 1
-      }
-    ],
-    "outputs": [
-      {
-        "id": "badspell:rune_glove",
-        "count": 1
-      }
-    ],
-    "ticks": 160,
-    "energy": 60
-  },
-  "rune_holder": {
-    "type": "badspell:processing",
-    "station": "arcane_workbench",
-    "inputs": [
-      {
-        "ingredient": "badspell:arcane_ingot",
-        "count": 2
-      },
-      {
-        "ingredient": "minecraft:copper_ingot",
+        "ingredient": "badspell:binding_compound",
         "count": 1
       },
       {
         "ingredient": "badspell:conductive_paste",
         "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:stabilizer_seal",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 30
+  },
+  "starter_cell": {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "ingredient": "minecraft:redstone",
+        "count": 2
       },
       {
-        "ingredient": "badspell:precision_coil",
+        "ingredient": "badspell:field_crystal_shard_q0",
+        "count": 1
+      },
+      {
+        "ingredient": "minecraft:coal",
+        "count": 1
+      },
+      {
+        "ingredient": "badspell:empty_field_cell",
         "count": 1
       }
     ],
     "outputs": [
       {
-        "id": "badspell:rune_holder",
+        "id": "badspell:field_cell",
         "count": 1
       }
     ],
-    "ticks": 100,
+    "ticks": 40,
     "energy": 0
   }
 }

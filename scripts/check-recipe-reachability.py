@@ -35,6 +35,13 @@ while True:
         if all(map(available, inputs)):
             reachable.update(output['id'] for output in recipe.get('outputs', [recipe['result']] if 'result' in recipe else []))
             del pending[key]
+    # Snapshot engraving is an executable station operation, not a JSON recipe.
+    # This proves only material reachability; SIGN/IMPULSE graph requirements
+    # and owner/energy validation are covered by server tests, not this graph.
+    for suffix in ('', '_q2', '_q3'):
+        if all(item in reachable for item in ('badspell:engraving_station',
+                'badspell:formula_book', 'badspell:blank_rune_plate' + suffix)):
+            reachable.add('badspell:inscribed_rune_plate' + suffix)
     if len(reachable) == previous:
         break
 if pending:

@@ -41,7 +41,10 @@ public final class LightFields extends SavedData {
         com.badspell.lighting.FieldLightSources.inChunk(event.getLevel(),event.getPos()).forEach((position,strength)->
             PacketDistributor.sendToPlayer(event.getPlayer(),new Packets.LightUpdate(position,strength)));
     }
+    public int count(){return fields.size();}
     public boolean canAdd(ServerLevel level,BlockPos position) {
+        var expired=fields.get(position);if(expired!=null&&expired.expiry()<=level.getGameTime()&&level.getChunkSource().hasChunk(position.getX()>>4,position.getZ()>>4)){update(level,position,0);fields.remove(position);setDirty();}
+
         if(fields.size()>=1024 || fields.containsKey(position) || !level.getChunkSource().hasChunk((position).getX() >> 4,(position).getZ() >> 4))return false;
         var manager=level.getChunkAt(position).getAuxLightManager(ChunkPos.containing(position));
         return manager.getLightAt(position)==0;

@@ -1,0 +1,22 @@
+{
+  "type": "badspell:processing",
+  "station": "engraving_station",
+  "inputs": [
+    {
+      "ingredient": "badspell:monocle_frame",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:stabilizer_seal",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:arcane_monocle",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 60
+}

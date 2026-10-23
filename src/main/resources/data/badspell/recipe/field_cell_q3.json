@@ -1,0 +1,34 @@
+{
+  "type": "badspell:processing",
+  "station": "arcane_workbench",
+  "inputs": [
+    {
+      "ingredient": "badspell:empty_field_cell",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:resonance_core",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:arcane_alloy",
+      "count": 2
+    },
+    {
+      "ingredient": "minecraft:redstone",
+      "count": 8
+    },
+    {
+      "ingredient": "minecraft:coal",
+      "count": 6
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:field_cell_q3",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 0
+}

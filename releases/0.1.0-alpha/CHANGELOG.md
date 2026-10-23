@@ -1,3 +1,11 @@
+# M1 development snapshot – 23.10.2026
+
+Erweiterte Runensprache, Bibliothek/Module, neue Zauberwirkungen und Werkzeuge, Q2/Q3 sowie Vanilla-nahe Texturen und 3D-Modelle. 54 Verarbeitungsrezepte.
+
+Build, 39 Kerntests und 33 Server-GameTests erfolgreich. Neue grafische Abläufe und vollständiger Survival-/Multiplayer-Durchlauf offen. M1 noch nicht vollständig abgenommen. Client und Server müssen dieselbe JAR nutzen (Netzwerkprotokoll 2). Minecraft 26.2, NeoForge 26.2.0.93, Java 25.
+
+SHA256: `13a3853b1b657fb9ec59dba4447210a592db559da38e203230db9cc2c34dccb2`
+
 # UI und Produktionsketten · 23. Oktober 2026
 
 Minecraft 26.2 · NeoForge 26.2.0.93 · Java 25 · Modversion weiterhin 0.1.0-alpha.

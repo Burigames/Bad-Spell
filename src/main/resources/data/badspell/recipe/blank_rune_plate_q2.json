@@ -1,0 +1,26 @@
+{
+  "type": "badspell:processing",
+  "station": "rune_press",
+  "inputs": [
+    {
+      "ingredient": "badspell:arcane_alloy",
+      "count": 2
+    },
+    {
+      "ingredient": "badspell:conductive_paste",
+      "count": 2
+    },
+    {
+      "ingredient": "badspell:resonance_glass",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:blank_rune_plate_q2",
+      "count": 2
+    }
+  ],
+  "ticks": 100,
+  "energy": 80
+}

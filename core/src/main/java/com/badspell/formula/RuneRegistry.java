@@ -6,7 +6,11 @@ import static com.badspell.formula.Value.Type.*;
 /** Trusted server registrations. Effects here produce plans, never touch a Minecraft world. */
 public final class RuneRegistry {
     @FunctionalInterface public interface Operation { Value evaluate(Map<String, Value> inputs, Map<String, Value> parameters, Context context); }
-    public record Context(Value.Position target, long tick) { public Context { Objects.requireNonNull(target); } }
+    public record Context(Value.Position target,long tick,Value.Entity entity,Value.Vector look,Map<String,Value> environment) {
+        public Context(Value.Position target,long tick){this(target,tick,null,new Value.Vector(0,0,1000),Map.of());}
+        public Context {Objects.requireNonNull(target);Objects.requireNonNull(look);environment=Map.copyOf(environment);}
+        public long start(){return environment.get("activation_tick") instanceof Value.Number n?n.value():tick;}
+    }
     public record Parameter(Value.Type type, long min, long max) {
         boolean accepts(Value value) {
             if (value.type() != type) return false;
@@ -19,12 +23,13 @@ public final class RuneRegistry {
     private final Map<String,Rune> entries;
     public RuneRegistry(Map<String,Rune> entries) { this.entries=Map.copyOf(entries); }
     public Rune get(String id) { return entries.get(id); }
+    public Rune get(Formula.Node node) {return node.rune().equals("badspell:call")?FormulaCalls.rune(node):get(node.rune());}
     public Set<String> ids() { return entries.keySet(); }
     private static Parameter numeric(long min,long max) { return new Parameter(NUMBER,min,max); }
     private static long number(Map<String,Value> values,String key) { return ((Value.Number)values.get(key)).value(); }
     public static RuneRegistry standard() {
         Map<String,Rune> r=new LinkedHashMap<>();
-        r.put("badspell:impulse",new Rune(Map.of(),Map.of(),EVENT,(i,p,c)->new Value.Event(c.tick())));
+        r.put("badspell:impulse",new Rune(Map.of(),Map.of(),EVENT,(i,p,c)->new Value.Event(c.start())));
         r.put("badspell:position",new Rune(Map.of(),Map.of("value",new Parameter(POSITION,0,0)),POSITION,(i,p,c)->p.get("value")));
         r.put("badspell:target_position",new Rune(Map.of("trigger",EVENT),Map.of(),POSITION,(i,p,c)->c.target()));
         r.put("badspell:point",new Rune(Map.of("position",POSITION),Map.of(),REGION,(i,p,c)->new Value.Region((Value.Position)i.get("position"),0)));
@@ -45,7 +50,8 @@ public final class RuneRegistry {
             cost=Math.multiplyExact(cost,1L+region.radius());
             return new Value.Effect("badspell:light",region,strength,ticks,cost,5);
         }));
-        r.put("badspell:activate",new Rune(Map.of("effect",EFFECT,"trigger",EVENT),Map.of(),EFFECT,(i,p,c)->i.get("effect")));
+        r.put("badspell:activate",new Rune(Map.of("effect",EFFECT,"trigger",EVENT),Map.of(),EFFECT,(i,p,c)->{var effect=(Value.Effect)i.get("effect");var event=(Value.Event)i.get("trigger");return new Value.Effect(effect.id(),effect.region(),effect.strength(),effect.durationTicks(),Math.addExact(effect.fieldCost(),event.interval()/20),effect.focusCost(),effect.target(),effect.vector(),event);}));
+        ExtendedRunes.register(r);
         return new RuneRegistry(r);
     }
 }

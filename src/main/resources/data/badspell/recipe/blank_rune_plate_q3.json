@@ -1,0 +1,26 @@
+{
+  "type": "badspell:processing",
+  "station": "rune_press",
+  "inputs": [
+    {
+      "ingredient": "badspell:blank_rune_plate_q2",
+      "count": 2
+    },
+    {
+      "ingredient": "badspell:calibrated_coil",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:resonance_core",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:blank_rune_plate_q3",
+      "count": 2
+    }
+  ],
+  "ticks": 100,
+  "energy": 200
+}

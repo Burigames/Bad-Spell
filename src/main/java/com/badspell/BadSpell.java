@@ -14,11 +14,11 @@ public final class BadSpell {
     public BadSpell(IEventBus bus) {
         com.badspell.content.ModContent.bootstrap();
         ModItems.register(bus);com.badspell.content.ModContent.register(bus);com.badspell.production.ProductionRegistries.register(bus);
-        if(Boolean.getBoolean("badspell.tests"))IntegrationTests.register(bus);bus.addListener(Packets::register);
-        NeoForge.EVENT_BUS.addListener(LightFields::tick);
+        if(Boolean.getBoolean("badspell.tests")){IntegrationTests.register(bus);M1Tests.register(bus);}bus.addListener(Packets::register);
+        NeoForge.EVENT_BUS.addListener(LightFields::tick);NeoForge.EVENT_BUS.addListener(SpellFields::tick);NeoForge.EVENT_BUS.addListener(SpellFields::incoming);
         NeoForge.EVENT_BUS.addListener(LightFields::load);
         NeoForge.EVENT_BUS.addListener(LightFields::sendChunk);
         NeoForge.EVENT_BUS.addListener(com.badspell.lighting.FieldLightSources::unloadClientChunk);
-        NeoForge.EVENT_BUS.addListener(MagicActions::tick);
+        NeoForge.EVENT_BUS.addListener(MagicActions::tick);NeoForge.EVENT_BUS.addListener(FormulaLibrary::clone);NeoForge.EVENT_BUS.addListener(ToolActions::tick);NeoForge.EVENT_BUS.addListener(RuneBoards::broken);NeoForge.EVENT_BUS.addListener(RuneBoards::tick);NeoForge.EVENT_BUS.addListener(RuneBoards::load);NeoForge.EVENT_BUS.addListener(RuneBoards::sendChunk);NeoForge.EVENT_BUS.addListener(WorldBindings::interact);NeoForge.EVENT_BUS.addListener(WorldBindings::breakBlock);
     }
 }

@@ -13,7 +13,7 @@ import net.neoforged.neoforge.registries.*;
 
 /** Only materials with actual processing recipes and working blocks enter the catalogue. */
 public final class ModContent {
-    public static final List<String> MATERIAL_IDS=List.of("raw_field_crystal","coarse_crystal_shard","field_crystal_shard_q0","field_crystal_shard","crystal_dust","sandpaper","raw_arcane_ore","impure_arcane_charge","arcane_ingot_q0","arcane_ingot","arcane_alloy","arcane_dust","raw_crystal_core","crystal_core","resonance_shard","resonance_glass","resonance_core_blank","resonance_core","rune_resin","conductive_paste","precision_coil","pure_water","moon_brew","moon_essence","moon_salt","aether_solution","glow_fiber","glow_moss_bundle","binding_compound","stabilizer_seal","blank_rune_plate","precision_lens","raw_formula_book","raw_rune_glove","empty_field_cell","cell_adapter");
+    public static final List<String> MATERIAL_IDS=List.of("raw_field_crystal","coarse_crystal_shard","field_crystal_shard_q0","field_crystal_shard","crystal_dust","sandpaper","raw_arcane_ore","impure_arcane_charge","arcane_ingot_q0","arcane_ingot","arcane_alloy","arcane_dust","raw_crystal_core","crystal_core","resonance_shard","resonance_glass","resonance_core_blank","resonance_core","rune_resin","conductive_paste","precision_coil","pure_water","moon_brew","moon_essence","moon_salt","aether_solution","glow_fiber","glow_moss_bundle","binding_compound","stabilizer_seal","blank_rune_plate","precision_lens","raw_formula_book","raw_rune_glove","empty_field_cell","cell_adapter","calibrated_coil","monocle_frame","raw_field_compass","raw_resonance_fork","blank_rune_plate_q2","blank_rune_plate_q3");
     public static final Map<String,DeferredItem<Item>> MATERIALS=new LinkedHashMap<>();
     public static final DeferredRegister.Blocks BLOCKS=DeferredRegister.createBlocks(BadSpell.MOD_ID);
     public static final Map<String,DeferredBlock<StationBlock>> STATIONS=new LinkedHashMap<>();
@@ -30,7 +30,8 @@ public final class ModContent {
     static {
         for(String id:MATERIAL_IDS)MATERIALS.put(id,ModItems.ITEMS.registerSimpleItem(id));
         ModItems.ITEMS.registerItem("inscribed_rune_plate",RunePlateItem::new,p->p.stacksTo(1));
-        for(String id:List.of("arcane_workbench","crystal_grinder","alchemy_table","arcane_smelter","rune_press","engraving_station","rune_holder"))STATIONS.put(id,BLOCKS.registerBlock(id,StationBlock::new,p->p.strength(3.5f).requiresCorrectToolForDrops()));
+        ModItems.ITEMS.registerItem("inscribed_rune_plate_q2",RunePlateItem::new,p->p.stacksTo(1));ModItems.ITEMS.registerItem("inscribed_rune_plate_q3",RunePlateItem::new,p->p.stacksTo(1));
+        for(String id:List.of("arcane_workbench","crystal_grinder","alchemy_table","arcane_smelter","rune_press","engraving_station","rune_holder"))STATIONS.put(id,BLOCKS.registerBlock(id,StationBlock::new,p->p.strength(3.5f).requiresCorrectToolForDrops().noOcclusion()));
         BLOCKS.getEntries().forEach(block->ModItems.ITEMS.registerSimpleBlockItem(block));
     }
     private ModContent(){}

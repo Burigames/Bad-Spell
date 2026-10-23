@@ -24,14 +24,14 @@ public final class MagicActions {
     private static final ActivationService ACTIVATIONS=new ActivationService(new FormulaEngine(RUNES));
     private MagicActions() {}
     private static net.minecraft.nbt.CompoundTag tag(ItemStack stack) { return stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag(); }
-    private static Formula read(ItemStack stack) throws IOException {
+    static Formula read(ItemStack stack) throws IOException {
         byte[] bytes=tag(stack).getByteArray(FORMULA).orElseThrow(()->new IOException("No formula snapshot"));
         if(bytes.length>Packets.MAX_FORMULA_BYTES)throw new IOException("Oversized book snapshot");
         Formula formula=FormulaCodec.decode(bytes);
-        if(!new FormulaValidator(RUNES).validate(formula).isEmpty())throw new IOException("Stored graph is invalid");
+        if(!new FormulaValidator(RUNES).validateDefinition(formula).isEmpty())throw new IOException("Stored graph is invalid");
         return formula;
     }
-    private static void write(ItemStack stack,Formula formula) throws IOException {
+    static void write(ItemStack stack,Formula formula) throws IOException {
         byte[] bytes=FormulaCodec.encode(formula);
         if(bytes.length>Packets.MAX_FORMULA_BYTES)throw new IOException("Formula exceeds network snapshot limit");
         CustomData.update(DataComponents.CUSTOM_DATA,stack,t->{t.putByteArray(FORMULA,bytes);t.putString("badspell_checksum",new FormulaSnapshot(formula).checksum());});
@@ -47,6 +47,7 @@ public final class MagicActions {
             }
             var f=read(stack);
             if(!f.owner().equals(player.getUUID())){message(player,"owner");return;}
+            FormulaLibrary.track(player,f,stack);
             PacketDistributor.sendToPlayer(player,new Packets.OpenBook(hand.ordinal(),FormulaCodec.encode(f),tag(stack).getIntOr(INK,0)));
         } catch(IOException|IllegalArgumentException error){message(player,"invalid");}
     }
@@ -62,13 +63,16 @@ public final class MagicActions {
             Formula current=read(book),proposed=FormulaCodec.decode(packet.formula());
             if(!current.owner().equals(player.getUUID()) || !proposed.owner().equals(player.getUUID()) || !current.id().equals(proposed.id()) || current.revision()!=proposed.revision()) {message(player,"conflict");return;}
             if(packet.action()==0) {
+                var authoritative=player.getPersistentData().getCompoundOrEmpty(FormulaLibrary.KEY).getCompoundOrEmpty(current.id().toString()).getByteArray("snapshot");
+                if(authoritative.isPresent()&&FormulaCodec.decode(authoritative.get()).revision()!=current.revision()){message(player,"conflict");return;}
+
                 long tick=player.level().getGameTime();var state=player.getPersistentData();long window=state.getLongOr("badspell_save_window",-1200);
                 int saves=tick-window>=1200?0:state.getIntOr("badspell_saves",0);
                 if(saves>=10){message(player,"rate_limit");return;}
-                var diagnostics=new FormulaValidator(RUNES).validate(proposed);
+                var diagnostics=new FormulaValidator(RUNES).validateDefinition(proposed);
                 if(!diagnostics.isEmpty()){player.sendSystemMessage(Component.literal(diagnostics.getFirst().toString()),false);return;}
                 int changes=0;Map<String,Formula.Node> old=new HashMap<>();current.nodes().forEach(n->old.put(n.id(),n));
-                for(var node:proposed.nodes())if(!node.equals(old.remove(node.id())))changes++;
+                for(var node:proposed.nodes()){var previous=old.remove(node.id());if(!node.equals(previous))changes+=previous!=null&&node.rune().equals("badspell:call")?2:1;}
                 changes+=old.size();if(!new HashSet<>(current.edges()).equals(new HashSet<>(proposed.edges())))changes++;
                 int cost=Math.min(8,changes);int ink=tag(book).getIntOr(INK,0);if(cost>ink){message(player,"no_ink");return;}
                 Formula saved=new Formula(current.id(),current.owner(),Math.addExact(current.revision(),1),proposed.title(),proposed.nodes(),proposed.edges(),proposed.output(),proposed.energyBudget());
@@ -78,11 +82,11 @@ public final class MagicActions {
                 write(book,saved);CustomData.update(DataComponents.CUSTOM_DATA,book,t->t.put("badspell_history",history));CustomData.update(DataComponents.CUSTOM_DATA,book,t->t.putInt(INK,ink-cost));
                 state.putLong("badspell_save_window",saves==0?tick:window);state.putInt("badspell_saves",saves+1);message(player,"saved");
             } else if(packet.action()==1) {
-                ItemStack glove=find(player,ModItems.RUNE_GLOVE.get());if(glove.isEmpty()){message(player,"no_glove");return;}
-                if(!GloveFormulas.ownedBy(glove,player.getUUID())){message(player,"owner");return;}
+                ItemStack glove=findGlove(player);if(glove.isEmpty()){message(player,"no_glove");return;}
+                if(!GloveFormulas.current(player,glove)||!GloveFormulas.ownedBy(glove,player.getUUID())){message(player,"owner");return;}
                 // Export only the authoritative saved graph, never unsaved client edits.
                 if(!new FormulaValidator(RUNES).validate(current).isEmpty()){message(player,"invalid");return;}
-                GloveFormulas.importSnapshot(glove,current,player.getUUID());message(player,"exported");
+                GloveFormulas.importSnapshot(glove,current,player.getUUID());GloveFormulas.backup(player,glove);message(player,"exported");
             } else if(packet.action()==3) {
                 long tick=player.level().getGameTime();var state=player.getPersistentData();
                 if(tick-state.getLongOr("badspell_last_history",-1000)<20){message(player,"rate_limit");return;}
@@ -110,56 +114,52 @@ public final class MagicActions {
         for(int i=0;i<player.getInventory().getContainerSize();i++){ItemStack stack=player.getInventory().getItem(i);if(stack.is(item))return stack;}
         return ItemStack.EMPTY;
     }
+    private static ItemStack findGlove(ServerPlayer player){for(int i=0;i<player.getInventory().getContainerSize();i++){var stack=player.getInventory().getItem(i);if(ModItems.isGlove(stack))return stack;}return ItemStack.EMPTY;}
     public static void cast(ServerPlayer player,InteractionHand hand) {
-        if(!player.getItemInHand(hand).is(ModItems.RUNE_GLOVE.get()))return;
-        var state=player.getPersistentData();long tick=player.level().getGameTime();
-        if(tick-state.getLongOr(LAST_CAST,-1000)<1){message(player,"rate_limit");return;}
-        ItemStack glove=player.getItemInHand(hand),cell=find(player,ModItems.FIELD_CELL.get());
-        if(cell.isEmpty()){message(player,"no_cell");return;}
+        var glove=player.getItemInHand(hand);if(!ModItems.isGlove(glove))return;
+        if(player.isShiftKeyDown()){ScheduledSpells.cancel(player);try{if(!GloveFormulas.current(player,glove))GloveFormulas.restore(player,glove);}catch(IOException error){message(player,"invalid");}message(player,"cancelled");return;}
+        long tick=player.level().getGameTime();if(tick-player.getPersistentData().getLongOr(LAST_CAST,-1000)<1){message(player,"rate_limit");return;}
         try {
+            if(!GloveFormulas.current(player,glove)){message(player,"conflict");return;}
             if(!GloveFormulas.occupied(glove,GloveFormulas.selected(glove))){message(player,"empty_slot");return;}
-            Formula f=GloveFormulas.read(glove);
-            if(!f.owner().equals(player.getUUID())){message(player,"owner");return;}
-            var storedTag=tag(glove);
-            if(!new FormulaSnapshot(f).verifies(storedTag.getStringOr("badspell_checksum",""))){message(player,"invalid");return;}
+            Formula formula=GloveFormulas.read(glove);if(!formula.owner().equals(player.getUUID())){message(player,"owner");return;}
             var hit=player.pick(12,1,false);BlockPos target=hit instanceof BlockHitResult block?block.getBlockPos().relative(block.getDirection()):BlockPos.containing(hit.getLocation());
-            String dimension=player.level().dimension().identifier().toString();
-            var position=new Value.Position(dimension,target.getX(),target.getY(),target.getZ());
-            var origin=new Value.Position(dimension,player.blockPosition().getX(),player.blockPosition().getY(),player.blockPosition().getZ());
-            int fl=Math.clamp(tag(cell).getIntOr("badspell_fl",100),0,100),focus=Math.clamp(state.getIntOr(FOCUS,100),0,100);
-            var energy=new EnergyAccount(100,100,fl,focus);
-            var result=ACTIVATIONS.activate(f,new RuneRegistry.Context(position,tick),origin,100,energy,effect->{
-                if(!effect.id().equals("badspell:light") || effect.region().radius()!=0)return null;
-                var p=effect.region().center();BlockPos pos=new BlockPos(p.x(),p.y(),p.z());
-                var level=player.level();
-                if(!p.dimension().equals(dimension) || !level.getChunkSource().hasChunk((pos).getX() >> 4,(pos).getZ() >> 4) || !level.getWorldBorder().isWithinBounds(pos) || !level.mayInteract(player,pos) || !level.getBlockState(pos).isAir())return null;
-                var fields=LightFields.get(level);if(!fields.canAdd(level,pos))return null;
-                return ()->fields.add(level,pos,effect.strength(),effect.durationTicks());
-            });
-            if(result==ActivationService.Result.APPLIED) {
-                CustomData.update(DataComponents.CUSTOM_DATA,cell,t->t.putInt("badspell_fl",(int)energy.balance().field()));
-                state.putInt(FOCUS,(int)energy.balance().focus());state.putLong(LAST_CAST,tick);
-            }
-            player.sendSystemMessage(Component.translatable("message.badspell.cast",Component.translatable("result.badspell."+result.name().toLowerCase(Locale.ROOT)),energy.balance().field(),energy.balance().focus()),true);
-        } catch(IOException|IllegalArgumentException error){message(player,"invalid");}
+            var context=SpellEffects.context(player,target,tick);var plan=new FormulaEngine(RUNES).plan(formula,context);
+            if((plan.event().interval()>0||plan.event().tick()>tick)&&!ScheduledSpells.canAdd(player)){message(player,"schedule_limit");return;}
+            var result=execute(player,formula,context);
+            if((result==ActivationService.Result.WAITING||result==ActivationService.Result.APPLIED||result==ActivationService.Result.SKIPPED)&&plan.event().remaining()!=0&&(plan.event().tick()>tick||plan.event().interval()>0))ScheduledSpells.add(player,formula,context,plan.event(),result==ActivationService.Result.APPLIED||result==ActivationService.Result.SKIPPED);
+            else if(result==ActivationService.Result.APPLIED)GloveFormulas.backup(player,glove);
+        }catch(IOException|IllegalArgumentException|IllegalStateException error){message(player,"invalid");}
+    }
+    public static ActivationService.Result execute(ServerPlayer player,Formula formula,RuneRegistry.Context context) {
+        var state=player.getPersistentData();var cells=new ArrayList<ItemStack>();int fl=0,capacity=0;
+        for(int i=0;i<player.getInventory().getContainerSize();i++){var cell=player.getInventory().getItem(i);int cap=ModItems.cellCapacity(cell);if(cap>0){cells.add(cell);fl+=Math.clamp(tag(cell).getIntOr("badspell_fl",cap),0,cap);capacity+=cap;}}
+        if(cells.isEmpty()){message(player,"no_cell");return ActivationService.Result.INSUFFICIENT_ENERGY;}
+        int focus=Math.clamp(state.getIntOr(FOCUS,100),0,100);var account=new EnergyAccount(capacity,100,fl,focus);
+        String dim=player.level().dimension().identifier().toString();var origin=SpellEffects.position(player.level(),player.blockPosition());
+        int stability=context.environment().get("stability") instanceof Value.Number n?(int)Math.clamp(n.value(),0,100):100;
+        var result=ACTIVATIONS.activate(formula,context,origin,stability,account,effect->SpellEffects.prepare(player,effect));
+        if(result==ActivationService.Result.APPLIED||result==ActivationService.Result.SKIPPED){int spent=fl-(int)account.balance().field();for(var cell:cells){int charge=Math.clamp(tag(cell).getIntOr("badspell_fl",ModItems.cellCapacity(cell)),0,ModItems.cellCapacity(cell));int amount=Math.min(charge,spent);spent-=amount;int left=charge-amount;CustomData.update(DataComponents.CUSTOM_DATA,cell,t->t.putInt("badspell_fl",left));}state.putInt(FOCUS,(int)account.balance().focus());if(result==ActivationService.Result.APPLIED)state.putLong(LAST_CAST,player.level().getGameTime());}
+        player.sendSystemMessage(Component.translatable("message.badspell.cast",Component.translatable("result.badspell."+result.name().toLowerCase(Locale.ROOT)),account.balance().field(),account.balance().focus()),true);return result;
     }
     public static void selectSlot(ServerPlayer player,int handIndex,int direction) {
         if(handIndex<0 || handIndex>1 || (direction!=-1 && direction!=1))return;
         ItemStack glove=player.getItemInHand(InteractionHand.values()[handIndex]);
-        if(!glove.is(ModItems.RUNE_GLOVE.get()))return;
+        if(!ModItems.isGlove(glove))return;
         long tick=player.level().getGameTime();var state=player.getPersistentData();
         if(state.getLongOr("badspell_last_slot_tick",Long.MIN_VALUE)==tick)return;
         state.putLong("badspell_last_slot_tick",tick);
         try {
-            if(!GloveFormulas.ownedBy(glove,player.getUUID())){message(player,"owner");return;}
-            GloveFormulas.cycle(glove,direction,player.getUUID());
+            if(!GloveFormulas.current(player,glove)||!GloveFormulas.ownedBy(glove,player.getUUID())){message(player,"owner");return;}
+            GloveFormulas.cycle(glove,direction,player.getUUID());GloveFormulas.backup(player,glove);
             Component title=GloveFormulas.occupied(glove,GloveFormulas.selected(glove))
                 ?Component.literal(GloveFormulas.read(glove).title()):Component.translatable("message.badspell.empty_slot");
-            player.sendSystemMessage(Component.translatable("message.badspell.selected_slot",GloveFormulas.selected(glove)+1,GloveFormulas.CAPACITY,title),true);
+            player.sendSystemMessage(Component.translatable("message.badspell.selected_slot",GloveFormulas.selected(glove)+1,GloveFormulas.capacity(glove),title),true);
         } catch(IOException error){message(player,"invalid");}
     }
     public static void tick(PlayerTickEvent.Post event) {
         if(!(event.getEntity() instanceof ServerPlayer player))return;
+        ScheduledSpells.tick(player);
         long tick=player.level().getGameTime();var state=player.getPersistentData();
         if(tick%20==0 && tick-state.getLongOr(LAST_CAST,-1000)>40)state.putInt(FOCUS,Math.min(100,state.getIntOr(FOCUS,100)+3));
     }

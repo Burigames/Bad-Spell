@@ -59,12 +59,16 @@ public final class FormulaCodec {
         if(v instanceof Value.Number n) { out.writeByte(0); out.writeLong(n.value()); }
         else if(v instanceof Value.Bool b) { out.writeByte(1); out.writeBoolean(b.value()); }
         else if(v instanceof Value.Position p) { out.writeByte(2); out.writeUTF(p.dimension()); out.writeInt(p.x()); out.writeInt(p.y()); out.writeInt(p.z()); }
-        else throw new IOException("Only scalar, boolean and position parameters may be persisted");
+        else if(v instanceof Value.Vector vector){out.writeByte(3);out.writeInt(vector.x());out.writeInt(vector.y());out.writeInt(vector.z());}
+        else if(v instanceof Value.Text text){out.writeByte(4);out.writeUTF(text.value());}
+        else throw new IOException("Only literal parameters may be persisted");
     }
     private static Value value(DataInputStream in) throws IOException {
         return switch(in.readUnsignedByte()) {
             case 0 -> new Value.Number(in.readLong()); case 1 -> new Value.Bool(in.readBoolean());
             case 2 -> new Value.Position(text(in,256),in.readInt(),in.readInt(),in.readInt());
+            case 3 -> new Value.Vector(in.readInt(),in.readInt(),in.readInt());
+            case 4 -> new Value.Text(text(in,40000));
             default -> throw new IOException("Unknown value type");
         };
     }

@@ -219,6 +219,61 @@ public final class CoreTests {
             expect(IllegalArgumentException.class,()->planner.plan("a",1,Map.of()));
             expect(IllegalArgumentException.class,()->planner.plan("missing",1,Map.of()));
         });
+        test("M1 vector/text literals keep canonical codec roundtrip",()->{
+            var f=light();var n=new ArrayList<>(f.nodes());n.add(new Formula.Node("literal","badspell:vector",0,0,Map.of("x",new Value.Number(0),"y",new Value.Number(600),"z",new Value.Number(300))));
+            var typed=new Formula(f.id(),f.owner(),f.revision(),"types",List.of(new Formula.Node("input","badspell:input_vector",0,0,Map.of("name",new Value.Text("motion"),"value",new Value.Vector(0,600,300)))),List.of(),"input",100);
+            check(typed.equals(FormulaCodec.decode(FormulaCodec.encode(typed))),"new literals roundtrip");
+        });
+        test("M1 delayed triggers never prepare or spend early",()->{
+            var f=light();var nodes=new ArrayList<>(f.nodes());nodes.add(new Formula.Node("delay","badspell:delay",0,0,Map.of("ticks",new Value.Number(40))));var edges=new ArrayList<>(f.edges());edges.removeIf(e->e.to().equals("activate")&&e.port().equals("trigger"));edges.add(new Formula.Edge("impulse","delay","trigger"));edges.add(new Formula.Edge("delay","activate","trigger"));
+            var delayed=copy(f,nodes,edges);var account=new EnergyAccount(100,100,100,100);
+            check(SERVICE.activate(delayed,CONTEXT,TARGET,100,account,e->{throw new AssertionError("too early");})==ActivationService.Result.WAITING,"waiting");check(account.balance().field()==100,"no early debit");
+            var context=new RuneRegistry.Context(TARGET,140,null,new Value.Vector(0,0,1000),Map.of("activation_tick",new Value.Number(100)));check(SERVICE.activate(delayed,context,TARGET,100,account,e->()->{})==ActivationService.Result.APPLIED,"fires at tick 140");
+        });
+        test("M1 interval limit and explicit abort remain bounded",()->{
+            var f=light();var nodes=new ArrayList<>(f.nodes());nodes.removeIf(n->n.id().equals("impulse"));nodes.add(new Formula.Node("impulse","badspell:interval",0,0,Map.of("ticks",new Value.Number(40))));var planned=ENGINE.plan(copy(f,nodes,f.edges()),CONTEXT);check(planned.event().interval()==40&&planned.event().remaining()==-1,"bounded interval");check(planned.fieldCost()==32,"sensor operating cost included");
+            nodes.add(new Formula.Node("abort","badspell:abort",0,0,Map.of()));var edges=new ArrayList<>(f.edges());edges.removeIf(e->e.to().equals("activate")&&e.port().equals("trigger"));edges.add(new Formula.Edge("impulse","abort","trigger"));edges.add(new Formula.Edge("abort","activate","trigger"));var account=new EnergyAccount(100,100,100,100);check(activate(copy(f,nodes,edges),account,100,e->{throw new AssertionError("cancelled");})==ActivationService.Result.CANCELLED,"abort");check(account.balance().field()==100,"no cancellation cost");
+        });
+        test("M1 embedded modules execute and retain independent snapshots",()->{
+            var child=light();var call=FormulaCalls.call("call",child,0,0);var root=new Formula(UUID.randomUUID(),OWNER,1,"module",List.of(call,new Formula.Node("impulse","badspell:impulse",0,0,Map.of()),new Formula.Node("activate","badspell:activate",0,0,Map.of())),List.of(new Formula.Edge("call","activate","effect"),new Formula.Edge("impulse","activate","trigger")),"activate",100);
+            check(ENGINE.plan(root,CONTEXT).fieldCost()==30,"embedded effect executes");check(Arrays.equals(FormulaCodec.encode(FormulaCalls.decode(call)),FormulaCodec.encode(child)),"snapshot independent");check(Arrays.equals(FormulaCodec.encode(root),FormulaCodec.encode(FormulaCodec.decode(FormulaCodec.encode(root)))),"module serializes");
+        });
+        test("M1 named typed module inputs change real effect costs",()->{
+            var child=light();var nodes=new ArrayList<>(child.nodes());nodes.add(new Formula.Node("boost","badspell:input_boolean",0,0,Map.of("name",new Value.Text("boost"),"value",new Value.Bool(false))));nodes.add(new Formula.Node("bright","badspell:light",0,0,Map.of("strength",new Value.Number(5),"duration_ticks",new Value.Number(600))));nodes.add(new Formula.Node("choose","badspell:if_effect",0,0,Map.of()));
+            var edges=new ArrayList<>(child.edges());edges.removeIf(e->e.to().equals("activate")&&e.port().equals("effect"));edges.addAll(List.of(new Formula.Edge("point","bright","region"),new Formula.Edge("boost","choose","condition"),new Formula.Edge("bright","choose","yes"),new Formula.Edge("light","choose","no"),new Formula.Edge("choose","activate","effect")));
+            var module=FormulaCalls.call("call",copy(child,nodes,edges),0,0);check(FormulaCalls.rune(module).inputs().get("boost")==Value.Type.BOOLEAN,"named boolean port exposed");
+            for(boolean boost:List.of(false,true)){
+                var root=new Formula(UUID.randomUUID(),OWNER,1,"caller",List.of(module,new Formula.Node("boost","badspell:boolean",0,0,Map.of("value",new Value.Bool(boost)))),List.of(new Formula.Edge("boost","call","boost")),"call",100);
+                check(ENGINE.plan(root,CONTEXT).fieldCost()==(boost?50:30),"runtime module parameter changes actual effect");
+            }
+            var invalid=new Formula(child.id(),child.owner(),1,"inputs",List.of(new Formula.Node("input","badspell:input_number",0,0,Map.of("name",new Value.Text("invalid name"),"value",new Value.Number(1)))),List.of(),"input",100);check(new FormulaValidator(RUNES).validate(invalid).stream().anyMatch(d->d.code()==FormulaValidator.Code.PARAMETER),"invalid names rejected");
+        });
+        test("M1 recursive embedded identities are rejected",()->{
+            var child=light();var call=FormulaCalls.call("call",child,0,0);var root=new Formula(child.id(),OWNER,1,"recursive",List.of(call),List.of(),"call",100);expect(IllegalArgumentException.class,()->ENGINE.plan(root,CONTEXT));
+        });
+        test("M1 all nine templates are valid compositions",()->{
+            var context=new RuneRegistry.Context(TARGET,100,new Value.Entity(OWNER,TARGET),new Value.Vector(0,0,1000),Map.of("self",new Value.Entity(OWNER,TARGET),"light",new Value.Number(0)));
+            for(String kind:ExampleFormulas.TEMPLATES){var formula=ExampleFormulas.template(kind,OWNER,TARGET);check(new FormulaValidator(RUNES).validate(formula).isEmpty(),"template "+kind);var effect=ENGINE.plan(formula,context);check(effect.fieldCost()<=formula.energyBudget(),"template budget "+kind);}
+        });
+        test("M1 inactive interval branches only pay sensor fees",()->{
+            var context=new RuneRegistry.Context(TARGET,100,null,new Value.Vector(0,0,1000),Map.of("light",new Value.Number(15)));var formula=ExampleFormulas.template("night_lamp",OWNER,TARGET);var account=new EnergyAccount(100,100,100,100);
+            check(SERVICE.activate(formula,context,TARGET,100,account,e->{throw new AssertionError("Empty branch cannot prepare a world action");})==ActivationService.Result.SKIPPED,"daylight skips light");check(account.balance().field()==98&&account.balance().focus()==100,"two FL sensor fee, no light/FK cost");
+            var limited=RUNES.get("badspell:limit").operation().evaluate(Map.of("trigger",new Value.Event(100,40,-1,false)),Map.of("count",new Value.Number(2)),context);check(((Value.Event)limited).remaining()==2,"Limit bounds an otherwise recurring interval");
+        });
+        test("M1 typed scalar module output drives a real effect branch",()->{
+            var child=new Formula(UUID.randomUUID(),OWNER,1,"number module",List.of(new Formula.Node("number","badspell:number",0,0,Map.of("value",new Value.Number(7))),new Formula.Node("return","badspell:return_number",0,0,Map.of())),List.of(new Formula.Edge("number","return","value")),"return",0);
+            check(new FormulaValidator(RUNES).validateDefinition(child).isEmpty(),"scalar module definition accepted");var call=FormulaCalls.call("call",child,0,0);check(FormulaCalls.rune(call).output()==Value.Type.NUMBER,"scalar output stays typed");
+            var base=light();var nodes=new ArrayList<>(base.nodes());nodes.addAll(List.of(call,new Formula.Node("threshold","badspell:number",0,0,Map.of("value",new Value.Number(5))),new Formula.Node("compare","badspell:greater",0,0,Map.of()),new Formula.Node("bright","badspell:light",0,0,Map.of("strength",new Value.Number(5),"duration_ticks",new Value.Number(600))),new Formula.Node("choose","badspell:if_effect",0,0,Map.of())));var edges=new ArrayList<>(base.edges());edges.removeIf(e->e.to().equals("activate")&&e.port().equals("effect"));edges.addAll(List.of(new Formula.Edge("call","compare","a"),new Formula.Edge("threshold","compare","b"),new Formula.Edge("point","bright","region"),new Formula.Edge("compare","choose","condition"),new Formula.Edge("bright","choose","yes"),new Formula.Edge("light","choose","no"),new Formula.Edge("choose","activate","effect")));check(ENGINE.plan(copy(base,nodes,edges),CONTEXT).fieldCost()==50,"7 > 5 selects the stronger real effect");
+        });
+        test("M1 embedded depth is bounded before evaluation",()->{
+            var child=light();for(int i=0;i<10;i++){var call=FormulaCalls.call("call",child,0,0);child=new Formula(UUID.randomUUID(),OWNER,1,"nested",List.of(call),List.of(),"call",100);}
+            check(new FormulaValidator(RUNES).validate(child).stream().anyMatch(d->d.code()==FormulaValidator.Code.LIMIT),"depth diagnostic");
+        });
+        test("M1 entity equality follows identity while positions remain values",()->{
+            var moved=new Value.Entity(OWNER,new Value.Position("minecraft:overworld",2,64,1));var original=new Value.Entity(OWNER,TARGET);
+            check(((Value.Bool)RUNES.get("badspell:equal_entity").operation().evaluate(Map.of("a",original,"b",moved),Map.of(),CONTEXT)).value(),"same entity despite movement");
+            check(!((Value.Bool)RUNES.get("badspell:equal_position").operation().evaluate(Map.of("a",TARGET,"b",moved.position()),Map.of(),CONTEXT)).value(),"different coordinates differ");
+        });
         System.out.println("PASS: "+passed+" tests; no Minecraft integration tests executed.");
     }
     private static Formula light() { return ExampleFormulas.light(OWNER); }

@@ -38,7 +38,7 @@ public final class IntegrationTests {
         });
         FUNCTIONS.register("production_recipe_coverage",()->helper->{
             var recipes=helper.getLevel().recipeAccess().recipeMap().byType(com.badspell.production.ProductionRegistries.TYPE.get());
-            helper.assertTrue(recipes.size()==36,"All 36 processing recipes must load, got "+recipes.size());
+            helper.assertTrue(recipes.size()==54,"All 54 processing recipes must load, got "+recipes.size());
             for(var recipe:recipes)for(var output:recipe.value().outputs())helper.assertTrue(!output.create().isEmpty(),"Recipe output must resolve");
             helper.succeed();
         });
@@ -315,7 +315,7 @@ public final class IntegrationTests {
         for(String path:List.of("production_engraving","production_recipe_coverage","production_overlapping_inputs","production_normal","production_full","production_adapter","registered_items","light_lifecycle","light_illuminates_air","light_starter_cast","light_empty_section","item_snapshot_persistence","book_server_workflow","book_rejects_forgery","glove_slots","glove_legacy_and_security","glove_server_intents","book_history_restore")) {
             Identifier id=Identifier.fromNamespaceAndPath("badspell",path);
             event.registerTest(id,new FunctionGameTestInstance(ResourceKey.create(Registries.TEST_FUNCTION,id),
-                new TestData<>(environment,Identifier.fromNamespaceAndPath("badspell","test_room"),path.startsWith("light_")?1000:path.startsWith("production_")?300:100,0,true)));
+                new TestData<>(environment,Identifier.fromNamespaceAndPath("badspell","test_room"),(path.startsWith("light_")||path.equals("production_engraving"))?1000:path.startsWith("production_")?300:100,0,true)));
         }
     }
 }

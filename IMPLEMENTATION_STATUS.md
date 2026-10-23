@@ -1,9 +1,22 @@
 # Implementierungsstatus – Bad Spell
 
 Ziel: Minecraft Java 26.2 · NeoForge · JDK 25 · com.badspell · 0.1.0-alpha.
-Derzeit Formelkern, überarbeiteter Canvas, Handschuh-Slots und Punktlicht, dazu 37 neue Material-/Plattenitems und 17 Blöcke mit sieben Produktionsstationen. **Keine vollständige Mod; vollständiger Survival-Durchlauf noch nicht geprüft.** Stand: 23.10.2026.
+Aktueller M1-Entwicklungsstand: erweiterte typisierte Runensprache, Formelmodule/Bibliothek, zusätzliche Zauberwirkungen und Werkzeuge, Q2/Q3-Ausbau sowie überarbeitete Vanilla-nahe Assets. Sieben Produktionsstationen; 54 Verarbeitungsrezepte. **Keine vollständige Mod; vollständiger Survival-Durchlauf noch nicht geprüft.** Stand: 23.10.2026.
 
 Status: Nicht begonnen / In Entwicklung / Implementiert, aber ungetestet / Getestet / Bekannte Probleme. „Getestet“ beschreibt ausschließlich den ausdrücklich genannten Testumfang.
+
+## M1-Entwicklungsstand vom 23.10.2026
+
+Dieser Abschnitt ersetzt widersprechende Angaben älterer Fortschrittsnotizen weiter unten. M1 ist noch **nicht vollständig abgenommen**. Die neue Clientdarstellung und ein vollständiger Survival-/Mehrspieler-Durchlauf sind offen.
+
+- Typisierte Vektor-, Text-, Entity-, Ereignis- und Regionswerte; verschachtelte Snapshot-Module, benannte Eingaben, typisierte Rückgaben, Bedingungen, Vergleich und begrenzte Auswertung.
+- Lichtfelder einschließlich Kugel/Pfad, Heilung, Stoß, Hitze, Kälte, Schild und Zielinformation; verzögerte/begrenzte/periodische Aktivierung mit Energieprüfung je Ausführung. Endliche Felder und Spieleraufträge werden gespeichert.
+- Private Formel-Bibliothek mit Suche, Tags und neun komponierten Vorlagen. Eigene Formelmodule lassen sich als Knoten einfügen. Oberflächengravur ist auf 16 Runen je Blockseite begrenzt; nur Glyphen werden öffentlich übertragen.
+- Runenmeißel, Resonanzgabel, Feldkompass/Q3, Monokel sowie Q2/Q3-Handschuhe, Zellen und Platten. Handschuhe besitzen 4/8/12 Slots, Zellen 100/300/600 FL. Zellladungen im Inventar werden zusammen verwendet.
+- Lokale Bindungen, versiegelte Blöcke sowie begrenzte Item-/Energieübertragung. Offizielle Interaktionsereignisse können Weltaktionen verweigern.
+- 54 datengetriebene Verarbeitungsrezepte plus 12 Vanilla-Rezepte. Sieben eigene Stationsmodelle, überarbeitete 16px-Texturen und 3D-Werkzeuge/Zellen. Stilregeln: [ASSET_STYLE.md](docs/ASSET_STYLE.md).
+
+**Grenzen:** Der Runenhalter führt weiterhin nur Punktlicht aus. Umfangreiche Maschinensteuerung, Forschung, Mobs, Bosse, Dimensionen und vollständige Weltgenerierung sind nicht fertig. Kompatibilität mit einzelnen Schutzmods und echte Netzwerkclients sind mit den neuen Abläufen noch nicht geprüft. Keine Behauptung einer vollständigen Umsetzung aller PDF-Features.
 
 ## Ursprüngliche 161 Konzepte (PDF Anhang A)
 
@@ -11,15 +24,15 @@ Alle 161 Konzepte sind hier einzeln erfasst. Ein getesteter Hilfsdatentyp markie
 
 | Kategorie | PDF-ID | Feature | Status |
 |---|---|---|---|
-| Magische Gegenstände (9) | 01 | Runenmeißel | Nicht begonnen |
-| Magische Gegenstände (9) | 02 | Runenhandschuh | In Entwicklung: vier Q1-Slots; Export und Slotwechsel server-/clientgetestet; Q2/Q3 offen |
-| Magische Gegenstände (9) | 03 | Arkanes Monokel | Nicht begonnen |
+| Magische Gegenstände (9) | 01 | Runenmeißel | In Entwicklung: persistente 4×4-Oberflächengravur, Haltbarkeit, Eigentümerprüfung; Clientdarstellung noch ungeprüft |
+| Magische Gegenstände (9) | 02 | Runenhandschuh | In Entwicklung: Q1/Q2/Q3 mit 4/8/12 Slots und serverseitiger Sicherung; neue Clientabläufe ungeprüft |
+| Magische Gegenstände (9) | 03 | Arkanes Monokel | In Entwicklung: Kopfslot, Scan, Fokusverbrauch und Intensitätswechsel; grafische Prüfung offen |
 | Magische Gegenstände (9) | 04 | Feldkristall | Nicht begonnen |
 | Magische Gegenstände (9) | 05 | Runentinte | In Entwicklung: echter Verbrauch/Refill getestet; Alchemierezept hinzugefügt, Survival-Durchlauf offen |
-| Magische Gegenstände (9) | 06 | Runenplatte | In Entwicklung: echte unveränderliche Buch-Snapshots, Handschuhimport; Q2/Q3 fehlen |
-| Magische Gegenstände (9) | 07 | Formelbuch | In Entwicklung: Canvas bedient, Serveraktionen getestet; Bibliothek/Module offen |
-| Magische Gegenstände (9) | 08 | Feldkompass | Nicht begonnen |
-| Magische Gegenstände (9) | 09 | Resonanzgabel | Nicht begonnen |
+| Magische Gegenstände (9) | 06 | Runenplatte | In Entwicklung: echte unveränderliche Buch-Snapshots, Handschuhimport; Q2/Q3 implementiert; neue Abläufe noch ohne grafischen Test |
+| Magische Gegenstände (9) | 07 | Formelbuch | In Entwicklung: Canvas bedient, Serveraktionen getestet; Bibliothek, Tags und typisierte Snapshot-Module implementiert; grafischer Test offen |
+| Magische Gegenstände (9) | 08 | Feldkompass | In Entwicklung: ortsfeste Signatur, Richtung und Signalstärke, Q3-Reichweite |
+| Magische Gegenstände (9) | 09 | Resonanzgabel | In Entwicklung: Diagnose/Aktivierung, Haltbarkeit und Reparatur |
 | Blöcke (20) | 01 | Gravurstation | In Entwicklung: echte Buch→Platten-Gravur, Inventar/FL; keine Oberflächengravur |
 | Blöcke (20) | 02 | Alchemietisch | In Entwicklung: datengetriebene Verarbeitung; kein universelles Alchemiesystem |
 | Blöcke (20) | 03 | Arkaner Schmelzofen | In Entwicklung: Inventar, FL, Zeitrezepte; keine thermischen Zusatzmechaniken |
@@ -459,3 +472,15 @@ Der erste veröffentlichte Stand verbrauchte Energie für Lichtfunke, ohne Luft 
 Grafischer Client: Editor geöffnet, Layout/Fit/Speichern bedient; Kristallschleifer über reguläres Menü geöffnet und Verarbeitung bestätigt (3 Splitter, 80 FL Rest). Abschließende Layoutkorrekturen werden gesondert geprüft.
 
 Finale JAR geprüft: Zahleneingabe, Speichern/Tinte/Kostenvorschau sowie persistente Schleifer-Ausgaben und FL nach regulärem Welt-Neuladen. Kein Test aller Stationen und kein Crash-Recovery-Nachweis.
+
+## Aktuelle Prüfung: M1-Entwicklungsstand
+
+`./gradlew --offline --no-daemon build runGameTestServer --max-workers=2`: erfolgreich; 39 Kerntests und 33 erforderliche GameTests bestanden. Vollständiges Protokoll: [docs/M1_VALIDATION.log](docs/M1_VALIDATION.log). Testuhr für periodischen Hitzeschaden korrekt ausgerichtet; Beleuchtungstest wartet bis zu 1000 Ticks auf asynchrone Lichtberechnung, unveränderte Helligkeitsassertion.
+
+Die neuen GameTests prüfen echte Serverwelt-/Inventaraktionen, nutzen jedoch FakePlayer und teilweise manuell ausgelöste Scheduler-/Feldschritte. Sie ersetzen keinen Test mit verbundenen Clients. Neue UI, Glyphenrenderer, Modelle, kompletter Survivalpfad, Client-Neuverbindung und Serverneustart mit aktiven Feldern bleiben manuell zu prüfen. Alte Screenshots zeigen den vorherigen Build.
+
+## Grafischer Kurztest des M1-Builds
+
+Am 23.10.2026 wurde der Entwicklungsclient mit denselben kompilierten Klassen/Ressourcen gestartet und die bestehende QA-Welt geladen. Formelbuch und Bibliothek geöffnet; Stoß-Vorlage über die Bibliothek angelegt und als Graph zurück in den Editor geladen; Schreibpunkte sanken von 52 auf 47. Die Canvas-Funktion „Fit view“ ließ sich auslösen. Ein vorhandener 3D-Schleifer und die Feldzelle wurden dargestellt. Das prüft weder sämtliche Modelle noch Oberflächenglyphen oder alle Clientinteraktionen. Dieser Kurztest verwendet die Entwicklungsumgebung, nicht eine separat installierte JAR.
+
+Im Xvfb-Client wurde einmal `X11: Standard cursor shape unavailable` gemeldet; die UI ließ sich anschließend weiter bedienen. Ein Produktionsclient-Test bleibt offen.

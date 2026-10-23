@@ -1,0 +1,22 @@
+{
+  "type": "badspell:processing",
+  "station": "engraving_station",
+  "inputs": [
+    {
+      "ingredient": "badspell:raw_resonance_fork",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:inscribed_rune_plate",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:resonance_fork",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 45
+}
