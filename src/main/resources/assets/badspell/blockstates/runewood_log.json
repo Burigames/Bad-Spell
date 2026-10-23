@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "badspell:block/runewood_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "badspell:block/runewood_log"
+    },
+    "axis=z": {
+      "model": "badspell:block/runewood_log",
+      "x": 90
+    }
+  }
+}

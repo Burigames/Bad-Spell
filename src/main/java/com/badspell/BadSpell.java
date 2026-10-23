@@ -12,7 +12,8 @@ import net.neoforged.neoforge.common.NeoForge;
 public final class BadSpell {
     public static final String MOD_ID="badspell";
     public BadSpell(IEventBus bus) {
-        ModItems.register(bus);
+        com.badspell.content.ModContent.bootstrap();
+        ModItems.register(bus);com.badspell.content.ModContent.register(bus);com.badspell.production.ProductionRegistries.register(bus);
         if(Boolean.getBoolean("badspell.tests"))IntegrationTests.register(bus);bus.addListener(Packets::register);
         NeoForge.EVENT_BUS.addListener(LightFields::tick);
         NeoForge.EVENT_BUS.addListener(LightFields::load);

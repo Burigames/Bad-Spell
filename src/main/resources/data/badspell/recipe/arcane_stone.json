@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:cobbled_deepslate",
+    "minecraft:cobbled_deepslate",
+    "minecraft:cobbled_deepslate",
+    "minecraft:cobbled_deepslate",
+    "badspell:crystal_dust",
+    "badspell:rune_resin"
+  ],
+  "result": {
+    "id": "badspell:arcane_stone",
+    "count": 8
+  }
+}

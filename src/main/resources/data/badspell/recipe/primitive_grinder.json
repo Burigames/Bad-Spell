@@ -1,0 +1,30 @@
+{
+  "type": "badspell:processing",
+  "station": "arcane_workbench",
+  "inputs": [
+    {
+      "ingredient": "minecraft:iron_ingot",
+      "count": 3
+    },
+    {
+      "ingredient": "minecraft:quartz_block",
+      "count": 1
+    },
+    {
+      "ingredient": "minecraft:copper_ingot",
+      "count": 2
+    },
+    {
+      "ingredient": "badspell:coarse_crystal_shard",
+      "count": 2
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:crystal_grinder",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 0
+}

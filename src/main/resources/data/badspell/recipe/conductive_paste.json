@@ -1,0 +1,26 @@
+{
+  "type": "badspell:processing",
+  "station": "alchemy_table",
+  "inputs": [
+    {
+      "ingredient": "badspell:crystal_dust",
+      "count": 2
+    },
+    {
+      "ingredient": "minecraft:redstone",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:rune_resin",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:conductive_paste",
+      "count": 4
+    }
+  ],
+  "ticks": 80,
+  "energy": 10
+}

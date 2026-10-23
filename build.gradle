@@ -52,21 +52,32 @@ tasks.register('validateResources') {
         def english = parser.parse(new File(root, 'lang/en_us.json'))
         def german = parser.parse(new File(root, 'lang/de_de.json'))
         if (english.keySet() != german.keySet()) throw new GradleException('Translation key sets differ')
-        def source = file('src/main/java/com/badspell/content/ModItems.java').text
-        def items = (source =~ /register(?:Simple)?Item\("([a-z_]+)"/).collect { it[1] }
-        if (items.empty) throw new GradleException('No mod item registrations found')
-        items.each { id ->
-            if (!english.containsKey("item.badspell.${id}".toString())) throw new GradleException("Missing translation for ${id}")
-            def definition = parser.parse(new File(root, "items/${id}.json"))
-            if (definition.model.model != "badspell:item/${id}") throw new GradleException("Invalid item definition: ${id}")
-            def model = parser.parse(new File(root, "models/item/${id}.json"))
-            if (model.textures.layer0 != "badspell:item/${id}") throw new GradleException("Invalid texture reference: ${id}")
-            byte[] png = new File(root, "textures/item/${id}.png").bytes
-            if (png.length < 24 || java.nio.ByteBuffer.wrap(png, 16, 8).getInt() != 16 || java.nio.ByteBuffer.wrap(png, 20, 4).getInt() != 16) {
-                throw new GradleException("Invalid texture dimensions: ${id}")
+        def definitions = new File(root, 'items').listFiles().findAll { it.name.endsWith('.json') }
+        definitions.each { definitionFile ->
+            def id = definitionFile.name[0..-6]
+            def isBlock = new File(root, "blockstates/${id}.json").exists()
+            def key = "${isBlock ? 'block' : 'item'}.badspell.${id}".toString()
+            if (!english.containsKey(key)) throw new GradleException("Missing translation: ${key}")
+            def definition = parser.parse(definitionFile)
+            def modelId = definition.model.model
+            def checked = [] as Set
+            while (modelId?.startsWith('badspell:')) {
+                if (!checked.add(modelId)) throw new GradleException("Model parent cycle: ${id}")
+                def modelFile = new File(root, 'models/' + modelId.substring(9) + '.json')
+                if (!modelFile.exists()) throw new GradleException("Missing model: ${modelId}")
+                def model = parser.parse(modelFile)
+                (model.textures ?: [:]).values().each { texture ->
+                    if (texture.startsWith('badspell:')) {
+                        def textureFile = new File(root, 'textures/' + texture.substring(9) + '.png')
+                        if (!textureFile.exists()) throw new GradleException("Missing texture: ${texture}")
+                        byte[] png = textureFile.bytes
+                        if (png.length < 24 || java.nio.ByteBuffer.wrap(png, 16, 4).getInt() != 16 || java.nio.ByteBuffer.wrap(png, 20, 4).getInt() != 16) throw new GradleException("Invalid 16x16 texture: ${texture}")
+                    }
+                }
+                modelId = model.parent
             }
         }
-        logger.lifecycle("Validated ${items.size()} item definitions/models/textures and ${english.size()} bilingual keys")
+        logger.lifecycle("Validated ${definitions.size()} item definitions and referenced models/textures; ${english.size()} bilingual keys")
     }
 }
 tasks.named('check') { dependsOn 'validateResources' }

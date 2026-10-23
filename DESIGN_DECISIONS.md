@@ -9,12 +9,12 @@
 7. Module werden vor Ausführung expandiert. Erste Version: konstante benannte Bindungen, ein Effektausgang, maximal acht Verschachtelungen und 128 expandierte Knoten. Dynamisch typisierte Modulports und unabhängige Moduleingänge sind noch offen, keine aufgegebene Anforderung.
 8. Positions-/Zahl-/Bool-Parameter besitzen ein geschlossenes binäres Format mit Schema-Version. Minecraft-Itemkomponenten sind angebunden; JSON-Datapacks und weitere Datenadapter stehen aus. Die neutralen JSON-Beispiele der PDF werden nicht ungeprüft als Minecraft-Rezepte eingebunden.
 9. Rezeptplanung verlangt explizit deklarierte Rohstoffe und konkrete Rezeptalternativen. Q-Stufen müssen in der ersten Adapterversion unterschiedliche aufgelöste Material-IDs bekommen; eine stillschweigende Q0/Q3-Substitution ist verboten.
-10. Kein Dummy-Inhalt, keine beliebigen neuen Rezepte und keine als „fertig“ registrierten Effektplatzhalter. Die Einstiegsklasse registriert ausschließlich die real existierenden Core-Dienste, Items und Adapter. Vier echte Items sind registriert; die Stations-/Worldgenblöcke stehen aus.
+10. Kein Dummy-Inhalt, keine beliebigen neuen Rezepte und keine als „fertig“ registrierten Effektplatzhalter. Die Einstiegsklasse registriert ausschließlich die real existierenden Core-Dienste, Items und Adapter. Inzwischen sind auch konkrete Stations-/Worldgenblöcke mit Verarbeitung und Rohstoffgewinnung hinzugefügt; nicht implementierte Effekte werden weiterhin nicht als fertig registriert.
 11. Die Client-/Server- und Lichtadapter basieren auf den tatsächlich heruntergeladenen und durch ModDevGradle erzeugten 26.2-Quellen. Für temporäres Licht wird NeoForge Auxiliary Light verwendet, für die Oberfläche die 26.2-API GuiGraphicsExtractor. Keine alte Render-/Input-API als Ersatz.
 12. JDK- und Gradle-Downloads wurden mit veröffentlichten SHA-256-Summen geprüft. TLS-/Signaturprüfung bleibt eingeschaltet. Die Cloudinitialisierung nutzt den vorhandenen Proxy und den System-Truststore; keine CA- oder Netzwerksperre wird umgangen.
 
 13. Q1-Handschuhe besitzen vier unabhängige Slots. Die Modifikatortaste für den spezifizierten Mausradwechsel ist Umschalt. Q2/Q3-Spulen und 8/12 Slots bleiben offen. Altbestände werden bei der nächsten erfolgreichen Schreibaktion in Slot 0 übernommen. Eine neue Buchrevision verändert vorhandene Importe nicht.
-14. Es gibt zunächst keine Survivalrezepte für die vier Items. Dadurch werden keine in der PDF geforderten Stationsketten durch billige Werkbankrezepte ersetzt. Der Creative-Tab dient der Entwicklungsprüfung; der Survivalpfad ist die nächste größere Phase.
+14. Die ursprünglichen vier Items haben inzwischen mehrstufige Stationsrezepte. Der Creative-Tab dient weiter der Entwicklungsprüfung; der vollständige Survival-Durchlauf steht noch aus.
 15. Formularpositionen sind Editor-Koordinaten; bestätigte typisierte Kanten steuern die Ausführung. Räumliche Nachbarschaftsoperatoren fehlen noch. Wiederverwendbare Module sind im Core verfügbar, aber noch nicht im Canvas oder Netzwerkformat verfügbar.
 16. Private Bücher und importierte Handschuhformeln werden auf Server-Seite an den Autor gebunden. Kopierfreigaben, Team-ACLs und kontrollierte Besitzerwechsel sind noch nicht vorhanden; standardmäßig wird fremde Nutzung verweigert.
 
@@ -24,3 +24,12 @@
 
 19. Fehlerkorrektur: Ein Eintrag im NeoForge-Auxiliary-Light-Manager genügt bei einem unveränderten Luftblock nicht für Lichtemission. Die tatsächlichen 26.2-Quellen wurden geprüft; zwei begrenzte Mixins ergänzen Feldemission und halten Sections mit Feldquellen im Lichtrechner aktiv. Vanilla-Blockemission bleibt per Maximum erhalten. Keine Platzhalterblöcke, kein Austausch von Luft und keine Änderung der FL/FK-Kosten. Die Indexdaten sind threadsicher, pro Welt schwach referenziert und aus SavedData/Servernachrichten rekonstruierbar. Fremde Lichtengine-Ersetzungen und Shader benötigen weiterhin eigene Kompatibilitätstests.
 20. Die serverseitige Zielabfrage verwendet den aktuellen Simulationszustand (`partialTick=1`) statt der vorherigen Position. Der neue Handschuh-GameTest überprüft die tatsächliche Item-Aktivierung und nicht nur einen direkt aufgerufenen Effekt-Callback.
+
+## Erste Produktionsketten
+
+- Der Vanilla-Ofen besitzt einen Eingang. Deshalb wird die mehrteilige frühe Arkanmischung vorher an der Werkbank hergestellt; Leuchtmoos wird als Dreierbündel zu zwei Fasern verarbeitet.
+- Ein zusätzlicher Startzellenadapter ermöglicht die frühen Maschinen vor dem noch fehlenden Kabelnetz. Gehäuse enthalten Kupfer und Glas; verbrauchte Zellen lassen sich in Gehäuse umwandeln und neu befüllen. Diese Übergangslösung ersetzt das spätere Netz nicht.
+- Sechs Ressourcenquellen werden zunächst in passenden Vanilla-Biomen generiert, bis die spezifizierten eigenen Biome implementiert sind. Dies ändert nicht das Ziel der eigenen Biome.
+- Gravuren sind unabhängige Buch-Snapshots; der Runenhalter hat einen festen Zielpunkt über sich und aktiviert auf steigender Redstone-Flanke.
+- Alle neuen Texturen sind einfache selbst erzeugte 16×16-Assets. Vanilla-Geometrie wird ausschließlich über aktuelle Modellvorlagen/Parentreferenzen eingebunden.
+- Das vorhandene MC-26.2-ItemStack.CODEC ist während Rezeptreload vor Komponenteninitialisierung ungeeignet. Wie die offiziellen Rezepte verwendet der neue Typ deshalb ItemStackTemplate.CODEC.

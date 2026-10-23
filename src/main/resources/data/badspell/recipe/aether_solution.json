@@ -1,0 +1,30 @@
+{
+  "type": "badspell:processing",
+  "station": "alchemy_table",
+  "inputs": [
+    {
+      "ingredient": "badspell:moon_blossom",
+      "count": 2
+    },
+    {
+      "ingredient": "badspell:crystal_dust",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:pure_water",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:aether_solution",
+      "count": 1
+    },
+    {
+      "id": "minecraft:glass_bottle",
+      "count": 1
+    }
+  ],
+  "ticks": 120,
+  "energy": 20
+}

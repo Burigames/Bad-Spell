@@ -1,0 +1,26 @@
+{
+  "type": "badspell:processing",
+  "station": "alchemy_table",
+  "inputs": [
+    {
+      "ingredient": "badspell:runewood_log",
+      "count": 2
+    },
+    {
+      "ingredient": "badspell:pure_water",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:rune_resin",
+      "count": 2
+    },
+    {
+      "id": "minecraft:glass_bottle",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 10
+}

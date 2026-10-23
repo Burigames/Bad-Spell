@@ -13,7 +13,8 @@ import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlers
 
 @Mod(value=BadSpell.MOD_ID,dist=Dist.CLIENT)
 public final class BadSpellClient {
-    public BadSpellClient(IEventBus bus) { bus.addListener(BadSpellClient::register); net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(BadSpellClient::scroll); }
+    public BadSpellClient(IEventBus bus) { bus.addListener(BadSpellClient::register);bus.addListener(BadSpellClient::menus); net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(BadSpellClient::scroll); }
+    private static void menus(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event){event.register(com.badspell.production.ProductionRegistries.MENU.get(),StationScreen::new);}
     private static void scroll(net.neoforged.neoforge.client.event.InputEvent.MouseScrollingEvent event) {
         var game=Minecraft.getInstance();var player=game.player;
         if(player==null || !game.options.keyShift.isDown() || event.getScrollDeltaY()==0)return;
@@ -27,7 +28,9 @@ public final class BadSpellClient {
     private static void register(RegisterClientPayloadHandlersEvent event) {
         event.register(Packets.OpenBook.TYPE,(packet,context)->{
             try {
-                Minecraft.getInstance().gui.setScreen(new FormulaBookScreen(packet.hand(),FormulaCodec.decode(packet.formula()),packet.ink()));
+                var game=Minecraft.getInstance();var formula=FormulaCodec.decode(packet.formula());
+                if(game.gui.screen() instanceof FormulaBookScreen current && current.accepts(packet.hand(),formula))current.acceptServer(formula,packet.ink());
+                else game.gui.setScreen(new FormulaBookScreen(packet.hand(),formula,packet.ink()));
             } catch(IOException error) { context.disconnect(net.minecraft.network.chat.Component.translatable("message.badspell.invalid")); }
         });
         event.register(Packets.BookHistory.TYPE,(packet,context)->{

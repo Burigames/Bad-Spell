@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "CTC",
+    "PS "
+  ],
+  "key": {
+    "P": "badspell:runewood_planks",
+    "C": "minecraft:copper_ingot",
+    "T": "minecraft:crafting_table",
+    "S": "badspell:field_crystal_shard_q0"
+  },
+  "result": {
+    "id": "badspell:arcane_workbench",
+    "count": 1
+  }
+}

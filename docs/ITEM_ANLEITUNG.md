@@ -2,7 +2,7 @@
 
 **Gültig für:** Bad Spell 0.1.0-alpha, Minecraft Java 26.2, NeoForge 26.2.0.93, Java 25.
 
-Dieser Build enthält tatsächlich nur vier Items. Die vollständige Mod aus dem Game-Design-Dokument ist noch nicht umgesetzt. Aktuell kannst du eine Punktlichtformel bearbeiten, speichern, in einen Handschuh kopieren und wirken. Es gibt noch keine Survivalrezepte, Maschinen, weiteren spielbaren Zauber, Mobs oder Dimensionen.
+Dieser Build enthält die vier ursprünglichen Werkzeuge plus 37 Material-/Plattenitems und 17 Blöcke einschließlich sieben Stationen. Du kannst eine Punktlichtformel bearbeiten, speichern, in einen Handschuh kopieren, gravieren und wirken. Die erste Herstellungskette ist implementiert; weitere Zauberwirkungen, Mobs und Dimensionen fehlen. Siehe [Herstellung](HERSTELLUNG.md).
 
 ## Korrektur für den ersten veröffentlichten Build
 
@@ -179,3 +179,9 @@ Die Anleitung beschreibt den implementierten Stand, keine vollständige Umsetzun
 
 Weitere Einzelheiten: [Implementierungsstatus](../IMPLEMENTATION_STATUS.md) und [Testnachweise](../TESTING.md).
 
+
+## Neue Oberfläche und Herstellung
+
+Die Formelbuch-Seitenleiste hat jetzt die Reiter **Runen**, **Details** und **Prüfen**. Unter Runen suchen und platzieren; Knoten wählen und unter Details Zahlen direkt eingeben. Unter Prüfen erscheinen verständliche Diagnosen und Kosten. Rechtsklick auf einen Eingangsport löst dessen Verbindung. Speichern erhält den Bildausschnitt; vor Export speichern.
+
+Für alle neuen Materialien, sieben Maschinen, Startenergie und Runenplatten: [Herstellungsanleitung](HERSTELLUNG.md). Nicht jede registrierte Zutat hat bereits ihre spätere PDF-Endverwendung.

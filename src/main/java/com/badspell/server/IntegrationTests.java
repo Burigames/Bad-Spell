@@ -19,6 +19,58 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public final class IntegrationTests {
     private static final DeferredRegister<Consumer<GameTestHelper>> FUNCTIONS=DeferredRegister.create(Registries.TEST_FUNCTION,"badspell");
     static {
+        FUNCTIONS.register("production_engraving",()->helper->{
+            var level=helper.getLevel();var player=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(level);
+            var hand=net.minecraft.world.InteractionHand.MAIN_HAND;player.setItemInHand(hand,new net.minecraft.world.item.ItemStack(ModItems.FORMULA_BOOK.get()));MagicActions.openBook(player,hand);
+            var at=helper.absolutePos(new BlockPos(2,1,2));level.setBlockAndUpdate(at,com.badspell.content.ModContent.STATIONS.get("engraving_station").get().defaultBlockState());
+            var machine=(com.badspell.production.StationBlockEntity)level.getBlockEntity(at);machine.claim(player);
+            machine.setItem(0,new net.minecraft.world.item.ItemStack(com.badspell.content.ModContent.item("blank_rune_plate"),2));machine.setItem(1,player.getItemInHand(hand).copy());
+            machine.setItem(6,new net.minecraft.world.item.ItemStack(ModItems.FIELD_CELL.get()));machine.setItem(11,new net.minecraft.world.item.ItemStack(com.badspell.content.ModContent.item("cell_adapter")));
+            helper.runAfterDelay(90,()->{
+                helper.assertTrue(machine.getItem(7).is(com.badspell.content.ModContent.item("inscribed_rune_plate")),"Engraving must produce a reusable formula plate");
+                helper.assertTrue(machine.getItem(0).getCount()==1&&!machine.getItem(1).isEmpty(),"Engraving consumes one blank and preserves the book");
+                var holderPos=helper.absolutePos(new BlockPos(4,1,4));level.setBlockAndUpdate(holderPos,com.badspell.content.ModContent.STATIONS.get("rune_holder").get().defaultBlockState());
+                var holder=(com.badspell.production.StationBlockEntity)level.getBlockEntity(holderPos);holder.claim(player);holder.setItem(0,machine.getItem(7).copy());holder.setItem(6,new net.minecraft.world.item.ItemStack(ModItems.FIELD_CELL.get()));holder.setItem(11,new net.minecraft.world.item.ItemStack(com.badspell.content.ModContent.item("cell_adapter")));
+                helper.assertTrue(holder.activatePlate(level),"Holder must execute the engraved formula");helper.assertTrue(holder.data.get(2)==70,"Holder activation spends exactly 30 FL");
+                helper.assertTrue(!holder.activatePlate(level)&&holder.data.get(2)==70,"Rejected overlapping field cannot spend more FL");
+                helper.succeedWhen(()->{yieldForLighting(level);helper.assertTrue(level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK,holderPos.above())==3,"Engraved holder produces real block light");});
+            });
+        });
+        FUNCTIONS.register("production_recipe_coverage",()->helper->{
+            var recipes=helper.getLevel().recipeAccess().recipeMap().byType(com.badspell.production.ProductionRegistries.TYPE.get());
+            helper.assertTrue(recipes.size()==36,"All 36 processing recipes must load, got "+recipes.size());
+            for(var recipe:recipes)for(var output:recipe.value().outputs())helper.assertTrue(!output.create().isEmpty(),"Recipe output must resolve");
+            helper.succeed();
+        });
+        FUNCTIONS.register("production_overlapping_inputs",()->helper->{
+            var inventory=new net.minecraft.world.SimpleContainer(6);
+            inventory.setItem(0,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT));
+            inventory.setItem(1,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COPPER_INGOT));
+            var broad=net.minecraft.world.item.crafting.Ingredient.of(net.minecraft.world.item.Items.IRON_INGOT,net.minecraft.world.item.Items.COPPER_INGOT);
+            var narrow=net.minecraft.world.item.crafting.Ingredient.of(net.minecraft.world.item.Items.IRON_INGOT);
+            var recipe=new com.badspell.production.ProcessingRecipe("test",List.of(new com.badspell.production.ProcessingRecipe.Input(broad,1),new com.badspell.production.ProcessingRecipe.Input(narrow,1)),List.of(),20,0);
+            var used=recipe.allocation(inventory);helper.assertTrue(used!=null&&used[0]==1&&used[1]==1,"Overlapping ingredients must reassign instead of greedily failing");
+            inventory.setItem(1,net.minecraft.world.item.ItemStack.EMPTY);helper.assertTrue(recipe.allocation(inventory)==null,"One item cannot satisfy two ingredient demands");helper.succeed();
+        });
+        for(String mode:List.of("normal","full","adapter"))FUNCTIONS.register("production_"+mode,()->helper->{
+            var at=helper.absolutePos(new BlockPos(2,1,2));var level=helper.getLevel();
+            level.setBlockAndUpdate(at,com.badspell.content.ModContent.STATIONS.get("crystal_grinder").get().defaultBlockState());
+            var machine=(com.badspell.production.StationBlockEntity)level.getBlockEntity(at);
+            machine.setItem(0,new net.minecraft.world.item.ItemStack(com.badspell.content.ModContent.item("raw_field_crystal")));
+            machine.setItem(6,new net.minecraft.world.item.ItemStack(ModItems.FIELD_CELL.get()));
+            if(!mode.equals("adapter"))machine.setItem(11,new net.minecraft.world.item.ItemStack(com.badspell.content.ModContent.item("cell_adapter")));
+            if(mode.equals("full"))for(int i=7;i<11;i++)machine.setItem(i,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COBBLESTONE,64));
+            helper.runAfterDelay(40,()->{
+                helper.assertTrue(machine.getItem(0).getCount()==1&&machine.data.get(2)==100,"Inputs and FL remain intact before completion");
+                if(mode.equals("full")){helper.assertTrue(machine.data.get(3)==3,"Full output pauses processing");machine.setItem(7,net.minecraft.world.item.ItemStack.EMPTY);}
+                if(mode.equals("adapter")){helper.assertTrue(machine.data.get(3)==4,"Missing adapter pauses processing");machine.setItem(11,new net.minecraft.world.item.ItemStack(com.badspell.content.ModContent.item("cell_adapter")));}
+            });
+            helper.runAfterDelay(140,()->{
+                helper.assertTrue(machine.getItem(0).isEmpty(),"Processing consumes input exactly once");
+                helper.assertTrue(machine.getItem(7).is(com.badspell.content.ModContent.item("field_crystal_shard"))&&machine.getItem(7).getCount()==3,"Processing produces three shards");
+                helper.assertTrue(machine.data.get(2)==80,"Processing costs exactly 20 FL");helper.succeed();
+            });
+        });
         FUNCTIONS.register("registered_items",()->helper->{
             helper.assertTrue(ModItems.FORMULA_BOOK.get().getDefaultInstance().getMaxStackSize()==1,"Formula book must not stack");
             helper.assertTrue(ModItems.RUNE_GLOVE.get().getDefaultInstance().getMaxStackSize()==1,"Glove must not stack");
@@ -260,10 +312,10 @@ public final class IntegrationTests {
     public static void register(IEventBus bus){FUNCTIONS.register(bus);bus.addListener(IntegrationTests::tests);}
     private static void tests(RegisterGameTestsEvent event) {
         var environment=event.registerEnvironment(Identifier.fromNamespaceAndPath("badspell","test_environment"));
-        for(String path:List.of("registered_items","light_lifecycle","light_illuminates_air","light_starter_cast","light_empty_section","item_snapshot_persistence","book_server_workflow","book_rejects_forgery","glove_slots","glove_legacy_and_security","glove_server_intents","book_history_restore")) {
+        for(String path:List.of("production_engraving","production_recipe_coverage","production_overlapping_inputs","production_normal","production_full","production_adapter","registered_items","light_lifecycle","light_illuminates_air","light_starter_cast","light_empty_section","item_snapshot_persistence","book_server_workflow","book_rejects_forgery","glove_slots","glove_legacy_and_security","glove_server_intents","book_history_restore")) {
             Identifier id=Identifier.fromNamespaceAndPath("badspell",path);
             event.registerTest(id,new FunctionGameTestInstance(ResourceKey.create(Registries.TEST_FUNCTION,id),
-                new TestData<>(environment,Identifier.fromNamespaceAndPath("badspell","test_room"),path.startsWith("light_")?1000:100,0,true)));
+                new TestData<>(environment,Identifier.fromNamespaceAndPath("badspell","test_room"),path.startsWith("light_")?1000:path.startsWith("production_")?300:100,0,true)));
         }
     }
 }

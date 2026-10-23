@@ -1,0 +1,18 @@
+{
+  "type": "badspell:processing",
+  "station": "crystal_grinder",
+  "inputs": [
+    {
+      "ingredient": "badspell:field_crystal_shard",
+      "count": 4
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:raw_crystal_core",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 20
+}

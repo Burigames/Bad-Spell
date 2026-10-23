@@ -107,3 +107,26 @@ Zusätzlich zu den Development-Tests wurde die tatsächlich gebaute JAR in einen
 In einer Kopie der Creative-QA-Welt wurde die unveränderte Lichtfunke-Formel aus dem Buch exportiert und mit frischer Zelle im vollständig geschlossenen dunklen Steinraum gewirkt. Bestätigt: Partikel, sichtbare Bodenbeleuchtung und Anzeige `Activated | FL 70 | FK 95`. Nach Ablauf erlosch das Licht. Ein unveränderter Bodenbereich außerhalb von Partikeln, Hand und HUD wechselte von mittlerem RGB 11,63/11,63/11,63 auf 24,21/23,34/21,13 und nach Ablauf exakt zurück auf 11,63/11,63/11,63. Dies ergänzt die physikalischen Helligkeitsassertions des Servers um tatsächliche Clientdarstellung.
 
 Unveränderte Screenshots: `docs/screenshots/light-before.png`, `light-after.png`, `light-expired.png`. Der frühere fehlende Nachweis der gepackten JAR wurde damit für diesen lokalen Mods-Ordner-Test nachgeholt. Ein separater Start über einen normalen Endnutzer-Launcher, fremde Shader/Lichtengines und mehrere externe Clients auf einem dedizierten Server bleiben ungetestet.
+
+## UI-/Produktionserweiterung 23.10.2026
+
+Erster Prüflauf: `./gradlew --offline --no-daemon build runGameTestServer --max-workers=2` erfolgreich, 18 erforderliche GameTests inklusive Vanilla-Test bestanden. 28 Coretests weiter erfolgreich. Neue Tests prüfen: alle 36 Stationsrezepte tatsächlich geladen (nicht nur syntaktisch vorhandene JSONs), Max-Flow bei überlappenden Zutaten, Schleifer mit echten Ticks, pausierter voller Ausgang und fehlender Adapter, exakt einmalige Eingangs-/FL-Entnahme.
+
+Die Ressourcenprüfung folgt jetzt sämtlichen Itemmodellen, Blockmodell-Parentreferenzen und Originaltexturen und gleicht beide Sprachdateien ab. Während der Entwicklung fiel ein Rezeptladefehler auf, der trotz erfolgreichem Gradle-Prozess alle neuen Rezepte deaktivierte. Korrigiert durch ItemStackTemplate und explizite Rezeptanzahl-Prüfung.
+
+Noch offen: grafische Prüfung des neu gestalteten Editors und aller Maschinenmenüs, echte Verteilung der neuen Weltgenquellen, vollständiger Survival-Durchlauf, Maschinen-Neuladen/Chunk-Unload, mehrere echte Spieler, Hopper-/Claim-Integration. Frühere Licht-Screenshots belegen den vorherigen Licht-Hotfix und ersetzen keine Prüfung der neuen Oberfläche. Neue Mobs/Dimensionen existieren noch nicht.
+
+Zweiter Prüflauf: **19 erforderliche GameTests bestanden**, einschließlich Gravur→Runenhalter→echtes Licht sowie keiner zusätzlichen FL-Entnahme bei abgewiesener Wiederholung. Im grafischen Development-Client Editor geöffnet, Layout/Fit/Speichern bedient. Kristallschleifer über reguläres Menü geöffnet und mit echten Inventaren verarbeitet: drei Splitter und 80 FL Restladung. Kleine UI-Überlappungen gefunden und korrigiert; finale Screenshots folgen nach erneutem Start. Im virtuellen X11 fehlt eine Standard-Cursorform (GLFW 65547); kein Minecraft-Absturz.
+
+Eine statische Erreichbarkeitsprüfung aller Bad-Spell-Rezepte fand keine zyklisch unerreichbaren Ausgaben, ausgehend von Vanilla-Ressourcen und den neuen natürlichen Rohstoffen. Dies prüft keine Mengenbalance, Fundhäufigkeit oder vollständige Spielprogression.
+
+### Prüfung der aktuellen gepackten JAR
+
+SHA-256 `f468b9aa1af2596fa2b544185eb8edbeb75116f18b04fa03427e3fce0fd3e80c`. Getrennte Instanz unter `/workspace/work/production-packaged`, ausschließlich `mods/badspell-0.1.0-alpha.jar`, keine Bad-Spell-/Core-Entwicklungsklassen und kein `fml.modFolders`. Loader bestätigt `badspell (jar(mods/badspell-0.1.0-alpha.jar))`.
+
+- Gespeicherte Testwelt geladen: Schleifer enthält weiterhin drei Splitter, Adapter und Zelle mit 80 FL. Das belegt reguläres Speichern/Laden dieses abgeschlossenen Jobs; unterbrochene Jobs und Stromausfall-Crashs nicht geprüft.
+- Finale Maschinenansicht mit beschrifteten Adapter-/Zellslots und innenliegender Diagnose geöffnet.
+- Finaler Editor in kleiner und größerer Fenstergröße geöffnet. Keine frühere Überlappung der Runenliste mehr. Zahleneingabe Stärke 3→4, Speichern mit Tintenausgabe 52→51, bestätigte Kosten 40 FL/5 FK/30 Sekunden. Canvasposition und Zoom bleiben erhalten.
+- Screenshots: [Editor](docs/screenshots/formula-editor.png), [Details](docs/screenshots/formula-details.png), [Schleifer nach Neuladen](docs/screenshots/crystal-grinder.png).
+
+Reproduzierbare strukturelle Rezeptprüfung: `python3 scripts/check-recipe-reachability.py` → 48 Rezepte erreichbar unter den dokumentierten Rohstoffannahmen. Kein Ersatz für den noch offenen Survival-Durchlauf.

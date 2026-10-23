@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "badspell:runewood_log"
+  ],
+  "result": {
+    "id": "badspell:runewood_planks",
+    "count": 4
+  }
+}

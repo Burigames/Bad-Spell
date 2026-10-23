@@ -1,0 +1,18 @@
+{
+  "type": "badspell:processing",
+  "station": "alchemy_table",
+  "inputs": [
+    {
+      "ingredient": "badspell:moon_brew",
+      "count": 2
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:moon_salt",
+      "count": 1
+    }
+  ],
+  "ticks": 240,
+  "energy": 20
+}

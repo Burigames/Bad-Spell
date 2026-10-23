@@ -1,0 +1,22 @@
+{
+  "type": "badspell:processing",
+  "station": "arcane_smelter",
+  "inputs": [
+    {
+      "ingredient": "badspell:raw_arcane_ore",
+      "count": 2
+    },
+    {
+      "ingredient": "minecraft:coal",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:arcane_ingot",
+      "count": 1
+    }
+  ],
+  "ticks": 160,
+  "energy": 40
+}

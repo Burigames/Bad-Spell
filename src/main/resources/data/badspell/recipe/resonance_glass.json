@@ -1,0 +1,26 @@
+{
+  "type": "badspell:processing",
+  "station": "arcane_smelter",
+  "inputs": [
+    {
+      "ingredient": "badspell:resonance_shard",
+      "count": 2
+    },
+    {
+      "ingredient": "minecraft:glass",
+      "count": 2
+    },
+    {
+      "ingredient": "badspell:arcane_dust",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:resonance_glass",
+      "count": 2
+    }
+  ],
+  "ticks": 160,
+  "energy": 50
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": "badspell:impure_arcane_charge",
+  "result": {
+    "id": "badspell:arcane_ingot_q0",
+    "count": 1
+  },
+  "experience": 0.1,
+  "cookingtime": 200
+}

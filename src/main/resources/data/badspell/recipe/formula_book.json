@@ -1,0 +1,22 @@
+{
+  "type": "badspell:processing",
+  "station": "alchemy_table",
+  "inputs": [
+    {
+      "ingredient": "badspell:raw_formula_book",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:rune_ink",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:formula_book",
+      "count": 1
+    }
+  ],
+  "ticks": 80,
+  "energy": 0
+}

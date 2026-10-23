@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "badspell:glow_moss"
+  ],
+  "step": "underground_decoration"
+}

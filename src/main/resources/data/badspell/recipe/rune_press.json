@@ -1,0 +1,30 @@
+{
+  "type": "badspell:processing",
+  "station": "arcane_workbench",
+  "inputs": [
+    {
+      "ingredient": "minecraft:iron_block",
+      "count": 2
+    },
+    {
+      "ingredient": "badspell:arcane_ingot",
+      "count": 2
+    },
+    {
+      "ingredient": "badspell:precision_coil",
+      "count": 2
+    },
+    {
+      "ingredient": "badspell:stabilizer_seal",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:rune_press",
+      "count": 1
+    }
+  ],
+  "ticks": 160,
+  "energy": 0
+}

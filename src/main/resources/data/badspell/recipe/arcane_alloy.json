@@ -1,0 +1,26 @@
+{
+  "type": "badspell:processing",
+  "station": "arcane_smelter",
+  "inputs": [
+    {
+      "ingredient": "badspell:arcane_ingot",
+      "count": 2
+    },
+    {
+      "ingredient": "minecraft:gold_ingot",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:moon_salt",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:arcane_alloy",
+      "count": 2
+    }
+  ],
+  "ticks": 180,
+  "energy": 75
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "badspell:coarse_crystal_shard",
+    "badspell:coarse_crystal_shard",
+    "badspell:sandpaper"
+  ],
+  "result": {
+    "id": "badspell:field_crystal_shard_q0",
+    "count": 1
+  }
+}

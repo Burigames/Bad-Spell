@@ -1,0 +1,22 @@
+{
+  "type": "badspell:processing",
+  "station": "engraving_station",
+  "inputs": [
+    {
+      "ingredient": "badspell:binding_compound",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:conductive_paste",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:stabilizer_seal",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 30
+}

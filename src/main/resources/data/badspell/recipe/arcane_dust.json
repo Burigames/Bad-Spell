@@ -1,0 +1,18 @@
+{
+  "type": "badspell:processing",
+  "station": "crystal_grinder",
+  "inputs": [
+    {
+      "ingredient": "badspell:arcane_ingot",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:arcane_dust",
+      "count": 2
+    }
+  ],
+  "ticks": 80,
+  "energy": 30
+}

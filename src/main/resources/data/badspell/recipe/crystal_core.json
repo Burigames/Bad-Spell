@@ -1,0 +1,26 @@
+{
+  "type": "badspell:processing",
+  "station": "alchemy_table",
+  "inputs": [
+    {
+      "ingredient": "badspell:raw_crystal_core",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:pure_water",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:crystal_core",
+      "count": 1
+    },
+    {
+      "id": "minecraft:glass_bottle",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 25
+}

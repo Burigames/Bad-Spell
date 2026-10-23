@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "badspell:field_crystal_ore",
+    "badspell:arcane_ore"
+  ]
+}

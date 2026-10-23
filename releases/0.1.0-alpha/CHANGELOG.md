@@ -1,3 +1,22 @@
+# UI und Produktionsketten · 23. Oktober 2026
+
+Minecraft 26.2 · NeoForge 26.2.0.93 · Java 25 · Modversion weiterhin 0.1.0-alpha.
+
+- Neuer Formelbuch-Editor: flache Oberfläche, Runensuche, Reiter, direkte Zahlenfelder, Kosten/Diagnosen, Zoom/Pan bleibt beim Speichern erhalten.
+- 37 neue Material-/Plattenitems und 17 Blöcke, darunter sieben echte Verarbeitungsstationen.
+- 36 Stationsrezepte plus frühe Werkbank-/Ofenrezepte; sechs natürliche Rohstoffquellen.
+- Getaktete Inventarverarbeitung mit FL-Verbrauch, Adapter, vollem-Ausgang-Schutz und Hopper-Seiten.
+- Gravierte Formelsnapshots, Plattenimport in Handschuhe und Redstone-Aktivierung von Punktlicht am Runenhalter.
+- 28 Coretests und 19 erforderliche GameTests inklusive Vanilla-Test bestanden. Details/Prüfgrenzen in TESTING.md.
+
+**Weiterhin unvollständig:** keine neuen Mobs/Bosse, Dimensionen, Ritualsysteme, Kabelnetze oder weiteren Zauberwirkungen. Vollständiger Survival-Durchlauf ausstehend. Neue Weltgenquellen benötigen neu erzeugte Chunks.
+
+Alte JAR ersetzen und Client/Server neu starten; nicht mehrere Bad-Spell-JARs gleichzeitig installieren. Anleitung: docs/HERSTELLUNG.md.
+
+SHA-256: `f468b9aa1af2596fa2b544185eb8edbeb75116f18b04fa03427e3fce0fd3e80c`
+
+---
+
 # Licht-Hotfix · 23. Oktober 2026
 
 Minecraft 26.2 · NeoForge 26.2.0.93 · Java 25 · Modversion weiterhin 0.1.0-alpha.

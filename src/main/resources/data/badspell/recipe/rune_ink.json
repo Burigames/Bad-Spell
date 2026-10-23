@@ -1,0 +1,30 @@
+{
+  "type": "badspell:processing",
+  "station": "alchemy_table",
+  "inputs": [
+    {
+      "ingredient": "badspell:crystal_dust",
+      "count": 2
+    },
+    {
+      "ingredient": "badspell:moon_brew",
+      "count": 1
+    },
+    {
+      "ingredient": "minecraft:ink_sac",
+      "count": 1
+    },
+    {
+      "ingredient": "minecraft:glass_bottle",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:rune_ink",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 10
+}

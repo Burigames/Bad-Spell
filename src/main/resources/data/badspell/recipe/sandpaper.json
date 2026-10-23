@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:sand",
+    "minecraft:sand",
+    "minecraft:paper",
+    "minecraft:flint"
+  ],
+  "result": {
+    "id": "badspell:sandpaper",
+    "count": 3
+  }
+}

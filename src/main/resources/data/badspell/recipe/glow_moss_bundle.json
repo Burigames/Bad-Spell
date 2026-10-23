@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "badspell:glow_moss",
+    "badspell:glow_moss",
+    "badspell:glow_moss"
+  ],
+  "result": {
+    "id": "badspell:glow_moss_bundle",
+    "count": 1
+  }
+}

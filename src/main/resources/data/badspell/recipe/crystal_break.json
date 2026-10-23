@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "badspell:raw_field_crystal",
+    "minecraft:flint"
+  ],
+  "result": {
+    "id": "badspell:coarse_crystal_shard",
+    "count": 2
+  }
+}

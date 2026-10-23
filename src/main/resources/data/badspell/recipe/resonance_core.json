@@ -1,0 +1,22 @@
+{
+  "type": "badspell:processing",
+  "station": "arcane_smelter",
+  "inputs": [
+    {
+      "ingredient": "badspell:resonance_core_blank",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:crystal_core",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:resonance_core",
+      "count": 1
+    }
+  ],
+  "ticks": 200,
+  "energy": 100
+}

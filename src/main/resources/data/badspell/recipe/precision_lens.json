@@ -1,0 +1,22 @@
+{
+  "type": "badspell:processing",
+  "station": "crystal_grinder",
+  "inputs": [
+    {
+      "ingredient": "badspell:resonance_glass",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:field_crystal_shard",
+      "count": 2
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:precision_lens",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 45
+}

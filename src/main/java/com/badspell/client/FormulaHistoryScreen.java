@@ -24,15 +24,15 @@ public final class FormulaHistoryScreen extends Screen {
         for(int row=0;row<page && offset+row<revisions.size();row++) {
             Formula archived=revisions.get(revisions.size()-1-offset-row);
             var label=Component.translatable("gui.badspell.restore_revision",archived.revision(),archived.title(),archived.nodes().size());
-            addRenderableWidget(Button.builder(label,b->{
+            addRenderableWidget(new SpellButton(20,55+row*24,Math.max(100,width-40),20,label,b->{
                 var editor=new FormulaBookScreen(hand,current,ink);Minecraft.getInstance().gui.setScreen(editor);editor.restoreDraft(archived);
-            }).bounds(20,55+row*24,Math.max(100,width-40),20).build());
+            },false));
         }
-        var previous=addRenderableWidget(Button.builder(Component.literal("<"),b->{offset=Math.max(0,offset-page);rebuildWidgets();}).bounds(20,height-30,35,20).build());
+        var previous=addRenderableWidget(new SpellButton(20,height-30,35,20,Component.literal("<"),b->{offset=Math.max(0,offset-page);rebuildWidgets();},false));
         previous.active=offset>0;
-        var next=addRenderableWidget(Button.builder(Component.literal(">"),b->{offset+=page;rebuildWidgets();}).bounds(60,height-30,35,20).build());
+        var next=addRenderableWidget(new SpellButton(60,height-30,35,20,Component.literal(">"),b->{offset+=page;rebuildWidgets();},false));
         next.active=offset+page<revisions.size();
-        addRenderableWidget(Button.builder(Component.translatable("gui.badspell.back"),b->onClose()).bounds(Math.max(100,width-110),height-30,90,20).build());
+        addRenderableWidget(new SpellButton(Math.max(100,width-110),height-30,90,20,Component.translatable("gui.badspell.back"),b->onClose(),true));
     }
     @Override public void extractRenderState(GuiGraphicsExtractor graphics,int mouseX,int mouseY,float partialTick) {
         graphics.fill(0,0,width,height,0xff101820);

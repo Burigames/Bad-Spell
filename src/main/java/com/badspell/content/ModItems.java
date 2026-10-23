@@ -23,7 +23,7 @@ public final class ModItems {
     static {
         TABS.register("badspell",()->CreativeModeTab.builder().title(Component.translatable("itemGroup.badspell"))
             .icon(()->FORMULA_BOOK.get().getDefaultInstance()).displayItems((parameters,output)->{
-                output.accept(FORMULA_BOOK);output.accept(RUNE_GLOVE);output.accept(FIELD_CELL);output.accept(RUNE_INK);
+                ITEMS.getEntries().forEach(holder->output.accept(holder.get()));
             }).build());
     }
     private ModItems() {}

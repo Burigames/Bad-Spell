@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "badspell:field_crystal_ore",
+    "badspell:arcane_ore",
+    "badspell:resonance_crystal",
+    "badspell:arcane_stone",
+    "badspell:arcane_workbench",
+    "badspell:crystal_grinder",
+    "badspell:alchemy_table",
+    "badspell:arcane_smelter",
+    "badspell:rune_press",
+    "badspell:engraving_station",
+    "badspell:rune_holder"
+  ]
+}

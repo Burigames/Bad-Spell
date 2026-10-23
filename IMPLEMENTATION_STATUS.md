@@ -1,7 +1,7 @@
 # Implementierungsstatus – Bad Spell
 
 Ziel: Minecraft Java 26.2 · NeoForge · JDK 25 · com.badspell · 0.1.0-alpha.
-Derzeit ein gebauter erster Mod-Stand mit Formelkern, vier Items, Canvas und serverseitigem Lichtzauber, **keine vollständige Mod und kein durchspielbarer Survivalstand**. Stand: 23.10.2026.
+Derzeit Formelkern, überarbeiteter Canvas, Handschuh-Slots und Punktlicht, dazu 37 neue Material-/Plattenitems und 17 Blöcke mit sieben Produktionsstationen. **Keine vollständige Mod; vollständiger Survival-Durchlauf noch nicht geprüft.** Stand: 23.10.2026.
 
 Status: Nicht begonnen / In Entwicklung / Implementiert, aber ungetestet / Getestet / Bekannte Probleme. „Getestet“ beschreibt ausschließlich den ausdrücklich genannten Testumfang.
 
@@ -15,31 +15,31 @@ Alle 161 Konzepte sind hier einzeln erfasst. Ein getesteter Hilfsdatentyp markie
 | Magische Gegenstände (9) | 02 | Runenhandschuh | In Entwicklung: vier Q1-Slots; Export und Slotwechsel server-/clientgetestet; Q2/Q3 offen |
 | Magische Gegenstände (9) | 03 | Arkanes Monokel | Nicht begonnen |
 | Magische Gegenstände (9) | 04 | Feldkristall | Nicht begonnen |
-| Magische Gegenstände (9) | 05 | Runentinte | In Entwicklung: echter Verbrauch/Refill getestet; Herstellung offen |
-| Magische Gegenstände (9) | 06 | Runenplatte | Nicht begonnen |
+| Magische Gegenstände (9) | 05 | Runentinte | In Entwicklung: echter Verbrauch/Refill getestet; Alchemierezept hinzugefügt, Survival-Durchlauf offen |
+| Magische Gegenstände (9) | 06 | Runenplatte | In Entwicklung: echte unveränderliche Buch-Snapshots, Handschuhimport; Q2/Q3 fehlen |
 | Magische Gegenstände (9) | 07 | Formelbuch | In Entwicklung: Canvas bedient, Serveraktionen getestet; Bibliothek/Module offen |
 | Magische Gegenstände (9) | 08 | Feldkompass | Nicht begonnen |
 | Magische Gegenstände (9) | 09 | Resonanzgabel | Nicht begonnen |
-| Blöcke (20) | 01 | Gravurstation | Nicht begonnen |
-| Blöcke (20) | 02 | Alchemietisch | Nicht begonnen |
-| Blöcke (20) | 03 | Arkaner Schmelzofen | Nicht begonnen |
+| Blöcke (20) | 01 | Gravurstation | In Entwicklung: echte Buch→Platten-Gravur, Inventar/FL; keine Oberflächengravur |
+| Blöcke (20) | 02 | Alchemietisch | In Entwicklung: datengetriebene Verarbeitung; kein universelles Alchemiesystem |
+| Blöcke (20) | 03 | Arkaner Schmelzofen | In Entwicklung: Inventar, FL, Zeitrezepte; keine thermischen Zusatzmechaniken |
 | Blöcke (20) | 04 | Ritualsockel | Nicht begonnen |
-| Blöcke (20) | 05 | Arkanwerkbank | Nicht begonnen |
+| Blöcke (20) | 05 | Arkanwerkbank | In Entwicklung: ausführbare Start- und Werkzeugketten |
 | Blöcke (20) | 06 | Runenblock | Nicht begonnen |
 | Blöcke (20) | 07 | Kristallkabel | Nicht begonnen |
 | Blöcke (20) | 08 | Kristall-Konnektor | Nicht begonnen |
 | Blöcke (20) | 09 | Kristall-Relais | Nicht begonnen |
-| Blöcke (20) | 10 | Runenhalter | Nicht begonnen |
-| Blöcke (20) | 11 | Arkanstein | Nicht begonnen |
+| Blöcke (20) | 10 | Runenhalter | In Entwicklung: Punktlicht-Platten ausführbar, Redstone-Flanke; kein Energienetz |
+| Blöcke (20) | 11 | Arkanstein | Implementiert, aber ungetestet: Block, Modell, Rezept, Loot |
 | Blöcke (20) | 12 | Kristallglas | Nicht begonnen |
 | Blöcke (20) | 13 | Arkane Laterne | Nicht begonnen |
 | Blöcke (20) | 14 | Runenbücherregal | Nicht begonnen |
 | Blöcke (20) | 15 | Kristallsäule | Nicht begonnen |
-| Blöcke (20) | 16 | Feldkristallerz | Nicht begonnen |
-| Blöcke (20) | 17 | Arkanerzblock | Nicht begonnen |
-| Blöcke (20) | 18 | Runenholzstamm | Nicht begonnen |
-| Blöcke (20) | 19 | Leuchtmoos | Nicht begonnen |
-| Blöcke (20) | 20 | Resonanzkristall | Nicht begonnen |
+| Blöcke (20) | 16 | Feldkristallerz | Implementiert, aber ungetestet: Erz, Loot/Fortune/Silk Touch, Weltgen |
+| Blöcke (20) | 17 | Arkanerzblock | Implementiert, aber ungetestet: Erz, Loot, Weltgen |
+| Blöcke (20) | 18 | Runenholzstamm | Implementiert, aber ungetestet: Baum, Setzling, Bretter, Loot |
+| Blöcke (20) | 19 | Leuchtmoos | Implementiert, aber ungetestet: Multiface-Block, Vermehrung, Weltgen |
+| Blöcke (20) | 20 | Resonanzkristall | Implementiert, aber ungetestet: Geodenquelle, Loot, Verarbeitung |
 | Ausrüstung (18) | 01 | Runenschwerter | Nicht begonnen |
 | Ausrüstung (18) | 02 | Magierstäbe | Nicht begonnen |
 | Ausrüstung (18) | 03 | Zauberbücher | Nicht begonnen |
@@ -102,7 +102,7 @@ Alle 161 Konzepte sind hier einzeln erfasst. Ein getesteter Hilfsdatentyp markie
 | Weltgenerierung (23) | 14 | Versunkene Bibliothek | Nicht begonnen |
 | Weltgenerierung (23) | 15 | Feldkristalladern | Nicht begonnen |
 | Weltgenerierung (23) | 16 | Arkanerz | Nicht begonnen |
-| Weltgenerierung (23) | 17 | Mondblüte | Nicht begonnen |
+| Weltgenerierung (23) | 17 | Mondblüte | Implementiert, aber ungetestet: Pflanze, Weltgen und Verarbeitung |
 | Weltgenerierung (23) | 18 | Runenholz | Nicht begonnen |
 | Weltgenerierung (23) | 19 | Ätherquelle | Nicht begonnen |
 | Weltgenerierung (23) | 20 | Resonanzgeode | Nicht begonnen |
@@ -184,17 +184,17 @@ Alle 161 Konzepte sind hier einzeln erfasst. Ein getesteter Hilfsdatentyp markie
 | PDF 02 | Zeitoperatoren, Entitätsziele, Bindung, übrige Runeffekte | Nicht begonnen | Nur die unten aufgeführten Operationen existieren |
 | PDF 02/16 | Versionierte, begrenzte Formelserialisierung und SHA-256 | Getestet | Schema 1; Itemkomponenten-Roundtrip servergetestet; Prüfsumme ist keine Authentifizierung |
 | PDF 16 | Formeldateien: Atomarer Austausch, Besitzer und Revisionskonflikte | Getestet | Separater Dateispeicher; zusätzlicher Itemadapter vorhanden; kein fsync-Crashnachweis |
-| PDF 03 | 11 Stationsprofile W/OF/AW/KS/AT/AS/GS/RP/RS/ÄK/FS | Nicht begonnen | AP ist Teilfunktion des Alchemietischs; Vanilla W/OF noch ohne Bad-Spell-Rezepte |
-| PDF 03 | Q0/Q1/Q2/Q3, Zwischenmaterialien, Flüssigkeiten, Behälterrücklauf | Nicht begonnen | Keine registrierten Materialien |
+| PDF 03 | 11 Stationsprofile W/OF/AW/KS/AT/AS/GS/RP/RS/ÄK/FS | In Entwicklung | W/OF-Rezepte sowie AW/KS/AT/AS/GS/RP und Runenhalter vorhanden; RS/ÄK/FS/AP fehlen |
+| PDF 03 | Q0/Q1/Q2/Q3, Zwischenmaterialien, Flüssigkeiten, Behälterrücklauf | In Entwicklung | Q0/Q1/Q2-Halbzeuge als getrennte Items, 36 Stationsrezepte; Q3 und Flüssigkeitstanks fehlen |
 | PDF 03/17 | Transitive Produktionsplanung, konkrete Alternativen und Chargenreste | Getestet | Java-Modell mit expliziten Rohstoffen; keine Stationsintegration |
-| PDF 03/17 | Atomarer Maschinenabschluss, Outputkapazität und Replay-Schutz | Getestet | Nur in-memory; kein Prozess-Timer oder persistentes Journal |
+| PDF 03/17 | Atomarer Maschinenabschluss, Outputkapazität und Replay-Schutz | Getestet | Core und echte getaktete Stationen mit voller-Ausgang-Prüfung getestet; Inventar/Fortschritt gespeichert, kein Crash-Journal |
 | PDF 04 | T0–T5 und vier Erwerbswege; pro Spieler gelerntes Wissen | Nicht begonnen | Kein XP-/Reputationssystem hinzufügen |
 | PDF 05/15 | Formelbuch: fünf Ansichten, Zoom 25–400%, Pan und Verbindungen | In Entwicklung | Minecraft-Canvas, typisierte Verbindung, Zoom/Pan, Anordnen, numerisches Editieren, Undo und Speichern im Client bedient; fünf vollständige Ansichten fehlen |
 | PDF 05/15 | Formelbuch: 100 Undo-Schritte, 20 Revisionen, Tinte, Exportrechte | In Entwicklung | Canvas-Undo 100, Bucharchiv begrenzt auf 20; Tinte/Revision/privater Export servergetestet; Archivbrowser mit paginierter Auswahl und Wiederherstellung als Entwurf implementiert; Server-Restore und Auswahl/Wiederherstellung/Speichern im Client geprüft; Paginierungs-/Grenzfallabnahme offen |
 | PDF 05 | Meißel: 6 Flächen × 4×4 Slots; Vorschau ohne Verbrauch | Nicht begonnen |  |
 | PDF 05 | Handschuh: 4/8/12 Slots, unveränderliche Importe, UUID/Revision | In Entwicklung | Vier Q1-Slots, unabhängige Importe, Slotwechsel, Altbestandsmigration und Besitzerprüfung servergetestet; Q2/Q3 mit 8/12 Slots und Spielerbackup fehlen |
 | PDF 05 | Monokel ohne Handslot; Privatsphäre; Kompass 1024/4096 Blöcke | Nicht begonnen |  |
-| PDF 06 | Runenholzset: Stamm, Brett, Treppe, Zaun, Setzling | Nicht begonnen |  |
+| PDF 06 | Runenholzset: Stamm, Brett, Treppe, Zaun, Setzling | In Entwicklung | Stamm, Bretter, Blätter und Setzling vorhanden; Treppe und Zaun fehlen |
 | PDF 07/22 | Rüstungseinzelteile, Q2/Q3-Upgrades, Reparatur und Softcap 25% | Nicht begonnen |  |
 | PDF 07 | Zubehörslots, Ladungen, 64-Pfeil-Köcher, Bewegungslimits | Nicht begonnen |  |
 | PDF 08 | Fluch I–III, erreichbare Reinigung, Einwilligung bei Seelenbindung | Nicht begonnen |  |
@@ -240,17 +240,17 @@ Die neutralen Rezeptbeispiele der PDF werden nicht als ladbare Minecraft-Rezepte
 | A-13 | Nicht begonnen |
 | A-14 | Nicht begonnen |
 | A-15 | Nicht begonnen |
-| B-00 | Nicht begonnen |
-| B-01 | Nicht begonnen |
-| B-02 | Nicht begonnen |
-| B-03 | Nicht begonnen |
-| B-04 | Nicht begonnen |
-| B-05 | Nicht begonnen |
-| B-06 | Nicht begonnen |
-| B-07 | Nicht begonnen |
-| B-08 | Nicht begonnen |
-| B-09 | Nicht begonnen |
-| B-10 | Nicht begonnen |
+| B-00 | In Entwicklung: ausführbarer Startpfad; Anpassungen siehe DESIGN_DECISIONS.md |
+| B-01 | In Entwicklung: ausführbarer Startpfad; Anpassungen siehe DESIGN_DECISIONS.md |
+| B-02 | In Entwicklung: ausführbarer Startpfad; Anpassungen siehe DESIGN_DECISIONS.md |
+| B-03 | In Entwicklung: ausführbarer Startpfad; Anpassungen siehe DESIGN_DECISIONS.md |
+| B-04 | In Entwicklung: ausführbarer Startpfad; Anpassungen siehe DESIGN_DECISIONS.md |
+| B-05 | In Entwicklung: ausführbarer Startpfad; Anpassungen siehe DESIGN_DECISIONS.md |
+| B-06 | In Entwicklung: ausführbarer Startpfad; Anpassungen siehe DESIGN_DECISIONS.md |
+| B-07 | In Entwicklung: ausführbarer Startpfad; Anpassungen siehe DESIGN_DECISIONS.md |
+| B-08 | In Entwicklung: ausführbarer Startpfad; Anpassungen siehe DESIGN_DECISIONS.md |
+| B-09 | In Entwicklung: ausführbarer Startpfad; Anpassungen siehe DESIGN_DECISIONS.md |
+| B-10 | In Entwicklung: ausführbarer Startpfad; Anpassungen siehe DESIGN_DECISIONS.md |
 | E-01 | Nicht begonnen |
 | E-02 | Nicht begonnen |
 | E-03 | Nicht begonnen |
@@ -298,47 +298,47 @@ Die neutralen Rezeptbeispiele der PDF werden nicht als ladbare Minecraft-Rezepte
 | INF-18 | Nicht begonnen |
 | INF-19 | Nicht begonnen |
 | INF-20 | Nicht begonnen |
-| R-001 | Nicht begonnen |
-| R-002 | Nicht begonnen |
-| R-003 | Nicht begonnen |
-| R-004 | Nicht begonnen |
-| R-005 | Nicht begonnen |
-| R-006 | Nicht begonnen |
-| R-007 | Nicht begonnen |
-| R-008 | Nicht begonnen |
-| R-009 | Nicht begonnen |
+| R-001 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-002 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-003 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-004 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-005 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-006 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-007 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-008 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-009 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
 | R-01 | Nicht begonnen |
-| R-010 | Nicht begonnen |
-| R-011 | Nicht begonnen |
-| R-012 | Nicht begonnen |
-| R-013 | Nicht begonnen |
-| R-014 | Nicht begonnen |
-| R-015 | Nicht begonnen |
-| R-016 | Nicht begonnen |
-| R-017 | Nicht begonnen |
-| R-018 | Nicht begonnen |
-| R-019 | Nicht begonnen |
+| R-010 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-011 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-012 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-013 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-014 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-015 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-016 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-017 | In Entwicklung: Rezept/Material vorhanden; gesamter Survivalpfad ungeprüft |
+| R-018 | In Entwicklung: ausführbare Verarbeitung; vollständiger Survivalpfad ungeprüft |
+| R-019 | In Entwicklung: ausführbare Verarbeitung; vollständiger Survivalpfad ungeprüft |
 | R-02 | Nicht begonnen |
 | R-020 | Nicht begonnen |
 | R-021 | Nicht begonnen |
-| R-022 | Nicht begonnen |
+| R-022 | In Entwicklung: ausführbare Verarbeitung; vollständiger Survivalpfad ungeprüft |
 | R-03 | Nicht begonnen |
-| R-030 | Nicht begonnen |
-| R-031 | Nicht begonnen |
-| R-032 | Nicht begonnen |
-| R-033 | Nicht begonnen |
-| R-034 | Nicht begonnen |
-| R-035 | Nicht begonnen |
+| R-030 | In Entwicklung: ausführbare Verarbeitung; vollständiger Survivalpfad ungeprüft |
+| R-031 | In Entwicklung: frühe B-04-Variante vorhanden; Q1-Kern-Alternative fehlt |
+| R-032 | In Entwicklung: ausführbare Verarbeitung; vollständiger Survivalpfad ungeprüft |
+| R-033 | In Entwicklung: ausführbare Verarbeitung; vollständiger Survivalpfad ungeprüft |
+| R-034 | In Entwicklung: ausführbare Verarbeitung; vollständiger Survivalpfad ungeprüft |
+| R-035 | In Entwicklung: ausführbare Verarbeitung; vollständiger Survivalpfad ungeprüft |
 | R-036 | Nicht begonnen |
 | R-037 | Nicht begonnen |
-| R-038 | Nicht begonnen |
-| R-039 | Nicht begonnen |
+| R-038 | In Entwicklung: ausführbare Verarbeitung; vollständiger Survivalpfad ungeprüft |
+| R-039 | In Entwicklung: ausführbare Verarbeitung; vollständiger Survivalpfad ungeprüft |
 | R-04 | Nicht begonnen |
 | R-040 | Nicht begonnen |
 | R-041 | Nicht begonnen |
 | R-042 | Nicht begonnen |
 | R-043 | Nicht begonnen |
-| R-044 | Nicht begonnen |
+| R-044 | In Entwicklung: ausführbare Verarbeitung; vollständiger Survivalpfad ungeprüft |
 | R-045 | Nicht begonnen |
 | R-046 | Nicht begonnen |
 | R-047 | Nicht begonnen |
@@ -440,3 +440,22 @@ Der vorhandene Quellstand und der erneut extrahierte Text der 58-seitigen PDF st
 ## Licht-Hotfix nach Spielerfehlermeldung
 
 Der erste veröffentlichte Stand verbrauchte Energie für Lichtfunke, ohne Luft tatsächlich zum Leuchten zu bringen. Der frühere Auxiliary-Eintrag-Test war dafür unzureichend. Der Fehler wurde durch einen neuen Helligkeitstest reproduziert und durch eine Anbindung an die tatsächliche 26.2-Blocklichtberechnung behoben. Getestet: Lichtstärke und Ausbreitung, Erlöschen, vollständig leere Sections und der Starterzauber über den Handschuh mit exakten FL/FK-Kosten. Aktuell: erfolgreicher Build, 28 Kerntests, 12 eigene GameTests plus ein Vanilla-Test. Weitere Zauber, Survivalherstellung und übrige Phasen bleiben offen.
+
+## Erweiterung: UI und Produktion (23.10.2026)
+
+- **Im Client bedient:** neue flache Bedienelemente, Suche, Reiter für Runen/Details/Prüfung, numerische Eingabe, Undo/Redo, Kostenanzeige, lokalisierten Diagnosen, Bestätigung ungespeicherter Änderungen. Speichern erhält Zoom und Verschiebung.
+- **Getestet (GameTest):** Laden aller 36 Stationsrezepte; überlappende Zutaten mittels Max-Flow; echte Kristallschleifer-Verarbeitung, volle Ausgänge und fehlender Adapter ohne Verlust von Eingangsmaterial/FL.
+- **Implementiert:** sieben Stationsinventare mit Zeitverarbeitung, Ein-/Ausgabeautomatisierung und persistenter Speicherung. Zusätzliche Tests/Clientprüfung werden in TESTING.md separat protokolliert.
+- **Implementiert, aber ungetestet:** sechs natürliche Rohstoffquellen, Modelle, Originaltexturen, Vanilla-Crafting-/Ofenrezepte, Baum-/Pflanzenvermehrung. Registry-Laden ersetzt keinen Weltgenerierungs- oder Survival-Durchlauf.
+- **Nicht begonnen:** sämtliche PDF-Mobs, Bosse und Dimensionen; übrige Einträge behalten ihren jeweiligen Status. Der neue Katalog stellt diese Systeme nicht als fertig dar.
+
+### Nächste konkrete Schritte
+
+1. Weitere Stationsmenüs, lang laufende/unterbrochene Jobs und mehrere Spieler prüfen. Editor und Schleifer wurden bereits aus der gepackten JAR geprüft; Screenshots in TESTING.md.
+2. Weltgenverteilung und vollständigen Start→Buch→Handschuh→Platte-Survivalpfad prüfen.
+3. Feldspeicher, Kabel und Kollektoren mit Flusslimits, Verlusten und Eigentumsprüfung implementieren; derzeit maximal 100 FL aus einer Startzelle.
+4. Weitere echte Zauberwirkungen, Formelmodule/Bibliothek, Runenmeißel und Diagnosewerkzeuge; danach Ritual- und Kreaturensysteme.
+
+Grafischer Client: Editor geöffnet, Layout/Fit/Speichern bedient; Kristallschleifer über reguläres Menü geöffnet und Verarbeitung bestätigt (3 Splitter, 80 FL Rest). Abschließende Layoutkorrekturen werden gesondert geprüft.
+
+Finale JAR geprüft: Zahleneingabe, Speichern/Tinte/Kostenvorschau sowie persistente Schleifer-Ausgaben und FL nach regulärem Welt-Neuladen. Kein Test aller Stationen und kein Crash-Recovery-Nachweis.

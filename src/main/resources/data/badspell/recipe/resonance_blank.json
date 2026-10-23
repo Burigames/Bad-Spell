@@ -1,0 +1,18 @@
+{
+  "type": "badspell:processing",
+  "station": "crystal_grinder",
+  "inputs": [
+    {
+      "ingredient": "badspell:resonance_shard",
+      "count": 4
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:resonance_core_blank",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 30
+}

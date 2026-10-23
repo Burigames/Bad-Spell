@@ -1,0 +1,22 @@
+{
+  "type": "badspell:processing",
+  "station": "alchemy_table",
+  "inputs": [
+    {
+      "ingredient": "badspell:rune_resin",
+      "count": 1
+    },
+    {
+      "ingredient": "badspell:moon_salt",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "badspell:binding_compound",
+      "count": 1
+    }
+  ],
+  "ticks": 100,
+  "energy": 10
+}

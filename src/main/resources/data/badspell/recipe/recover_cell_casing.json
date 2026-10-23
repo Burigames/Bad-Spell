@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "badspell:field_cell"
+  ],
+  "result": {
+    "id": "badspell:empty_field_cell",
+    "count": 1
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "badspell:field_crystal_ore"
+  ],
+  "step": "underground_ores"
+}

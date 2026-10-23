@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:book",
+    "badspell:rune_resin",
+    "badspell:rune_resin",
+    "badspell:crystal_dust"
+  ],
+  "result": {
+    "id": "badspell:raw_formula_book",
+    "count": 1
+  }
+}
