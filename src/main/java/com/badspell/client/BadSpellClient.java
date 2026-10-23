@@ -44,6 +44,8 @@ public final class BadSpellClient {
         event.register(Packets.LightUpdate.TYPE,(packet,context)->{
             var level=Minecraft.getInstance().level;
             if(level!=null && level.getChunkSource().hasChunk((packet.position()).getX() >> 4,(packet.position()).getZ() >> 4) && packet.strength()>=0 && packet.strength()<=8) {
+                com.badspell.lighting.FieldLightSources.set(level,packet.position(),packet.strength());
+                com.badspell.lighting.FieldLightSources.syncSection(level,packet.position());
                 level.getChunkAt(packet.position()).getAuxLightManager(ChunkPos.containing(packet.position())).setLightAt(packet.position(),packet.strength());
             }
         });

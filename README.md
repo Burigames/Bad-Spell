@@ -32,7 +32,7 @@ source scripts/cloud-env.sh
 
 Außerhalb der Cloud genügt ein installiertes JDK 25 mit passendem `JAVA_HOME`; `cloud-env.sh` ist ausschließlich für diese Umgebung gedacht. Der Wrapper lädt Gradle mit Prüfsumme. Für den Cloud-Client zuerst `source scripts/cloud-display.sh`, dann `./gradlew runClient`. Auf einem Rechner mit vorhandener Anzeige nur `JAVA_HOME` setzen und `./gradlew runClient` starten. Dedizierter Entwicklungsserver: `./gradlew runServer`. Die Minecraft-EULA muss der Serverbetreiber selbst lesen und akzeptieren; dieses Projekt akzeptiert sie nicht automatisch.
 
-Gebautes Mod-Artefakt: `build/libs/badspell-0.1.0-alpha.jar`. Der Entwicklungsstand lädt im echten Minecraft-26.2-GameTestServer. Ein separat erzeugtes Core-JAR allein ist keine Minecraft-Mod. Der Testlauf prüft die Development-Klassen; ein zusätzlicher Installationstest der gepackten JAR ist noch offen.
+Gebautes Mod-Artefakt: `build/libs/badspell-0.1.0-alpha.jar`. Der Entwicklungsstand lädt im echten Minecraft-26.2-GameTestServer. Ein separat erzeugtes Core-JAR allein ist keine Minecraft-Mod. Der Testlauf prüft die Development-Klassen; die gepackte Hotfix-JAR wurde zusätzlich aus einem separaten Mods-Ordner im Client geprüft (TESTING.md).
 
 Netzwerk: NeoForge-Dokumentation/Maven, Gradle-/Maven-Presets und Mojang-Hosts `libraries.minecraft.net`, `piston-meta.mojang.com`, `piston-data.mojang.com`, `resources.download.minecraft.net` werden benötigt. Die anfänglichen HTTP-403-Sperren sind behoben; JDK, Gradle, NeoForge und Minecraft wurden mit aktiver TLS-/Prüfsummenprüfung bezogen. Keine Mod-API-Schlüssel oder zusätzlichen Geheimnisse erforderlich.
 
@@ -56,3 +56,7 @@ Repository-Lizenz: GPL v3 gemäß vorhandener LICENSE. Herkunft und MIT-Lizenz d
 ## JAR im Repository
 
 Der aktuelle unvollständige Entwicklungsbuild liegt unter [releases/0.1.0-alpha/badspell-0.1.0-alpha.jar](releases/0.1.0-alpha/badspell-0.1.0-alpha.jar), inklusive SHA-256-Datei. Er benötigt Minecraft 26.2 und NeoForge 26.2.0.93. Noch kein vollständiger Survival-Spielstand; bekannte Grenzen siehe IMPLEMENTATION_STATUS.md und TESTING.md.
+
+## Licht-Hotfix
+
+Ein Fehler des ersten veröffentlichten Builds führte dazu, dass Lichtfunke FL/FK verbrauchte, aber Luftblöcke nicht tatsächlich beleuchtete. Die aktuelle JAR enthält die Korrektur für die Minecraft-Lichtberechnung und einen kurzen Partikeleffekt bei Aktivierung. Die Kosten bleiben unverändert. Neue Tests prüfen reale Helligkeit und Erlöschen. Ersetze die alte JAR; installiere nicht zwei Bad-Spell-JARs gleichzeitig. Andere Effekte als Punktlicht bleiben unimplementiert.

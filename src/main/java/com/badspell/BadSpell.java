@@ -15,6 +15,9 @@ public final class BadSpell {
         ModItems.register(bus);
         if(Boolean.getBoolean("badspell.tests"))IntegrationTests.register(bus);bus.addListener(Packets::register);
         NeoForge.EVENT_BUS.addListener(LightFields::tick);
+        NeoForge.EVENT_BUS.addListener(LightFields::load);
+        NeoForge.EVENT_BUS.addListener(LightFields::sendChunk);
+        NeoForge.EVENT_BUS.addListener(com.badspell.lighting.FieldLightSources::unloadClientChunk);
         NeoForge.EVENT_BUS.addListener(MagicActions::tick);
     }
 }

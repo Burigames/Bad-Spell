@@ -2,6 +2,14 @@
 
 Stand: 23. Oktober 2026. Ziel ausschließlich Minecraft 26.2 / NeoForge 26.2.0.93 / JDK 25.
 
+## Korrektur des früheren Lichtnachweises
+
+Nach einer Fehlermeldung mit sinkenden FL/FK ohne sichtbare Wirkung wurde ein Fehler reproduziert: Die bisherigen Tests prüften nur den Auxiliary-Light-Eintrag. Vanilla-Luft liest diesen Eintrag nicht als eigene Emission; die behauptete Lichtwirkung war damit nicht ausreichend nachgewiesen. Der neue Test gegen `LightLayer.BLOCK` schlug vor der Korrektur fehl. Kostenanzeigen und die früheren Screenshots beweisen allein keine tatsächliche Beleuchtung.
+
+Die Korrektur ergänzt eine auf die geprüften 26.2-Klassen begrenzte Mixin-Anbindung an den Blocklichtrechner, einen threadsicheren Quellenindex und die Behandlung leerer Sections. Es werden keine Lichtblöcke platziert. Beim Laden eines beobachteten Chunks werden aktive Quellen nachgesendet; beim Client-Unload wird der abgeleitete Index bereinigt. Eine erfolgreiche Aktivierung erzeugt zusätzlich einen kurzen Vanilla-Partikeleffekt.
+
+Ergebnis des aktuellen Gradle-Laufs: **Build erfolgreich; 28 Kerntests und 12 eigene GameTests plus ein Vanilla-Test bestanden**. Die drei neuen GameTests prüfen tatsächliche Helligkeit, Nachbarlicht, Erlöschen, vollständig leere Sections sowie den vollständigen Handschuh-Itemaufruf mit exakt 30 FL und 5 FK. Der schnell laufende GameTestServer lässt seinem asynchronen Lichtworker dabei je Prüfversuch 1 ms Rechenzeit und wartet auf dessen Abschluss; diese Wartehilfe ist ausschließlich Testcode.
+
 ## Reproduzierbare Befehle
 
 ```bash
@@ -20,7 +28,7 @@ source scripts/cloud-env.sh
 | Java-Kern | 28/28 bestanden | Eigener JavaExec-Runner, Java 25, `-Xlint:all -Werror` |
 | Gradle-Build | Bestanden | Gemeinsame und Clientklassen, Mod-Metadaten, Ressourcen und Mod-JAR |
 | Ressourcen | Bestanden | Vier Itemdefinitionen, Modelle, 16×16-Texturen; identische DE/EN-Schlüssel (51) |
-| Minecraft-GameTests | 9/9 Bad Spell bestanden | Zusätzlich 1 Vanilla-Test; Runner meldet insgesamt 10 bestandene erforderliche Tests |
+| Minecraft-GameTests | 12/12 Bad Spell bestanden | Zusätzlich 1 Vanilla-Test; Runner meldet insgesamt 13 bestandene erforderliche Tests |
 | Grafischer Client | Gestartet und bedient | Minecraft 26.2 mit Software-OpenGL, Xvfb und integriertem Server |
 
 Die Standardaufgaben `test` melden **NO-SOURCE** und zählen nicht als bestandene Tests. Die 28 tatsächlichen Kerntests laufen als `:core:coreTest` über `:core:check`. Eine anfängliche falsche Zuordnung zum Standard-Test-SourceSet wurde korrigiert, ohne Assertions oder die No-Test-Erkennung abzuschalten.
@@ -35,7 +43,7 @@ Die eigenen GameTests sind:
 - `badspell:book_server_workflow`: Buch-ID/Autor, Revision, echter Tintenverbrauch, Vorgängerrevision, Export, unabhängige Handschuhkopie, abgewiesene veraltete Revision und tatsächlicher Tinten-Itemverbrauch beim Nachfüllen.
 - `badspell:book_rejects_forgery`: abweichender Autor und negative Stärke ändern weder Buch noch Tinte.
 
-Die letzten beiden Tests nutzen NeoForge-FakePlayer für Serveraktionen. Die Testwelt liegt ausschließlich unter `run/gametestserver`. Der Testlauf lädt den Mod im echten Serverkontext; ein separater Installationstest der gepackten JAR in einer frischen NeoForge-Installation bleibt offen.
+Die letzten beiden Tests nutzen NeoForge-FakePlayer für Serveraktionen. Die Testwelt liegt ausschließlich unter `run/gametestserver`. Der Testlauf lädt den Mod im echten Serverkontext; die gepackte Hotfix-JAR wurde zusätzlich im separaten Mods-Ordner getestet (siehe Abschlussabschnitt). Ein Endnutzer-Launcher-Test bleibt offen.
 
 ## Tatsächlicher Clienttest
 
@@ -90,4 +98,12 @@ Neue Serverprüfungen:
 
 Im echten grafischen Minecraft-26.2-Client mit integriertem Server erneut bedient: Buchhistorie geöffnet, Revision 1 gewählt, als Entwurf geladen, gespeichert und danach Revisionen 2 und 1 weiterhin im Archiv gesehen. Umschalt+Mausrad wählte Slot 2/4 mit Leerstand; Export aus dem Buch wurde bestätigt, Zurückwechseln zeigte weiterhin Lichtfunke in Slot 1/4. Screenshots: `docs/screenshots/revision-history.png`, `revision-restored.png`, `glove-slot-selection.png`, `glove-slot-return.png`.
 
-Nicht zusätzlich geprüft: Archivpaginierung auf kleinem Fenster, 20-Revisions-Grenzfall, neue Daten nach Hard-Crash, Slotbedienung in Nebenhand und Mehrclientbetrieb. Diese manuellen Durchläufe betreffen die Development-Klassen; kein gesonderter Installationstest des gepackten JAR. Frühere Clientnachweise oben stammen aus dem bereits vorhandenen Stand.
+Nicht zusätzlich geprüft: Archivpaginierung auf kleinem Fenster, 20-Revisions-Grenzfall, neue Daten nach Hard-Crash, Slotbedienung in Nebenhand und Mehrclientbetrieb. Diese früheren manuellen Durchläufe betreffen die Development-Klassen; der Mods-Ordner-Test der gepackten Hotfix-JAR steht im Abschlussabschnitt. Frühere Clientnachweise oben stammen aus dem bereits vorhandenen Stand.
+
+## Test der gepackten Hotfix-JAR im Mods-Ordner
+
+Zusätzlich zu den Development-Tests wurde die tatsächlich gebaute JAR in einen separaten Ordner `work/packaged-client/mods` kopiert. Der Minecraft-26.2-/NeoForge-26.2.0.93-Client wurde mit den vorhandenen offiziellen Laufzeitbibliotheken gestartet, aber ohne `fml.modFolders` und ohne die Bad-Spell-/Core-Klassenverzeichnisse oder Core-JAR im Klassenpfad. Der Loadernachweis lautet `badspell (jar(mods/badspell-0.1.0-alpha.jar))`.
+
+In einer Kopie der Creative-QA-Welt wurde die unveränderte Lichtfunke-Formel aus dem Buch exportiert und mit frischer Zelle im vollständig geschlossenen dunklen Steinraum gewirkt. Bestätigt: Partikel, sichtbare Bodenbeleuchtung und Anzeige `Activated | FL 70 | FK 95`. Nach Ablauf erlosch das Licht. Ein unveränderter Bodenbereich außerhalb von Partikeln, Hand und HUD wechselte von mittlerem RGB 11,63/11,63/11,63 auf 24,21/23,34/21,13 und nach Ablauf exakt zurück auf 11,63/11,63/11,63. Dies ergänzt die physikalischen Helligkeitsassertions des Servers um tatsächliche Clientdarstellung.
+
+Unveränderte Screenshots: `docs/screenshots/light-before.png`, `light-after.png`, `light-expired.png`. Der frühere fehlende Nachweis der gepackten JAR wurde damit für diesen lokalen Mods-Ordner-Test nachgeholt. Ein separater Start über einen normalen Endnutzer-Launcher, fremde Shader/Lichtengines und mehrere externe Clients auf einem dedizierten Server bleiben ungetestet.

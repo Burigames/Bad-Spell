@@ -436,3 +436,7 @@ Keine Phase gilt als abgeschlossen. Die nächsten konkreten Befehle und offenen 
 ## Aktueller Sitzungsabschluss
 
 Der vorhandene Quellstand und der erneut extrahierte Text der 58-seitigen PDF stimmen überein. Weiterentwickelt wurden vier Q1-Handschuhslots mit Umschalt+Mausrad, unabhängigen Importsnapshots, Altbestandsmigration und serverseitigem Schutz sowie die Buchhistorie mit Wiederherstellung als Entwurf. Erfolgreicher Gradle-Build, 28 Kerntests und neun Bad-Spell-GameTests; beide neuen Bedienabläufe im grafischen Client geprüft. Dies schließt M2 nicht ab. M1/M3–M6 bleiben überwiegend offen, insbesondere alle tatsächlichen Produktionsstationen, Survivalpfade, vollständige Runenbibliothek, Weltinhalte und Bosse.
+
+## Licht-Hotfix nach Spielerfehlermeldung
+
+Der erste veröffentlichte Stand verbrauchte Energie für Lichtfunke, ohne Luft tatsächlich zum Leuchten zu bringen. Der frühere Auxiliary-Eintrag-Test war dafür unzureichend. Der Fehler wurde durch einen neuen Helligkeitstest reproduziert und durch eine Anbindung an die tatsächliche 26.2-Blocklichtberechnung behoben. Getestet: Lichtstärke und Ausbreitung, Erlöschen, vollständig leere Sections und der Starterzauber über den Handschuh mit exakten FL/FK-Kosten. Aktuell: erfolgreicher Build, 28 Kerntests, 12 eigene GameTests plus ein Vanilla-Test. Weitere Zauber, Survivalherstellung und übrige Phasen bleiben offen.

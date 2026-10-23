@@ -4,6 +4,10 @@
 
 Dieser Build enthält tatsächlich nur vier Items. Die vollständige Mod aus dem Game-Design-Dokument ist noch nicht umgesetzt. Aktuell kannst du eine Punktlichtformel bearbeiten, speichern, in einen Handschuh kopieren und wirken. Es gibt noch keine Survivalrezepte, Maschinen, weiteren spielbaren Zauber, Mobs oder Dimensionen.
 
+## Korrektur für den ersten veröffentlichten Build
+
+Wenn FL/FK sinkt, aber kein Licht erscheint, kann noch die erste fehlerhafte JAR installiert sein. Dieser Fehler wurde nachgewiesen: Der gespeicherte Lichteintrag erzeugte allein keine Emission in Luft. Die aktuelle JAR im Repository enthält die Korrektur und einen kurzen Partikeleffekt. Ersetze die alte Datei im Mods-Ordner und starte das Spiel bzw. den Server neu; auf einem Server auch die Clients aktualisieren. Nur eine Bad-Spell-JAR gleichzeitig installieren. Bereits exportierte Formeln bleiben gültig. Andere Effekte als Punktlicht werden durch diesen Hotfix nicht ergänzt.
+
 ## Items erhalten
 
 Öffne eine Creative-Welt und nimm im Creative-Tab **Bad Spell** je ein Formelbuch, einen Runenhandschuh und eine Start-Feldzelle sowie einige Runentintenflakons.
@@ -171,6 +175,7 @@ Ein Flakon wird verbraucht und der Buchvorrat auf **64 Punkte** gesetzt. Bei tei
 
 Im Entwicklungsclient geprüft wurden Buchbedienung, Lichtwirkung und Kosten, Export, Revisionswiederherstellung sowie Slotwechsel. Automatisierte Serverprüfungen decken unter anderem unabhängige Slots, Besitzerrechte, Migration alter Handschuhdaten und Wiederherstellung ab.
 
-Die Anleitung beschreibt den implementierten Stand, keine vollständige Umsetzung des Designs. Insbesondere fehlen Survivalherstellung, weitere Effekte, Q2/Q3-Handschuhupgrades und ein vollständiges Energie- oder Maschinensystem. Ein gesonderter Installationstest der gepackten JAR und ein Mehrclient-Test auf einem normalen dedizierten Server stehen noch aus.
+Die Anleitung beschreibt den implementierten Stand, keine vollständige Umsetzung des Designs. Insbesondere fehlen Survivalherstellung, weitere Effekte, Q2/Q3-Handschuhupgrades und ein vollständiges Energie- oder Maschinensystem. Die gepackte Hotfix-JAR wurde zusätzlich in einem separaten Mods-Ordner im Client geprüft. Ein Mehrclient-Test auf einem normalen dedizierten Server sowie Tests mit einem Endnutzer-Launcher und fremden Shadern stehen noch aus.
 
 Weitere Einzelheiten: [Implementierungsstatus](../IMPLEMENTATION_STATUS.md) und [Testnachweise](../TESTING.md).
+

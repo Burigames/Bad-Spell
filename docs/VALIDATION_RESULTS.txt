@@ -47,3 +47,8 @@ Current continuation: build + 28 core tests + 9 Bad Spell GameTests (10 includin
 51 bilingual keys; four independent Q1 glove slots and history restore.
 Graphical development client: history open/restore/save and Shift+scroll slot selection/export/return verified.
 Current JAR checksum: 477e7a8c630d150145207db51e0a9c9997ed57a1f0c4a8cf10fba4e62233d9ba  build/libs/badspell-0.1.0-alpha.jar
+
+Licht-Hotfix: ursprünglicher Auxiliary-Test bewies keine tatsächliche Beleuchtung. Reproduziert und korrigiert.
+Build + 28 core + 12 Bad Spell GameTests (13 including vanilla) PASS.
+Packaged JAR loaded from isolated mods folder without Bad Spell source classpath; light appears and expires in client.
+Current hotfix JAR SHA-256: 66ce9c6262c1553180ce7f0752b84d97acc010bdbf1d13c0785e8ff462d1be6e

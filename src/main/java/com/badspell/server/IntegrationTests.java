@@ -43,6 +43,59 @@ public final class IntegrationTests {
                 helper.assertTrue(level.getBlockState(pos).equals(original),"Block remains unchanged after expiry");helper.succeed();
             });
         });
+        FUNCTIONS.register("light_illuminates_air",()->helper->{
+            var level=helper.getLevel();var pos=helper.absolutePos(new BlockPos(2,2,2));
+            LightFields.get(level).add(level,pos,8,40);
+            boolean[] observed={false};java.util.concurrent.CompletableFuture<?>[] cleared={null};
+            // Server light work is asynchronous. Observe actual illumination before asserting its removal.
+            helper.succeedWhen(()->{
+                yieldForLighting(level);
+                if(!observed[0]) {
+                    helper.assertTrue(level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK,pos)==8,"Spell must produce real block light at an air position, not only an auxiliary entry");
+                    helper.assertTrue(level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK,pos.above())>=7,"Spell light must propagate to adjacent air");
+                    observed[0]=true;
+                }
+                helper.assertTrue(com.badspell.lighting.FieldLightSources.emission(level,pos)==0,"Wait for field expiry");
+                if(cleared[0]==null)cleared[0]=level.getChunkSource().getLightEngine().waitForPendingTasks(pos.getX()>>4,pos.getZ()>>4);
+                helper.assertTrue(cleared[0].isDone(),"Wait for asynchronous removal lighting work");
+                helper.assertTrue(level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK,pos)==0,"Real light must disappear after expiry; actual="+level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK,pos));
+            });
+        });
+        FUNCTIONS.register("light_starter_cast",()->helper->{
+            var level=helper.getLevel();var player=new net.neoforged.neoforge.common.util.FakePlayer(level,new com.mojang.authlib.GameProfile(UUID.randomUUID(),"BadSpell_Cast"));
+            var origin=helper.absolutePos(new BlockPos(2,1,2));var wall=helper.absolutePos(new BlockPos(2,2,5));var target=wall.north();
+            level.setBlockAndUpdate(wall,net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+            level.setBlockAndUpdate(target,net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+            player.setPos(origin.getX()+.5,origin.getY(),origin.getZ()+.5);player.setYRot(0);player.setXRot(0);
+            var glove=ModItems.RUNE_GLOVE.get().getDefaultInstance();var cell=ModItems.FIELD_CELL.get().getDefaultInstance();
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,glove);player.getInventory().setItem(1,cell);
+            try {com.badspell.item.GloveFormulas.importSnapshot(glove,ExampleFormulas.light(player.getUUID()),player.getUUID());}
+            catch(java.io.IOException error){throw new IllegalStateException(error);}
+            glove.getItem().use(level,player,net.minecraft.world.InteractionHand.MAIN_HAND);
+            helper.assertTrue(bookTag(cell).getIntOr("badspell_fl",100)==70,"Real glove use spends exactly 30 FL");
+            helper.assertTrue(player.getPersistentData().getIntOr("badspell_focus",100)==95,"Real glove use spends exactly 5 FK");
+            helper.succeedWhen(()->{
+                yieldForLighting(level);
+                helper.assertTrue(level.getBlockState(target).isAir(),"Spell must not replace target air with a light block");
+                helper.assertTrue(level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK,target)==3,"Starter glove spell must actually illuminate the world");
+            });
+        });
+        FUNCTIONS.register("light_empty_section",()->helper->{
+            var level=helper.getLevel();var pos=helper.absolutePos(new BlockPos(2,90,2));
+            helper.assertTrue(level.getChunkAt(pos).getSection(level.getSectionIndex(pos.getY())).hasOnlyAir(),"Fixture must be an empty air section");
+            LightFields.get(level).add(level,pos,8,40);boolean[] observed={false};java.util.concurrent.CompletableFuture<?>[] cleared={null};
+            helper.succeedWhen(()->{
+                yieldForLighting(level);
+                if(!observed[0]) {
+                    helper.assertTrue(level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK,pos)==8,"A field must illuminate a completely empty section");
+                    helper.assertTrue(level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK,pos.above())>=7,"Light must propagate through empty air");observed[0]=true;
+                }
+                helper.assertTrue(com.badspell.lighting.FieldLightSources.emission(level,pos)==0,"Wait for empty-section expiry");
+                if(cleared[0]==null)cleared[0]=level.getChunkSource().getLightEngine().waitForPendingTasks(pos.getX()>>4,pos.getZ()>>4);
+                helper.assertTrue(cleared[0].isDone(),"Wait for asynchronous empty-section removal work");
+                helper.assertTrue(level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK,pos)==0,"Empty-section light must disappear after expiry; actual="+level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK,pos));
+            });
+        });
         FUNCTIONS.register("item_snapshot_persistence",()->helper->{
             var book=ModItems.FORMULA_BOOK.get().getDefaultInstance();
             try {
@@ -186,6 +239,12 @@ public final class IntegrationTests {
             helper.succeed();
         });
     }
+    private static void yieldForLighting(net.minecraft.server.level.ServerLevel level) {
+        // GameTestServer runs ticks without real-time pacing. Let its asynchronous light worker run too.
+        level.getChunkSource().pollTask();level.getChunkSource().getLightEngine().tryScheduleUpdate();
+        try {Thread.sleep(1);}
+        catch(InterruptedException error){Thread.currentThread().interrupt();throw new IllegalStateException("Lighting test interrupted",error);}
+    }
     private static net.minecraft.nbt.CompoundTag bookTag(net.minecraft.world.item.ItemStack item) {
         return item.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.EMPTY).copyTag();
     }
@@ -201,10 +260,10 @@ public final class IntegrationTests {
     public static void register(IEventBus bus){FUNCTIONS.register(bus);bus.addListener(IntegrationTests::tests);}
     private static void tests(RegisterGameTestsEvent event) {
         var environment=event.registerEnvironment(Identifier.fromNamespaceAndPath("badspell","test_environment"));
-        for(String path:List.of("registered_items","light_lifecycle","item_snapshot_persistence","book_server_workflow","book_rejects_forgery","glove_slots","glove_legacy_and_security","glove_server_intents","book_history_restore")) {
+        for(String path:List.of("registered_items","light_lifecycle","light_illuminates_air","light_starter_cast","light_empty_section","item_snapshot_persistence","book_server_workflow","book_rejects_forgery","glove_slots","glove_legacy_and_security","glove_server_intents","book_history_restore")) {
             Identifier id=Identifier.fromNamespaceAndPath("badspell",path);
             event.registerTest(id,new FunctionGameTestInstance(ResourceKey.create(Registries.TEST_FUNCTION,id),
-                new TestData<>(environment,Identifier.fromNamespaceAndPath("badspell","test_room"),100,0,true)));
+                new TestData<>(environment,Identifier.fromNamespaceAndPath("badspell","test_room"),path.startsWith("light_")?1000:100,0,true)));
         }
     }
 }

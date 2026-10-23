@@ -1,0 +1,7 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.badspell.mixin",
+  "mixins": ["BlockLightEngineMixin", "LevelLightEngineMixin"],
+  "injectors": { "defaultRequire": 1 }
+}

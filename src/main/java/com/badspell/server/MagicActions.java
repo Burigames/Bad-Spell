@@ -122,7 +122,7 @@ public final class MagicActions {
             if(!f.owner().equals(player.getUUID())){message(player,"owner");return;}
             var storedTag=tag(glove);
             if(!new FormulaSnapshot(f).verifies(storedTag.getStringOr("badspell_checksum",""))){message(player,"invalid");return;}
-            var hit=player.pick(12,0,false);BlockPos target=hit instanceof BlockHitResult block?block.getBlockPos().relative(block.getDirection()):BlockPos.containing(hit.getLocation());
+            var hit=player.pick(12,1,false);BlockPos target=hit instanceof BlockHitResult block?block.getBlockPos().relative(block.getDirection()):BlockPos.containing(hit.getLocation());
             String dimension=player.level().dimension().identifier().toString();
             var position=new Value.Position(dimension,target.getX(),target.getY(),target.getZ());
             var origin=new Value.Position(dimension,player.blockPosition().getX(),player.blockPosition().getY(),player.blockPosition().getZ());
