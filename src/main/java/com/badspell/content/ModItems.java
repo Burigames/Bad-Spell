@@ -15,6 +15,8 @@ import net.neoforged.neoforge.registries.*;
 
 public final class ModItems {
     public static final DeferredRegister.Items ITEMS=DeferredRegister.createItems(BadSpell.MOD_ID);
+    public static final DeferredItem<Item> RUNE_FRAGMENT=ITEMS.registerItem("rune_fragment",p->new ResearchItem(p,false),p->p.stacksTo(1));
+    public static final DeferredItem<Item> TEACHING_FOLIO=ITEMS.registerItem("teaching_folio",p->new ResearchItem(p,true),p->p.stacksTo(1));
     public static final DeferredItem<Item> CODEX=ITEMS.registerItem("arcane_codex",p->new MagicItem(p,2),p->p.stacksTo(1));
     public static final DeferredItem<Item> FORMULA_BOOK=ITEMS.registerItem("formula_book",p->new MagicItem(p,0),p->p.stacksTo(1));
     public static final DeferredItem<Item> RUNE_GLOVE=ITEMS.registerItem("rune_glove",p->new MagicItem(p,1),p->p.stacksTo(1));

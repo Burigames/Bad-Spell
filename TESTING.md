@@ -1,6 +1,12 @@
 # Tests und Qualitätssicherung
 
-## Aktueller M1-Stand – 24.10.2026
+## M2 – 24.10.2026
+
+Build und Ressourcenprüfung erfolgreich. **51 Kernprüfungen und 61 erforderliche Server-GameTests bestanden.** Dazu gehören alle bestehenden M1-Regressionsprüfungen. Die neuen sechs Kernprüfungen decken Registry-Analysen, stabile Lösungen/Kosten, Grundwissen, verschachtelte Wissensprüfung, Begrenzungen und Nachweisregeln ab. Zwölf neue GameTests prüfen frische getrennte Profile, echte Proben, exakte Abbuchung, Fehlversuche, Ressourcenmangel, gefälschte Fragmente, bewusste Weitergabe, abgewiesene unbekannte Buchpakete, Entdeckungen, Tod/Persistenz, inaktive Legacy-Slots und exakte Offline-Freigaben.
+
+Echte Clientprüfung: Analyse, getrenntes Wissen, Lehrblatt verfassen, physisches Lehrblatt aufnehmen ohne sofortiges Lernen und bewusstes Lesen wurden durchgeführt. Handwerksansicht samt unbekannten Kategorien im Client geprüft. Nach sauberem Serverneustart stimmen die bekannten/entschlüsselten Runen und Stationsnachweise beider tatsächlicher Spielerprofile exakt mit dem zuvor gespeicherten Stand überein. Beide Logins und zwei echte Clients in Phase 2 sind PASS. [Abnahme und Grenzen](docs/M2_ACCEPTANCE.md). [Anleitung](docs/FORSCHUNG.md).
+
+## Historische M1-Abnahme – 24.10.2026
 
 - Gradle-Build erfolgreich, einschließlich Ressourcen- und 26.2-Atlasprüfung.
 - **45 Kernprüfungen und 49 erforderliche Server-GameTests bestanden.**

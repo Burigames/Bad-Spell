@@ -117,7 +117,7 @@ public final class FormulaBookScreen extends Screen {
         if(!fitted){fitted=true;zoom=.85;panX=14;panY=18;}
     }
     private final List<SpellButton> paletteButtons=new ArrayList<>();
-    private List<String> palette(){return RUNES.ids().stream().filter(id->runeName(id).toLowerCase(Locale.ROOT).contains(search.toLowerCase(Locale.ROOT))||id.contains(search.toLowerCase(Locale.ROOT))).sorted(Comparator.comparing(FormulaBookScreen::runeName)).toList();}
+    private List<String> palette(){return RUNES.ids().stream().filter(ClientResearch::knows).filter(id->runeName(id).toLowerCase(Locale.ROOT).contains(search.toLowerCase(Locale.ROOT))||id.contains(search.toLowerCase(Locale.ROOT))).sorted(Comparator.comparing(FormulaBookScreen::runeName)).toList();}
     private void refreshPalette() {
         for(var b:paletteButtons)removeWidget(b);paletteButtons.clear();
         if(sideTab!=0)return;
@@ -236,7 +236,7 @@ public final class FormulaBookScreen extends Screen {
             int y=n.y()+35;for(String port:ports(n)){g.fill(n.x()-4,y,n.x()+3,y+8,connecting!=null&&RUNES.get(node(connecting)).output()!=RUNES.get(n).inputs().get(port)?SpellTheme.EDGE:typeColor(RUNES.get(n).inputs().get(port)));g.text(font,font.plainSubstrByWidth(RunePresentation.port(port).getString()+" · "+RunePresentation.type(RUNES.get(n).inputs().get(port)).getString(),NODE_W-12),n.x()+8,y,MUTED,false);y+=16;}
         }
         g.pose().popMatrix();g.disableScissor();
-        if(sideTab==0)text(g,tr("gui.badspell.rune_count",RUNES.ids().size()),16,height-42,sideW-12,MUTED);
+        if(sideTab==0)text(g,tr("gui.badspell.rune_count",RUNES.ids().stream().filter(ClientResearch::knows).count()),16,height-42,sideW-12,MUTED);
         if(sideTab==1) {
             var n=node(selected);
             if(n==null){text(g,tr("gui.badspell.name"),16,TOP+29,sideW-12,MUTED);text(g,tr("gui.badspell.budget_label"),16,TOP+67,sideW-12,MUTED);}

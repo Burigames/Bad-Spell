@@ -45,7 +45,7 @@ public final class StationBlockEntity extends BlockEntity implements WorldlyCont
     };
     public StationBlockEntity(BlockPos pos,BlockState state){super(ProductionRegistries.STATION.get(),pos,state);}
     public String station(){return BuiltInRegistries.BLOCK.getKey(getBlockState().getBlock()).getPath();}
-    public void claim(Player player){if(owner==null){owner=player.getUUID();setChanged();}}
+    public void claim(Player player){if(player instanceof net.minecraft.server.level.ServerPlayer p&&!com.badspell.server.DeviceCasters.isDevice(p))com.badspell.progression.ResearchProgress.station(p,station());if(owner==null){owner=player.getUUID();setChanged();}}
     public boolean canUse(Player player){return owner==null||owner.equals(player.getUUID());}
     private int charge(){var stack=items.get(6);return ModItems.isCell(stack)?Math.clamp(stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getIntOr("badspell_fl",ModItems.cellCapacity(stack)),0,ModItems.cellCapacity(stack)):0;}
     public int energyStored(){return charge();}
@@ -93,6 +93,7 @@ public final class StationBlockEntity extends BlockEntity implements WorldlyCont
             var bytes=items.get(book).getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getByteArray("badspell_formula").orElseThrow();
             if(bytes.length>com.badspell.network.Packets.MAX_FORMULA_BYTES)throw new IllegalArgumentException();var formula=FormulaCodec.decode(bytes);
             if(owner==null||!owner.equals(formula.owner())||formula.nodes().size()>(items.get(plate).is(ModContent.item("blank_rune_plate_q3"))?128:items.get(plate).is(ModContent.item("blank_rune_plate_q2"))?64:24)||!new FormulaValidator(RuneRegistry.standard()).validate(formula).isEmpty()){status=5;return true;}
+            var researcher=server.getServer().getPlayerList().getPlayer(owner);if(researcher!=null&&!com.badspell.progression.ResearchProgress.allows(researcher,formula)||researcher==null&&!com.badspell.progression.ResearchProgress.authorized(items.get(book),formula)){status=5;return true;}
             var output=new ItemStack(ModContent.item(items.get(plate).is(ModContent.item("blank_rune_plate_q3"))?"inscribed_rune_plate_q3":items.get(plate).is(ModContent.item("blank_rune_plate_q2"))?"inscribed_rune_plate_q2":"inscribed_rune_plate"));CustomData.update(DataComponents.CUSTOM_DATA,output,t->{t.putByteArray("badspell_formula",bytes);t.putString("badspell_checksum",new FormulaSnapshot(formula).checksum());});
             var slots=outputsAfter(List.of(output));if(slots==null){status=3;return true;}int energy=Math.min(500,30+4*formula.nodes().size());if(!ready(energy))return true;
             String id="engrave:"+new FormulaSnapshot(formula).checksum();if(!recipeId.equals(id)){progress=0;recipeId=id;cachedRecipe=null;}

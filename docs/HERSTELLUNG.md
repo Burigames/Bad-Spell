@@ -1,5 +1,7 @@
 # Herstellung und Stationen
 
+Seit M2 benötigen neue eigene Formeln die Kenntnis ihrer Runen. **G → Forschung** öffnet Analyse, Materialentdeckungen und Handwerkswege. Bestehende eigene M1-Formeln migrieren einmalig. Siehe [Forschungsanleitung](FORSCHUNG.md).
+
 Zielversion: Minecraft Java 26.2 / NeoForge 26.2.0.93, Bad Spell 0.1.0-alpha. Dies ist der aktuelle implementierte Produktionsumfang, keine vollständige PDF-Mod.
 
 ## Bedienung

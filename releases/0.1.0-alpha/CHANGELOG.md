@@ -1,3 +1,18 @@
+# M2 – Forschung und Spielfortschritt · 24.10.2026
+
+- Persönliche Runenkenntnis ohne XP; deterministische Analyse aus echten Proben, Fragmenten, FL und Tinte.
+- 91 bestehende Operatoren plus Modulaufruf erschließbar; serverseitige Wissensprüfung auch für verschachtelte Graphen.
+- Verbrauchbare bewusst verfasste Lehrblätter, T0–T2-Nachweise und einmalige Migration eigener M1-Formeln.
+- Forschungsregister im Kodex und 68 entdeckungsabhängige Handwerkswege mit Mengen, Kosten, Alternativen und Filtern.
+- Zwei neue eigene 16px-Items: Runenfragment und Lehrblatt.
+- 51 Kernprüfungen und 61 erforderliche Server-GameTests erfolgreich. Zwei echte Clients: Analyse, getrenntes Wissen, bewusstes Lernen, Tod und exakter Wissensstand nach Serverneustart geprüft.
+
+**Netzwerkprotokoll 5: Client und Server gemeinsam aktualisieren.** Plattform unverändert: Minecraft 26.2 / NeoForge 26.2.0.93 / Java 25.
+
+Anleitung: docs/FORSCHUNG.md. Abnahme und Grenzen: docs/M2_ACCEPTANCE.md. Allgemeine Fehlerbereinigung und die weiteren PDF-Inhalte folgen später.
+
+SHA256: `abc761714b0ea1bdfbd648a5c9c315bc7f9a1ddcd49477f74b28c080bc051f9a`
+
 # M1 abgeschlossen – 24.10.2026
 
 - Einheitliche Vanilla-nahe Itemtexturen und neue 3D-Modelle; korrekte Atlas- und Q3-Anzeige.

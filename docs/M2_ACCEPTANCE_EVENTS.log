@@ -1,0 +1,29 @@
+# m2-dedicated-phase1.log
+[10:54:27] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE phase=1
+[10:56:03] [Server thread/INFO] [minecraft/PlayerList]: M2Research2[/127.0.0.1:43266] logged in with entity id 1 at (-8.5, -60.0, -2.5)
+[10:56:03] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE login.M2Research2=8bc4d0d8-f73d-3e2c-b718-22f8297c34e1
+[10:56:03] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE initialized.M2Research2=8 bootstrap runes; physical test materials
+[10:56:13] [Server thread/INFO] [minecraft/PlayerList]: M2Research1[/127.0.0.1:56890] logged in with entity id 6 at (0.5, -60.0, -3.5)
+[10:56:13] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE login.M2Research1=c8dfd65b-ab62-3081-b584-8cddc316fa1a
+[10:56:13] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE initialized.M2Research1=8 bootstrap runes; physical test materials
+[10:56:13] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE two_clients_phase1=PASS
+[10:57:19] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE network_analysis=PASS
+[10:57:19] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE independent_knowledge=PASS
+[10:57:41] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE network_folio_written=PASS
+[11:00:04] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE carrying_does_not_teach=PASS
+[11:02:30] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE network_folio_read=PASS
+[11:04:38] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE stopped_phase1=clean
+# m2-dedicated-phase1b.log
+[11:07:24] [Server thread/INFO] [minecraft/PlayerList]: M2Research2[/127.0.0.1:52676] logged in with entity id 13 at (11.5, 81.0, 8.5)
+[11:07:26] [Server thread/INFO] [minecraft/PlayerList]: M2Research1[/127.0.0.1:49548] logged in with entity id 14 at (8.5, 81.0, 8.5)
+[11:08:05] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE death_preserves_knowledge=PASS
+[11:09:14] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE profile.M2Research2=[badspell:activate, badspell:boolean, badspell:circle, badspell:impulse, badspell:light, badspell:number, badspell:point, badspell:position, badspell:target_position]|[badspell:circle]|[]
+[11:09:14] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE profile.M2Research1=[badspell:activate, badspell:boolean, badspell:circle, badspell:impulse, badspell:light, badspell:number, badspell:point, badspell:position, badspell:target_position]|[badspell:circle]|[]
+# m2-dedicated-phase2.log
+[11:11:11] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE phase=2
+[11:12:02] [Server thread/INFO] [minecraft/PlayerList]: M2Research1[/127.0.0.1:39404] logged in with entity id 13 at (8.5, 81.0, 8.5)
+[11:12:03] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE restart.M2Research1=PASS
+[11:12:04] [Server thread/INFO] [minecraft/PlayerList]: M2Research2[/127.0.0.1:39400] logged in with entity id 14 at (11.5, 81.0, 8.5)
+[11:12:04] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE restart.M2Research2=PASS
+[11:12:05] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE two_clients_phase2=PASS
+[11:16:08] [Server thread/INFO] [co.ba.qa.ResearchAcceptance/]: M2_ACCEPTANCE stopped_phase2=clean

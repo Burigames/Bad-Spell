@@ -40,4 +40,16 @@ Stations-Slotindizes bleiben im Netzwerk stabil, während die Arbeitsbereiche na
 
 ## Erweiterung
 
-Neue Operatoren benötigen echte Registerverträge, reine Auswertung, Lokalisierung, Dokumentation/Glyphenzuordnung und Tests. Neue Wirkungen benötigen zusätzlich einen geprüften Weltadapter; bestehende Glyphencodes werden nicht umnummeriert. Größere Netze, Forschung, Weltinhalte und Kreaturen sind nachfolgende Meilensteine, kein Bestandteil der M1-Abnahme.
+Neue Operatoren benötigen echte Registerverträge, reine Auswertung, Lokalisierung, Dokumentation/Glyphenzuordnung und Tests. Neue Wirkungen benötigen zusätzlich einen geprüften Weltadapter; bestehende Glyphencodes werden nicht umnummeriert. Größere Netze, Weltinhalte und Kreaturen folgen später. Persönliche Forschung wird im nachfolgenden M2-Abschnitt beschrieben und ist kein Bestandteil der historischen M1-Abnahme.
+
+## M2: persönliches Wissen
+
+`core/com.badspell.research.ResearchRules` enthält reine Regeln: Grundwissen, Probenfamilien, aus Registry-Verträgen abgeleitete Analysen, deterministische Portreihenfolge, Kosten, Nachweise und begrenzte rekursive Wissensprüfung von Modulen. Das Minecraft-Modul verwendet absichtlich das separate Package `com.badspell.progression`, damit NeoForges Entwicklungs-Module keine Split-Packages zwischen Core und Mod bilden.
+
+`ResearchProgress` speichert eine versionierte NBT-Struktur im persistenten Spielerprofil. Bekannte Runen, tatsächlich entschlüsselte Runen, aufgenommene Materialien und selbst nachgewiesene Stationen sind getrennte Mengen. Clone kopiert diese Daten beim Tod. Login und gezielte Anfragen übertragen nur den aktuellen Clientspiegel. Eine begrenzte Inventarbeobachtung alle 40 Ticks ergänzt Entdeckungen; es gibt keine Rune-pro-Tick-Auswertung. Alte eigene M1-Snapshots migrieren einmalig einschließlich inaktiver Handschuh-Slots.
+
+`ResearchActions` akzeptiert ausschließlich Absichten und begrenzte Typantworten. Besitz des Formelbuchs, registrierte Probe, Fragmentbindung an die Welt, Inventarplatz, FL, Schreibpunkte und die tatsächliche Registry-Lösung werden serverseitig geprüft. Zahlung erfolgt erst nach vollständiger Ressourcenprüfung, immer im Serverthread. Lehrblätter entstehen nur aus bewusst freigegebenem bekanntem Wissen und lernen erst beim Benutzen. Die Weltbindung verhindert versehentliche Übernahme fremder Weltartefakte; sie ist kein Schutz vor Operatoren mit NBT-Cheats.
+
+Buchspeicherung, Vorlagenerstellung, Export, Plattenimport, physische Gravur und persönliches Wirken prüfen das erforderliche Wissen, einschließlich eingebetteter Module. Eine freigegebene Buchrevision erhält einen exakten Snapshot-Nachweis für spätere Offline-Gravur; Änderungen machen ihn ungültig. Bereits erzeugte Geräteplatten bleiben autonome Artefakte.
+
+`ResearchScreen`/`ResearchAnalysisScreen` trennen Überblick, Materialentdeckungen und einen einzelnen Analysevorgang. `CraftingPathsScreen` liest alle mitgelieferten Rezepte aus einem generierten Guide und maskiert unbekannte Komponenten. Abhängigkeiten sind in Tiefe und Zeilenanzahl begrenzt; Mengen werden über tatsächliche Batch-Ausbeuten skaliert. Der Vorratsfilter ist eine Zutaten-/FL-Hilfe und kein globaler Maschinenreservierungsdienst.

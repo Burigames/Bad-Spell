@@ -26,7 +26,7 @@ public final class RunePickerScreen extends Screen {
     }
     private final List<SpellButton> rowWidgets=new ArrayList<>();
     private void rebuildRows(){for(var widget:rowWidgets)removeWidget(widget);rowWidgets.clear();for(int row=0;row<rows()&&row+offset<found.size();row++){String id=found.get(row+offset);int y=88+row*40;
-        var add=addRenderableWidget(new SpellButton(width-100,y+7,36,22,Component.literal("+"),b->{minecraft.gui.setScreen(parent);choose.accept(id);},true));add.setTooltip(Tooltip.create(tr("add_rune",RunePresentation.name(id))));rowWidgets.add(add);
+        var add=addRenderableWidget(new SpellButton(width-100,y+7,36,22,Component.literal("+"),b->{minecraft.gui.setScreen(parent);choose.accept(id);},true));add.active=ClientResearch.knows(id);add.setTooltip(Tooltip.create(ClientResearch.knows(id)?tr("add_rune",RunePresentation.name(id)):ResearchScreen.tr("unknown_formula")));rowWidgets.add(add);
         var help=addRenderableWidget(new SpellButton(width-58,y+7,38,22,Component.literal("?"),b->minecraft.gui.setScreen(new RuneReferenceScreen(this,id)),false));rowWidgets.add(help);
     }}
     @Override public void extractRenderState(GuiGraphicsExtractor g,int mx,int my,float partial){g.fill(0,0,width,height,SpellTheme.BG);SpellTheme.panel(g,10,8,width-20,height-16);g.text(font,title,18,17,SpellTheme.INK,false);

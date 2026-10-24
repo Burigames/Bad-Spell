@@ -1,5 +1,7 @@
 # Bad Spell – Item-Anleitung
 
+Seit M2 benötigen neue eigene Formeln die Kenntnis ihrer Runen. **G → Forschung** öffnet Analyse, Materialentdeckungen und Handwerkswege. Bestehende eigene M1-Formeln migrieren einmalig. Siehe [Forschungsanleitung](FORSCHUNG.md).
+
 **Neue Bedienung:** G öffnet den bebilderten Kodex. Im Editor: + Rune und Eingangs-/Ausgangsfilter; Eingangszeilen bieten passende Quellen an. Stations-? zeigt Rezeptbilder. Siehe [Bedienungsüberarbeitung](USABILITY_REWORK.md).
 
 **Gültig für:** Bad Spell 0.1.0-alpha, Minecraft Java 26.2, NeoForge 26.2.0.93, Java 25.

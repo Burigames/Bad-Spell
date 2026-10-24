@@ -1,0 +1,1771 @@
+[
+  {
+    "id": "aether_solution",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "id": "badspell:moon_blossom",
+        "count": 2
+      },
+      {
+        "id": "badspell:crystal_dust",
+        "count": 1
+      },
+      {
+        "id": "badspell:pure_water",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:aether_solution",
+        "count": 1
+      },
+      {
+        "id": "minecraft:glass_bottle",
+        "count": 1
+      }
+    ],
+    "ticks": 120,
+    "energy": 20,
+    "tier": 1
+  },
+  {
+    "id": "alchemy_table",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "minecraft:brewing_stand",
+        "count": 1
+      },
+      {
+        "id": "minecraft:glass",
+        "count": 2
+      },
+      {
+        "id": "badspell:runewood_log",
+        "count": 2
+      },
+      {
+        "id": "minecraft:copper_ingot",
+        "count": 1
+      },
+      {
+        "id": "badspell:crystal_dust",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:alchemy_table",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "arcane_alloy",
+    "station": "arcane_smelter",
+    "inputs": [
+      {
+        "id": "badspell:arcane_ingot",
+        "count": 2
+      },
+      {
+        "id": "minecraft:gold_ingot",
+        "count": 1
+      },
+      {
+        "id": "badspell:moon_salt",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:arcane_alloy",
+        "count": 2
+      }
+    ],
+    "ticks": 180,
+    "energy": 75,
+    "tier": 1
+  },
+  {
+    "id": "arcane_codex",
+    "station": "crafting_table",
+    "inputs": [
+      {
+        "id": "minecraft:book",
+        "count": 1
+      },
+      {
+        "id": "minecraft:ink_sac",
+        "count": 1
+      },
+      {
+        "id": "minecraft:copper_ingot",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:arcane_codex",
+        "count": 1
+      }
+    ],
+    "ticks": 0,
+    "energy": 0,
+    "tier": 0
+  },
+  {
+    "id": "arcane_dust",
+    "station": "crystal_grinder",
+    "inputs": [
+      {
+        "id": "badspell:arcane_ingot",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:arcane_dust",
+        "count": 2
+      }
+    ],
+    "ticks": 80,
+    "energy": 30,
+    "tier": 1
+  },
+  {
+    "id": "arcane_ingot",
+    "station": "arcane_smelter",
+    "inputs": [
+      {
+        "id": "badspell:raw_arcane_ore",
+        "count": 2
+      },
+      {
+        "id": "minecraft:coal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:arcane_ingot",
+        "count": 1
+      }
+    ],
+    "ticks": 160,
+    "energy": 40,
+    "tier": 1
+  },
+  {
+    "id": "arcane_ingot_q0",
+    "station": "furnace",
+    "inputs": [
+      {
+        "id": "badspell:impure_arcane_charge",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:arcane_ingot_q0",
+        "count": 1
+      }
+    ],
+    "ticks": 200,
+    "energy": 0,
+    "tier": 0
+  },
+  {
+    "id": "arcane_monocle",
+    "station": "engraving_station",
+    "inputs": [
+      {
+        "id": "badspell:monocle_frame",
+        "count": 1
+      },
+      {
+        "id": "badspell:stabilizer_seal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:arcane_monocle",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 60,
+    "tier": 2
+  },
+  {
+    "id": "arcane_smelter",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "minecraft:blast_furnace",
+        "count": 1
+      },
+      {
+        "id": "badspell:arcane_ingot_q0",
+        "count": 4
+      },
+      {
+        "id": "badspell:conductive_paste",
+        "count": 2
+      },
+      {
+        "id": "badspell:precision_coil",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:arcane_smelter",
+        "count": 1
+      }
+    ],
+    "ticks": 160,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "arcane_stone",
+    "station": "crafting_table",
+    "inputs": [
+      {
+        "id": "minecraft:cobbled_deepslate",
+        "count": 4
+      },
+      {
+        "id": "badspell:crystal_dust",
+        "count": 1
+      },
+      {
+        "id": "badspell:rune_resin",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:arcane_stone",
+        "count": 8
+      }
+    ],
+    "ticks": 0,
+    "energy": 0,
+    "tier": 0
+  },
+  {
+    "id": "arcane_workbench",
+    "station": "crafting_table",
+    "inputs": [
+      {
+        "id": "badspell:runewood_planks",
+        "count": 4
+      },
+      {
+        "id": "minecraft:copper_ingot",
+        "count": 2
+      },
+      {
+        "id": "minecraft:crafting_table",
+        "count": 1
+      },
+      {
+        "id": "badspell:field_crystal_shard_q0",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:arcane_workbench",
+        "count": 1
+      }
+    ],
+    "ticks": 0,
+    "energy": 0,
+    "tier": 0
+  },
+  {
+    "id": "binding_compound",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "id": "badspell:rune_resin",
+        "count": 1
+      },
+      {
+        "id": "badspell:moon_salt",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:binding_compound",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 10,
+    "tier": 1
+  },
+  {
+    "id": "blank_rune_plate",
+    "station": "rune_press",
+    "inputs": [
+      {
+        "id": "badspell:arcane_ingot",
+        "count": 2
+      },
+      {
+        "id": "badspell:conductive_paste",
+        "count": 2
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:blank_rune_plate",
+        "count": 2
+      }
+    ],
+    "ticks": 100,
+    "energy": 40,
+    "tier": 2
+  },
+  {
+    "id": "blank_rune_plate_q2",
+    "station": "rune_press",
+    "inputs": [
+      {
+        "id": "badspell:arcane_alloy",
+        "count": 2
+      },
+      {
+        "id": "badspell:conductive_paste",
+        "count": 2
+      },
+      {
+        "id": "badspell:resonance_glass",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:blank_rune_plate_q2",
+        "count": 2
+      }
+    ],
+    "ticks": 100,
+    "energy": 80,
+    "tier": 2
+  },
+  {
+    "id": "blank_rune_plate_q3",
+    "station": "rune_press",
+    "inputs": [
+      {
+        "id": "badspell:blank_rune_plate_q2",
+        "count": 2
+      },
+      {
+        "id": "badspell:calibrated_coil",
+        "count": 1
+      },
+      {
+        "id": "badspell:resonance_core",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:blank_rune_plate_q3",
+        "count": 2
+      }
+    ],
+    "ticks": 100,
+    "energy": 200,
+    "tier": 2
+  },
+  {
+    "id": "calibrated_coil",
+    "station": "arcane_smelter",
+    "inputs": [
+      {
+        "id": "badspell:precision_coil",
+        "count": 1
+      },
+      {
+        "id": "badspell:resonance_core",
+        "count": 1
+      },
+      {
+        "id": "badspell:arcane_alloy",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:calibrated_coil",
+        "count": 1
+      }
+    ],
+    "ticks": 240,
+    "energy": 180,
+    "tier": 1
+  },
+  {
+    "id": "cell_adapter",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "minecraft:copper_ingot",
+        "count": 1
+      },
+      {
+        "id": "badspell:field_crystal_shard_q0",
+        "count": 1
+      },
+      {
+        "id": "minecraft:redstone",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:cell_adapter",
+        "count": 1
+      }
+    ],
+    "ticks": 40,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "cell_casing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "minecraft:copper_ingot",
+        "count": 1
+      },
+      {
+        "id": "minecraft:glass",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:empty_field_cell",
+        "count": 1
+      }
+    ],
+    "ticks": 40,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "cell_recharge",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "minecraft:redstone",
+        "count": 2
+      },
+      {
+        "id": "badspell:field_crystal_shard",
+        "count": 1
+      },
+      {
+        "id": "minecraft:coal",
+        "count": 1
+      },
+      {
+        "id": "badspell:empty_field_cell",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_cell",
+        "count": 1
+      }
+    ],
+    "ticks": 40,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "conductive_paste",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "id": "badspell:crystal_dust",
+        "count": 2
+      },
+      {
+        "id": "minecraft:redstone",
+        "count": 1
+      },
+      {
+        "id": "badspell:rune_resin",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:conductive_paste",
+        "count": 4
+      }
+    ],
+    "ticks": 80,
+    "energy": 10,
+    "tier": 1
+  },
+  {
+    "id": "crystal_break",
+    "station": "crafting_table",
+    "inputs": [
+      {
+        "id": "badspell:raw_field_crystal",
+        "count": 1
+      },
+      {
+        "id": "minecraft:flint",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:coarse_crystal_shard",
+        "count": 2
+      }
+    ],
+    "ticks": 0,
+    "energy": 0,
+    "tier": 0
+  },
+  {
+    "id": "crystal_core",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "id": "badspell:raw_crystal_core",
+        "count": 1
+      },
+      {
+        "id": "badspell:pure_water",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:crystal_core",
+        "count": 1
+      },
+      {
+        "id": "minecraft:glass_bottle",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 25,
+    "tier": 1
+  },
+  {
+    "id": "crystal_dust",
+    "station": "crystal_grinder",
+    "inputs": [
+      {
+        "id": "badspell:field_crystal_shard",
+        "count": 2
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:crystal_dust",
+        "count": 4
+      }
+    ],
+    "ticks": 60,
+    "energy": 10,
+    "tier": 1
+  },
+  {
+    "id": "crystal_split",
+    "station": "crystal_grinder",
+    "inputs": [
+      {
+        "id": "badspell:raw_field_crystal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_crystal_shard",
+        "count": 3
+      }
+    ],
+    "ticks": 80,
+    "energy": 20,
+    "tier": 1
+  },
+  {
+    "id": "engraving_station",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "badspell:arcane_alloy",
+        "count": 2
+      },
+      {
+        "id": "badspell:precision_coil",
+        "count": 2
+      },
+      {
+        "id": "badspell:precision_lens",
+        "count": 1
+      },
+      {
+        "id": "badspell:crystal_core",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:engraving_station",
+        "count": 1
+      }
+    ],
+    "ticks": 160,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "field_cell_q2",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "badspell:empty_field_cell",
+        "count": 1
+      },
+      {
+        "id": "badspell:crystal_core",
+        "count": 1
+      },
+      {
+        "id": "badspell:conductive_paste",
+        "count": 2
+      },
+      {
+        "id": "minecraft:redstone",
+        "count": 4
+      },
+      {
+        "id": "minecraft:coal",
+        "count": 3
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_cell_q2",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0,
+    "tier": 2
+  },
+  {
+    "id": "field_cell_q3",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "badspell:empty_field_cell",
+        "count": 1
+      },
+      {
+        "id": "badspell:resonance_core",
+        "count": 1
+      },
+      {
+        "id": "badspell:arcane_alloy",
+        "count": 2
+      },
+      {
+        "id": "minecraft:redstone",
+        "count": 8
+      },
+      {
+        "id": "minecraft:coal",
+        "count": 6
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_cell_q3",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0,
+    "tier": 2
+  },
+  {
+    "id": "field_compass",
+    "station": "engraving_station",
+    "inputs": [
+      {
+        "id": "badspell:raw_field_compass",
+        "count": 1
+      },
+      {
+        "id": "badspell:inscribed_rune_plate",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_compass",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 80,
+    "tier": 2
+  },
+  {
+    "id": "field_compass_q3",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "badspell:field_compass",
+        "count": 1
+      },
+      {
+        "id": "badspell:calibrated_coil",
+        "count": 1
+      },
+      {
+        "id": "badspell:resonance_core",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_compass_q3",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 100,
+    "tier": 2
+  },
+  {
+    "id": "field_crystal",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "badspell:field_crystal_shard",
+        "count": 4
+      },
+      {
+        "id": "badspell:conductive_paste",
+        "count": 1
+      },
+      {
+        "id": "minecraft:copper_ingot",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_crystal",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 20,
+    "tier": 1
+  },
+  {
+    "id": "fork_repair",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "badspell:resonance_fork",
+        "count": 1
+      },
+      {
+        "id": "badspell:rune_resin",
+        "count": 1
+      },
+      {
+        "id": "badspell:field_crystal_shard",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:resonance_fork",
+        "count": 1
+      }
+    ],
+    "ticks": 80,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "formula_book",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "id": "badspell:raw_formula_book",
+        "count": 1
+      },
+      {
+        "id": "badspell:rune_ink",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:formula_book",
+        "count": 1
+      }
+    ],
+    "ticks": 80,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "glow_fiber",
+    "station": "furnace",
+    "inputs": [
+      {
+        "id": "badspell:glow_moss_bundle",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:glow_fiber",
+        "count": 2
+      }
+    ],
+    "ticks": 120,
+    "energy": 0,
+    "tier": 0
+  },
+  {
+    "id": "glow_moss_bundle",
+    "station": "crafting_table",
+    "inputs": [
+      {
+        "id": "badspell:glow_moss",
+        "count": 3
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:glow_moss_bundle",
+        "count": 1
+      }
+    ],
+    "ticks": 0,
+    "energy": 0,
+    "tier": 0
+  },
+  {
+    "id": "impure_arcane_charge",
+    "station": "crafting_table",
+    "inputs": [
+      {
+        "id": "badspell:raw_arcane_ore",
+        "count": 3
+      },
+      {
+        "id": "minecraft:quartz",
+        "count": 1
+      },
+      {
+        "id": "minecraft:coal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:impure_arcane_charge",
+        "count": 1
+      }
+    ],
+    "ticks": 0,
+    "energy": 0,
+    "tier": 0
+  },
+  {
+    "id": "monocle_frame",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "minecraft:gold_ingot",
+        "count": 1
+      },
+      {
+        "id": "badspell:precision_lens",
+        "count": 1
+      },
+      {
+        "id": "badspell:resonance_glass",
+        "count": 1
+      },
+      {
+        "id": "badspell:rune_resin",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:monocle_frame",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "moon_brew",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "id": "badspell:moon_blossom",
+        "count": 2
+      },
+      {
+        "id": "badspell:pure_water",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:moon_brew",
+        "count": 2
+      },
+      {
+        "id": "minecraft:glass_bottle",
+        "count": 1
+      }
+    ],
+    "ticks": 160,
+    "energy": 15,
+    "tier": 1
+  },
+  {
+    "id": "moon_essence",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "id": "badspell:moon_brew",
+        "count": 2
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:moon_essence",
+        "count": 1
+      }
+    ],
+    "ticks": 200,
+    "energy": 20,
+    "tier": 1
+  },
+  {
+    "id": "moon_salt",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "id": "badspell:moon_brew",
+        "count": 2
+      },
+      {
+        "id": "minecraft:quartz",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:moon_salt",
+        "count": 1
+      }
+    ],
+    "ticks": 240,
+    "energy": 20,
+    "tier": 1
+  },
+  {
+    "id": "precision_coil",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "minecraft:copper_ingot",
+        "count": 2
+      },
+      {
+        "id": "badspell:conductive_paste",
+        "count": 2
+      },
+      {
+        "id": "badspell:field_crystal_shard",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:precision_coil",
+        "count": 1
+      }
+    ],
+    "ticks": 40,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "precision_lens",
+    "station": "crystal_grinder",
+    "inputs": [
+      {
+        "id": "badspell:resonance_glass",
+        "count": 1
+      },
+      {
+        "id": "badspell:field_crystal_shard",
+        "count": 2
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:precision_lens",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 45,
+    "tier": 1
+  },
+  {
+    "id": "primitive_grinder",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "minecraft:iron_ingot",
+        "count": 3
+      },
+      {
+        "id": "minecraft:quartz_block",
+        "count": 1
+      },
+      {
+        "id": "minecraft:copper_ingot",
+        "count": 2
+      },
+      {
+        "id": "badspell:coarse_crystal_shard",
+        "count": 2
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:crystal_grinder",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "primitive_shard",
+    "station": "crafting_table",
+    "inputs": [
+      {
+        "id": "badspell:coarse_crystal_shard",
+        "count": 2
+      },
+      {
+        "id": "badspell:sandpaper",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_crystal_shard_q0",
+        "count": 1
+      }
+    ],
+    "ticks": 0,
+    "energy": 0,
+    "tier": 0
+  },
+  {
+    "id": "pure_water",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "id": "minecraft:potion",
+        "count": 1,
+        "water": true
+      },
+      {
+        "id": "minecraft:charcoal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:pure_water",
+        "count": 1
+      }
+    ],
+    "ticks": 200,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "raw_core",
+    "station": "crystal_grinder",
+    "inputs": [
+      {
+        "id": "badspell:field_crystal_shard",
+        "count": 4
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:raw_crystal_core",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 20,
+    "tier": 1
+  },
+  {
+    "id": "raw_field_compass",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "minecraft:compass",
+        "count": 1
+      },
+      {
+        "id": "badspell:resonance_core",
+        "count": 1
+      },
+      {
+        "id": "badspell:conductive_paste",
+        "count": 2
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:raw_field_compass",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "raw_formula_book",
+    "station": "crafting_table",
+    "inputs": [
+      {
+        "id": "minecraft:book",
+        "count": 1
+      },
+      {
+        "id": "badspell:rune_resin",
+        "count": 2
+      },
+      {
+        "id": "badspell:crystal_dust",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:raw_formula_book",
+        "count": 1
+      }
+    ],
+    "ticks": 0,
+    "energy": 0,
+    "tier": 0
+  },
+  {
+    "id": "raw_resonance_fork",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "badspell:arcane_ingot",
+        "count": 2
+      },
+      {
+        "id": "badspell:field_crystal_shard",
+        "count": 2
+      },
+      {
+        "id": "badspell:precision_coil",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:raw_resonance_fork",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "raw_rune_glove",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "minecraft:leather",
+        "count": 2
+      },
+      {
+        "id": "minecraft:gold_ingot",
+        "count": 1
+      },
+      {
+        "id": "badspell:precision_coil",
+        "count": 2
+      },
+      {
+        "id": "badspell:crystal_core",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:raw_rune_glove",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "recharge_cell_q2",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "badspell:field_cell_q2",
+        "count": 1
+      },
+      {
+        "id": "minecraft:redstone",
+        "count": 4
+      },
+      {
+        "id": "minecraft:coal",
+        "count": 3
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_cell_q2",
+        "count": 1
+      }
+    ],
+    "ticks": 80,
+    "energy": 0,
+    "tier": 2
+  },
+  {
+    "id": "recharge_cell_q3",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "badspell:field_cell_q3",
+        "count": 1
+      },
+      {
+        "id": "minecraft:redstone",
+        "count": 8
+      },
+      {
+        "id": "minecraft:coal",
+        "count": 6
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_cell_q3",
+        "count": 1
+      }
+    ],
+    "ticks": 120,
+    "energy": 0,
+    "tier": 2
+  },
+  {
+    "id": "recover_cell_casing",
+    "station": "crafting_table",
+    "inputs": [
+      {
+        "id": "badspell:field_cell",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:empty_field_cell",
+        "count": 1
+      }
+    ],
+    "ticks": 0,
+    "energy": 0,
+    "tier": 0
+  },
+  {
+    "id": "resonance_blank",
+    "station": "crystal_grinder",
+    "inputs": [
+      {
+        "id": "badspell:resonance_shard",
+        "count": 4
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:resonance_core_blank",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 30,
+    "tier": 1
+  },
+  {
+    "id": "resonance_core",
+    "station": "arcane_smelter",
+    "inputs": [
+      {
+        "id": "badspell:resonance_core_blank",
+        "count": 1
+      },
+      {
+        "id": "badspell:crystal_core",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:resonance_core",
+        "count": 1
+      }
+    ],
+    "ticks": 200,
+    "energy": 100,
+    "tier": 1
+  },
+  {
+    "id": "resonance_fork",
+    "station": "engraving_station",
+    "inputs": [
+      {
+        "id": "badspell:raw_resonance_fork",
+        "count": 1
+      },
+      {
+        "id": "badspell:inscribed_rune_plate",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:resonance_fork",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 45,
+    "tier": 2
+  },
+  {
+    "id": "resonance_glass",
+    "station": "arcane_smelter",
+    "inputs": [
+      {
+        "id": "badspell:resonance_shard",
+        "count": 2
+      },
+      {
+        "id": "minecraft:glass",
+        "count": 2
+      },
+      {
+        "id": "badspell:arcane_dust",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:resonance_glass",
+        "count": 2
+      }
+    ],
+    "ticks": 160,
+    "energy": 50,
+    "tier": 1
+  },
+  {
+    "id": "rune_chisel",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "minecraft:iron_ingot",
+        "count": 2
+      },
+      {
+        "id": "badspell:arcane_ingot",
+        "count": 1
+      },
+      {
+        "id": "badspell:conductive_paste",
+        "count": 1
+      },
+      {
+        "id": "badspell:field_crystal_shard",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:rune_chisel",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "rune_glove",
+    "station": "engraving_station",
+    "inputs": [
+      {
+        "id": "badspell:raw_rune_glove",
+        "count": 1
+      },
+      {
+        "id": "badspell:stabilizer_seal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:rune_glove",
+        "count": 1
+      }
+    ],
+    "ticks": 160,
+    "energy": 60,
+    "tier": 2
+  },
+  {
+    "id": "rune_glove_q2",
+    "station": "engraving_station",
+    "inputs": [
+      {
+        "id": "badspell:rune_glove",
+        "count": 1
+      },
+      {
+        "id": "badspell:precision_coil",
+        "count": 2
+      },
+      {
+        "id": "badspell:arcane_alloy",
+        "count": 2
+      },
+      {
+        "id": "badspell:stabilizer_seal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:rune_glove_q2",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 100,
+    "tier": 2
+  },
+  {
+    "id": "rune_glove_q3",
+    "station": "engraving_station",
+    "inputs": [
+      {
+        "id": "badspell:rune_glove_q2",
+        "count": 1
+      },
+      {
+        "id": "badspell:calibrated_coil",
+        "count": 2
+      },
+      {
+        "id": "badspell:resonance_core",
+        "count": 1
+      },
+      {
+        "id": "badspell:stabilizer_seal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:rune_glove_q3",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 300,
+    "tier": 2
+  },
+  {
+    "id": "rune_holder",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "badspell:arcane_ingot",
+        "count": 2
+      },
+      {
+        "id": "minecraft:copper_ingot",
+        "count": 1
+      },
+      {
+        "id": "badspell:conductive_paste",
+        "count": 1
+      },
+      {
+        "id": "badspell:precision_coil",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:rune_holder",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "rune_ink",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "id": "badspell:crystal_dust",
+        "count": 2
+      },
+      {
+        "id": "badspell:moon_brew",
+        "count": 1
+      },
+      {
+        "id": "minecraft:ink_sac",
+        "count": 1
+      },
+      {
+        "id": "minecraft:glass_bottle",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:rune_ink",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 10,
+    "tier": 1
+  },
+  {
+    "id": "rune_press",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "minecraft:iron_block",
+        "count": 2
+      },
+      {
+        "id": "badspell:arcane_ingot",
+        "count": 2
+      },
+      {
+        "id": "badspell:precision_coil",
+        "count": 2
+      },
+      {
+        "id": "badspell:stabilizer_seal",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:rune_press",
+        "count": 1
+      }
+    ],
+    "ticks": 160,
+    "energy": 0,
+    "tier": 1
+  },
+  {
+    "id": "rune_resin",
+    "station": "alchemy_table",
+    "inputs": [
+      {
+        "id": "badspell:runewood_log",
+        "count": 2
+      },
+      {
+        "id": "badspell:pure_water",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:rune_resin",
+        "count": 2
+      },
+      {
+        "id": "minecraft:glass_bottle",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 10,
+    "tier": 1
+  },
+  {
+    "id": "runewood_planks",
+    "station": "crafting_table",
+    "inputs": [
+      {
+        "id": "badspell:runewood_log",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:runewood_planks",
+        "count": 4
+      }
+    ],
+    "ticks": 0,
+    "energy": 0,
+    "tier": 0
+  },
+  {
+    "id": "sandpaper",
+    "station": "crafting_table",
+    "inputs": [
+      {
+        "id": "minecraft:sand",
+        "count": 2
+      },
+      {
+        "id": "minecraft:paper",
+        "count": 1
+      },
+      {
+        "id": "minecraft:flint",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:sandpaper",
+        "count": 3
+      }
+    ],
+    "ticks": 0,
+    "energy": 0,
+    "tier": 0
+  },
+  {
+    "id": "stabilizer_seal",
+    "station": "engraving_station",
+    "inputs": [
+      {
+        "id": "badspell:binding_compound",
+        "count": 1
+      },
+      {
+        "id": "badspell:conductive_paste",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:stabilizer_seal",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 30,
+    "tier": 2
+  },
+  {
+    "id": "starter_cell",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
+        "id": "minecraft:redstone",
+        "count": 2
+      },
+      {
+        "id": "badspell:field_crystal_shard_q0",
+        "count": 1
+      },
+      {
+        "id": "minecraft:coal",
+        "count": 1
+      },
+      {
+        "id": "badspell:empty_field_cell",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_cell",
+        "count": 1
+      }
+    ],
+    "ticks": 40,
+    "energy": 0,
+    "tier": 1
+  }
+]

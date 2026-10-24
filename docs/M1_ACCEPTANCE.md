@@ -65,3 +65,5 @@ Geprüft wurden die festgelegte Plattform und eine lokale Offline-Verbindung. On
 ![Überarbeitete Modelle und Q3-Kapazität](screenshots/m1-completed-items.png)
 
 [Build und GameTests](M1_CLOSURE_VALIDATION.log) · [Dedizierte Abnahme](M1_ACCEPTANCE_EVENTS.log) · [Persistenzjournal](M1_ACCEPTANCE.properties)
+
+Hinweis zum späteren M2-Code: Der alte M1-Produktions-Harness stellt sein benötigtes Runenwissen als QA-Fixture bereit. Der getrennte M2-Harness startet ausdrücklich mit acht Grundlagen und prüft das tatsächliche Lernen. Die oben protokollierte historische M1-Abnahme wurde vor Einführung der M2-Wissenssperren ausgeführt.

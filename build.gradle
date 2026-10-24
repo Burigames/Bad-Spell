@@ -111,6 +111,13 @@ if (project.hasProperty('qaM1')) {
     tasks.named('prepareServerRun') { dependsOn tasks.named('acceptanceClasses') }
 }
 
+if (project.hasProperty('qaM2')) {
+    neoForge.mods.badspell.sourceSet(sourceSets.acceptance)
+    neoForge.runs.server.gameDirectory = file('run/m2-acceptance-server')
+    neoForge.runs.server.systemProperty 'badspell.acceptance.research', project.findProperty('qaPhase') ?: '1'
+    tasks.named('prepareServerRun') { dependsOn tasks.named('acceptanceClasses') }
+}
+
 // Export an official prepared runtime for actual packaged-JAR clients, without dev mod folders.
 tasks.register('writeAcceptanceClientCommand') {
     dependsOn 'prepareClientRun', 'jar'
@@ -124,3 +131,39 @@ tasks.register('writeAcceptanceClientCommand') {
         layout.buildDirectory.file('acceptance-client-command.json').get().asFile.text = groovy.json.JsonOutput.toJson(command)
     }
 }
+
+tasks.register('validateResearchGuide') {
+    inputs.dir('src/main/resources/data/badspell/recipe')
+    inputs.file('src/main/resources/assets/badspell/guides/paths.json')
+    doLast {
+        def parser = new groovy.json.JsonSlurper()
+        def source = file('src/main/resources/data/badspell/recipe').listFiles().findAll { it.name.endsWith('.json') }
+        def guide = parser.parse(file('src/main/resources/assets/badspell/guides/paths.json'))
+        if (guide.collect { it.id }.toSet() != source.collect { it.name[0..-6] }.toSet() || guide.size() != source.size()) throw new GradleException('Research guide recipe coverage differs; run scripts/generate-m2-assets.py')
+        source.each { f ->
+            def r = parser.parse(f)
+            def g = guide.find { it.id == f.name[0..-6] }
+            def outputs = r.type == 'badspell:processing' ? r.outputs : [r.result]
+            def normalize = { value, count -> value instanceof String ? [id:value, count:count] : [id:(value.items instanceof String ? value.items : value.items[0]), count:count, water:true] }
+            def expectedInputs = []
+            if (r.type == 'badspell:processing') expectedInputs = r.inputs.collect { normalize(it.ingredient, it.count) }
+            else if (r.type == 'minecraft:crafting_shaped') {
+                def counts = [:].withDefault { 0 }
+                r.pattern.join('').each { c -> if (c != ' ') counts[c]++ }
+                expectedInputs = counts.collect { key, count -> normalize(r.key[key], count) }
+            } else if (r.type == 'minecraft:crafting_shapeless') {
+                r.ingredients.each { ingredient ->
+                    def entry = normalize(ingredient, 1)
+                    def old = expectedInputs.find { it.id == entry.id }
+                    if (old) old.count++
+                    else expectedInputs.add(entry)
+                }
+            } else expectedInputs = [normalize(r.ingredient, 1)]
+            if (g.inputs != expectedInputs) throw new GradleException("Stale research inputs: ${f.name}")
+            if (g.outputs != outputs) throw new GradleException("Stale research outputs: ${f.name}")
+            if (r.type == 'badspell:processing' && (g.station != r.station || g.energy != r.energy || g.ticks != r.ticks)) throw new GradleException("Stale research costs: ${f.name}")
+        }
+        logger.lifecycle("Validated ${guide.size()} research crafting paths against recipe sources")
+    }
+}
+tasks.named('check') { dependsOn 'validateResearchGuide' }

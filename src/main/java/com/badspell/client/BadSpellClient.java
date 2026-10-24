@@ -31,6 +31,7 @@ public final class BadSpellClient {
             new Packets.GloveSlot(hand,event.getAccumulatedScrollY()>0?-1:1));
     }
     private static void register(RegisterClientPayloadHandlersEvent event) {
+        event.register(Packets.ResearchState.TYPE,(packet,context)->ClientResearch.accept(packet));
         event.register(Packets.OpenCodex.TYPE,(packet,context)->Minecraft.getInstance().gui.setScreen(new CodexScreen(null)));
         event.register(Packets.BoardMarks.TYPE,(packet,context)->RuneSurfaceRenderer.accept(packet));
         event.register(Packets.ScanInfo.TYPE,(packet,context)->MonocleOverlay.accept(packet));

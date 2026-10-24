@@ -24,7 +24,7 @@ public final class MagicActions {
     private static final ActivationService ACTIVATIONS=new ActivationService(new FormulaEngine(RUNES));
     private MagicActions() {}
     private static net.minecraft.nbt.CompoundTag tag(ItemStack stack) { return stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag(); }
-    static Formula read(ItemStack stack) throws IOException {
+    public static Formula read(ItemStack stack) throws IOException {
         byte[] bytes=tag(stack).getByteArray(FORMULA).orElseThrow(()->new IOException("No formula snapshot"));
         if(bytes.length>Packets.MAX_FORMULA_BYTES)throw new IOException("Oversized book snapshot");
         Formula formula=FormulaCodec.decode(bytes);
@@ -39,6 +39,7 @@ public final class MagicActions {
     public static void openBook(ServerPlayer player,InteractionHand hand) {
         ItemStack stack=player.getItemInHand(hand);
         if(!stack.is(ModItems.FORMULA_BOOK.get()))return;
+        com.badspell.progression.ResearchProgress.initialize(player);
         try {
             if(!tag(stack).contains(FORMULA)) {
                 var example=ExampleFormulas.light(player.getUUID());
@@ -47,7 +48,9 @@ public final class MagicActions {
             }
             var f=read(stack);
             if(!f.owner().equals(player.getUUID())){message(player,"owner");return;}
+            if(com.badspell.progression.ResearchProgress.allows(player,f))com.badspell.progression.ResearchProgress.authorize(stack,f);
             FormulaLibrary.track(player,f,stack);
+            com.badspell.progression.ResearchProgress.send(player,false,"");
             PacketDistributor.sendToPlayer(player,new Packets.OpenBook(hand.ordinal(),FormulaCodec.encode(f),tag(stack).getIntOr(INK,0)));
         } catch(IOException|IllegalArgumentException error){message(player,"invalid");}
     }
@@ -63,6 +66,7 @@ public final class MagicActions {
             Formula current=read(book),proposed=FormulaCodec.decode(packet.formula());
             if(!current.owner().equals(player.getUUID()) || !proposed.owner().equals(player.getUUID()) || !current.id().equals(proposed.id()) || current.revision()!=proposed.revision()) {message(player,"conflict");return;}
             if(packet.action()==0) {
+                if(!com.badspell.progression.ResearchProgress.require(player,proposed))return;
                 var authoritative=player.getPersistentData().getCompoundOrEmpty(FormulaLibrary.KEY).getCompoundOrEmpty(current.id().toString()).getByteArray("snapshot");
                 if(authoritative.isPresent()&&FormulaCodec.decode(authoritative.get()).revision()!=current.revision()){message(player,"conflict");return;}
 
@@ -80,8 +84,10 @@ public final class MagicActions {
                 var revisionTag=new net.minecraft.nbt.CompoundTag();revisionTag.putByteArray("snapshot",FormulaCodec.encode(current));history.add(revisionTag);
                 while(history.size()>20)history.remove(0);
                 write(book,saved);CustomData.update(DataComponents.CUSTOM_DATA,book,t->t.put("badspell_history",history));CustomData.update(DataComponents.CUSTOM_DATA,book,t->t.putInt(INK,ink-cost));
+                com.badspell.progression.ResearchProgress.formula(player);
                 state.putLong("badspell_save_window",saves==0?tick:window);state.putInt("badspell_saves",saves+1);message(player,"saved");
             } else if(packet.action()==1) {
+                if(!com.badspell.progression.ResearchProgress.require(player,current))return;
                 ItemStack glove=findGlove(player);if(glove.isEmpty()){message(player,"no_glove");return;}
                 if(!GloveFormulas.current(player,glove)||!GloveFormulas.ownedBy(glove,player.getUUID())){message(player,"owner");return;}
                 // Export only the authoritative saved graph, never unsaved client edits.
@@ -128,7 +134,7 @@ public final class MagicActions {
         try {
             if(!GloveFormulas.current(player,glove)){message(player,"conflict");return;}
             if(!GloveFormulas.occupied(glove,GloveFormulas.selected(glove))){message(player,"empty_slot");return;}
-            Formula formula=GloveFormulas.read(glove);if(!formula.owner().equals(player.getUUID())){message(player,"owner");return;}
+            Formula formula=GloveFormulas.read(glove);if(!com.badspell.progression.ResearchProgress.require(player,formula))return;if(!formula.owner().equals(player.getUUID())){message(player,"owner");return;}
             BlockPos target=com.badspell.magic.SpellTargets.position(player);
             var context=SpellEffects.context(player,target,tick);
             if(clicked!=null){if(clicked.level()!=player.level()||clicked.distanceToSqr(player)>144||!player.hasLineOfSight(clicked))throw new SpellEffects.Failure("target_unavailable");var entity=new Value.Entity(clicked.getUUID(),SpellEffects.position(player.level(),clicked.blockPosition()));var environment=new HashMap<>(context.environment());environment.put("entity:"+entity.id(),entity);environment.put("health:"+entity.id(),new Value.Number((long)clicked.getHealth()));context=new RuneRegistry.Context(context.target(),context.tick(),entity,context.look(),environment);}
@@ -142,6 +148,7 @@ public final class MagicActions {
         catch(IOException|IllegalArgumentException|IllegalStateException error){message(player,"invalid");}
     }
     public static ActivationService.Result execute(ServerPlayer player,Formula formula,RuneRegistry.Context context) {
+        if(!DeviceCasters.isDevice(player)&&!com.badspell.progression.ResearchProgress.require(player,formula))return ActivationService.Result.DENIED;
         var state=player.getPersistentData();var cells=new ArrayList<ItemStack>();int fl=0,capacity=0;
         for(int i=0;i<player.getInventory().getContainerSize();i++){var cell=player.getInventory().getItem(i);int cap=ModItems.cellCapacity(cell);if(cap>0){cells.add(cell);fl+=Math.clamp(tag(cell).getIntOr("badspell_fl",cap),0,cap);capacity+=cap;}}
         if(cells.isEmpty()){message(player,"no_cell");return ActivationService.Result.INSUFFICIENT_ENERGY;}

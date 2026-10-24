@@ -38,7 +38,7 @@ Das Stations-**?** zeigt eine Rezeptansicht mit Itembildern, Mengen, FL und Daue
 
 ## Grenzen
 
-Der anschließende M1-Abschluss umfasst jetzt auch Geräteausführung und die Mehrspieler-/Neustart-Abnahme. Weitere Weltinhalte und das vollständige Forschungssystem bleiben späteren Meilensteinen zugeordnet. Exakte Validierungsergebnisse und grafisch geprüfte Abläufe stehen in TESTING.md und docs/M1_ACCEPTANCE.md. Beide Seiten benötigen den neuen Build: Netzwerkprotokoll 4.
+Der anschließende M1-Abschluss umfasst jetzt auch Geräteausführung und die Mehrspieler-/Neustart-Abnahme. Weitere Weltinhalte und das vollständige Forschungssystem bleiben späteren Meilensteinen zugeordnet. Exakte Validierungsergebnisse und grafisch geprüfte Abläufe stehen in TESTING.md und docs/M1_ACCEPTANCE.md. Beide Seiten benötigen den neuen Build: Netzwerkprotokoll 5.
 
 ## Geprüfte Bildschirmansichten
 

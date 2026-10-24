@@ -17,7 +17,8 @@ public final class CodexScreen extends Screen {
     public CodexScreen(Screen parent){super(Component.translatable("ui.badspell.codex"));this.parent=parent;}
     private Component tr(String key){return Component.translatable("codex.badspell."+key);}
     private int left(){return width<400?92:112;}
-    @Override protected void init(){for(int i=0;i<CHAPTERS.size();i++){int index=i;addRenderableWidget(new SpellButton(12,37+i*18,left()-20,17,tr(CHAPTERS.get(i)+".title"),b->{chapter=index;scroll=0;rebuildWidgets();},chapter==i));}
+    @Override protected void init(){for(int i=0;i<CHAPTERS.size();i++){int index=i;addRenderableWidget(new SpellButton(12,37+i*16,left()-20,15,tr(CHAPTERS.get(i)+".title"),b->{chapter=index;scroll=0;rebuildWidgets();},chapter==i));}
+        addRenderableWidget(new SpellButton(12,height-48,left()-20,18,ResearchScreen.tr("title"),b->minecraft.gui.setScreen(new ResearchScreen(this)),true));
         addRenderableWidget(new SpellButton(12,height-26,left()-20,18,Component.translatable("ui.badspell.back"),b->onClose(),false));
         addRenderableWidget(new SpellButton(width-106,10,94,18,Component.translatable("ui.badspell.runes"),b->minecraft.gui.setScreen(new RunePickerScreen(this,null,id->minecraft.gui.setScreen(new RuneReferenceScreen(this,id)))),false));
         String template=switch(CHAPTERS.get(chapter)){case "start","editor"->"light";case "targets"->"self_light";case "combine"->"frost_push";case "logic"->"adaptive_ward";default->null;};

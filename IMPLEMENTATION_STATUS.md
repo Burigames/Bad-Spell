@@ -2,7 +2,7 @@
 
 Stand: 24.10.2026. **M1: abgeschlossen im unten definierten Umfang. Die vollständige PDF-Mod ist weiterhin in Entwicklung.**
 
-Plattform: Minecraft Java 26.2 · NeoForge 26.2.0.93 · Java 25 · ModDevGradle 2.0.148 · Gradle 9.2.1 · Mod-Version 0.1.0-alpha · Netzwerkprotokoll 4.
+Plattform: Minecraft Java 26.2 · NeoForge 26.2.0.93 · Java 25 · ModDevGradle 2.0.148 · Gradle 9.2.1 · Mod-Version 0.1.0-alpha · Netzwerkprotokoll 5.
 
 ## Verbindlicher M1-Abschluss
 
@@ -15,6 +15,16 @@ Abnahme und reproduzierbare Prüfungen: [M1_ACCEPTANCE.md](docs/M1_ACCEPTANCE.md
 - Überarbeitete Itemmodelle mit getrennt erkennbaren Rohlingen/Qualitäten und einer für 26.2 geeigneten gemeinsamen Textur-Atlas-Zuordnung.
 
 „Getestet“ bezeichnet den genannten Umfang, keine pauschale Abnahme weiterer PDF-Systeme. Natürliche Weltverteilung, Drittanbieter-Schutzmods und andere Auflösungen gehören nicht zu den behaupteten Prüfungen.
+
+## M2 – Forschung und Spielfortschritt
+
+Status: Abgeschlossen im vereinbarten Umfang; Abnahme und Grenzen: [M2_ACCEPTANCE.md](docs/M2_ACCEPTANCE.md). Forschung entspricht dem in der Unterhaltung vereinbarten M2, nicht der anders nummerierten PDF-Roadmap.
+
+- Persönliches versioniertes Wissen, acht Grundlagen und deterministische Analyse aller 91 Operatoren plus Modulaufruf.
+- Echte Fragmente aus Materialproben, FL-/Tintenverbrauch und bewusst verfasste Lehrblätter.
+- Serverseitige Wissensprüfung bei Formeln, verschachtelten Modulen, Handschuhen und Gravur.
+- Nachweise T0–T2, Materialentdeckungen, Forschungsregister und 68 entdeckungsabhängige Handwerkswege.
+- 51 Kernprüfungen und 61 erforderliche Server-GameTests; Details in TESTING.md.
 
 ## Sämtliche 161 PDF-Konzepte
 
@@ -120,10 +130,10 @@ Diese Tabelle ist der aktuelle Stand; widersprüchliche alte Fortschrittsnotizen
 | Weltgenerierung (23) | 21 | Die Zersplitterung | Nicht begonnen |
 | Weltgenerierung (23) | 22 | Arkane Stürme | Nicht begonnen |
 | Weltgenerierung (23) | 23 | Feldanomalien | Nicht begonnen |
-| Zauberfortschritt (8) | 01 | Forschung und Entschlüsselung | Nicht begonnen |
+| Zauberfortschritt (8) | 01 | Forschung und Entschlüsselung | Getestet: Proben, Fragmente, deterministische Portanalyse, FL/Tinte, dauerhaftes Spielerwissen; neue Weltfund-/NPC-Quellen später. |
 | Zauberfortschritt (8) | 02 | Lernen von NPCs | Nicht begonnen |
-| Zauberfortschritt (8) | 03 | Wissensbasierter Fortschritt | Nicht begonnen |
-| Zauberfortschritt (8) | 04 | Ausrüstungsbasierter Fortschritt | In Entwicklung: M1-Qualitätsketten Q1–Q3 getestet; übrige Ausrüstung und Forschungszugänge später. |
+| Zauberfortschritt (8) | 03 | Wissensbasierter Fortschritt | Getestet: Runenkenntnis begrenzt freie Formeln und Module; T0–T2-Nachweise, keine XP. T3–T5 benötigen die späteren Welt-/Boss-/Ritualsysteme. |
+| Zauberfortschritt (8) | 04 | Ausrüstungsbasierter Fortschritt | In Entwicklung: M1-Qualitätsketten Q1–Q3 getestet; M2 ergänzt Wissensprüfungen. Übrige Ausrüstung später. |
 | Zauberfortschritt (8) | 05 | Eigene Formeln entwickeln | Getestet: eigene typisierte Graphen, Bedingungen, Module, Fehleranzeige und tatsächliche Weltwirkungen. |
 | Zauberfortschritt (8) | 06 | Formeln finden | Nicht begonnen |
 | Zauberfortschritt (8) | 07 | Formeln von NPCs erwerben | Nicht begonnen |
@@ -194,4 +204,4 @@ Zusätzlich spielbar: Q1/Q2/Q3-Feldzellen, Zelladapter, Schleifer und Runenpress
 
 ## Folgende Meilensteine
 
-Forschung/Entschlüsselung, vollständige Automatisierungsnetze mit Kabeln/Speichern/Kollektoren, Rituale, weitere Ausrüstung, Weltbiome/Strukturen, Mobs, NPCs, Bosse und Dimensionen bleiben entsprechend der Tabelle offen. M1-Abschluss bedeutet nicht Abschluss dieser Systeme.
+Weitere Forschungsquellen in Welt/NPCs, T3–T5 und vollständige Automatisierungsnetze mit Kabeln/Speichern/Kollektoren, Rituale, weitere Ausrüstung, Weltbiome/Strukturen, Mobs, NPCs, Bosse und Dimensionen bleiben entsprechend der Tabelle offen. M1-Abschluss bedeutet nicht Abschluss dieser Systeme.

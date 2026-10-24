@@ -22,3 +22,5 @@ Eigene 16×16-Materialien `workshop_wood`, `workshop_top`, `workshop_stone`, `wo
 ## M1-Abschluss
 
 Bücher, Handschuhe, Monokel, Kompasse und Feldzellen besitzen eigene 3D-Silhouetten. Leder, Stahl, Buchseiten, jadefarbene Kristallfacetten und transparente Linsen teilen eine ruhige 16×16-Palette. Unfertige Werkzeuge und Qualitätsstufen bleiben unterscheidbar. Alle Flächen eines Cuboid-Modells verwenden den Blockatlas; gemischte Atlanten werden im Build abgewiesen. Die fertige JAR wurde in zwei echten Clients geprüft.
+
+M2 ergänzt zwei eigene 16×16-Itemgrafiken: ein abgebrochenes Steinfragment mit gedämpfter Jadegravur und ein lesbares Pergament-Lehrblatt mit Siegel. `scripts/generate-m2-assets.py` erzeugt sie und den Handwerksführer nach den vorhandenen Gestaltungsstufen.

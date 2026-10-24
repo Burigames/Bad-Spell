@@ -95,8 +95,22 @@ public final class Packets {
         public static final StreamCodec<RegistryFriendlyByteBuf,OpenCodex> CODEC=StreamCodec.unit(new OpenCodex());
         public Type<OpenCodex> type(){return TYPE;}
     }
+    public record ResearchAction(int action,String rune,java.util.List<Integer> answer,boolean open) implements CustomPacketPayload {
+        public static final Type<ResearchAction> TYPE=new Type<>(Identifier.fromNamespaceAndPath("badspell","research_action"));
+        public static final StreamCodec<RegistryFriendlyByteBuf,ResearchAction> CODEC=CustomPacketPayload.codec((p,b)->{b.writeVarInt(p.action);b.writeUtf(p.rune,80);b.writeVarInt(p.answer.size());for(int a:p.answer)b.writeVarInt(a);b.writeBoolean(p.open);},b->{int action=b.readVarInt();String rune=b.readUtf(80);int count=b.readVarInt();if(count<0||count>12)throw new IllegalArgumentException("Research ports");var answer=new java.util.ArrayList<Integer>();for(int i=0;i<count;i++)answer.add(b.readVarInt());return new ResearchAction(action,rune,java.util.List.copyOf(answer),b.readBoolean());});
+        public Type<ResearchAction> type(){return TYPE;}
+    }
+    public record ResearchState(boolean open,long seed,java.util.List<String> known,java.util.List<String> discovered,java.util.List<String> stations,int decoded,boolean formula,String focus,String message) implements CustomPacketPayload {
+        public static final Type<ResearchState> TYPE=new Type<>(Identifier.fromNamespaceAndPath("badspell","research_state"));
+        private static void strings(RegistryFriendlyByteBuf b,java.util.List<String> values,int max){if(values.size()>max)throw new IllegalArgumentException("Research collection");b.writeVarInt(values.size());for(String s:values)b.writeUtf(s,128);}
+        private static java.util.List<String> strings(RegistryFriendlyByteBuf b,int max){int n=b.readVarInt();if(n<0||n>max)throw new IllegalArgumentException("Research collection");var list=new java.util.ArrayList<String>();for(int i=0;i<n;i++)list.add(b.readUtf(128));return java.util.List.copyOf(list);}
+        public static final StreamCodec<RegistryFriendlyByteBuf,ResearchState> CODEC=CustomPacketPayload.codec((p,b)->{b.writeBoolean(p.open);b.writeLong(p.seed);strings(b,p.known,128);strings(b,p.discovered,4096);strings(b,p.stations,32);b.writeVarInt(p.decoded);b.writeBoolean(p.formula);b.writeUtf(p.focus,80);b.writeUtf(p.message,80);},b->new ResearchState(b.readBoolean(),b.readLong(),strings(b,128),strings(b,4096),strings(b,32),b.readVarInt(),b.readBoolean(),b.readUtf(80),b.readUtf(80)));
+        public Type<ResearchState> type(){return TYPE;}
+    }
     public static void register(RegisterPayloadHandlersEvent event) {
-        var registrar=event.registrar("4");
+        var registrar=event.registrar("5");
+        registrar.playToClient(ResearchState.TYPE,ResearchState.CODEC);
+        registrar.playToServer(ResearchAction.TYPE,ResearchAction.CODEC,(p,c)->{if(c.player() instanceof net.minecraft.server.level.ServerPlayer player)com.badspell.progression.ResearchActions.handle(player,p);});
         registrar.playToClient(OpenCodex.TYPE,OpenCodex.CODEC);
         registrar.playToServer(MonocleToggle.TYPE,MonocleToggle.CODEC,(p,c)->{if(c.player() instanceof net.minecraft.server.level.ServerPlayer player)com.badspell.server.ToolActions.toggleMonocle(player);});
         registrar.playToClient(BoardMarks.TYPE,BoardMarks.CODEC);

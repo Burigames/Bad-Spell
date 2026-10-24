@@ -296,6 +296,7 @@ public final class CoreTests {
             check(((Value.Bool)RUNES.get("badspell:equal_entity").operation().evaluate(Map.of("a",original,"b",moved),Map.of(),CONTEXT)).value(),"same entity despite movement");
             check(!((Value.Bool)RUNES.get("badspell:equal_position").operation().evaluate(Map.of("a",TARGET,"b",moved.position()),Map.of(),CONTEXT)).value(),"different coordinates differ");
         });
+        passed+=ResearchTests.run();
         System.out.println("PASS: "+passed+" tests; no Minecraft integration tests executed.");
     }
     private static Formula light() { return ExampleFormulas.light(OWNER); }

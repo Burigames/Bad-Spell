@@ -63,7 +63,7 @@ public final class ToolActions {
         if(packet.hand()<0||packet.hand()>1||packet.face()<0||packet.face()>5||!allowed(player,packet.position()))return;var hand=InteractionHand.values()[packet.hand()];var tool=player.getItemInHand(hand);if(!tool.is(ModItems.RUNE_CHISEL.get()))return;
         long tick=player.level().getGameTime();if(tick-player.getPersistentData().getLongOr("badspell_board_request",-1000)<5)return;player.getPersistentData().putLong("badspell_board_request",tick);
         try {
-            var formula=FormulaCodec.decode(packet.formula());var boards=RuneBoards.get(player.level());var old=boards.find(packet.position(),packet.face());
+            var formula=FormulaCodec.decode(packet.formula());if(!com.badspell.progression.ResearchProgress.require(player,formula))return;var boards=RuneBoards.get(player.level());var old=boards.find(packet.position(),packet.face());
             if(!formula.owner().equals(player.getUUID())||formula.nodes().size()>16||!new FormulaValidator(RuneRegistry.standard()).validate(formula).isEmpty()||!player.level().getBlockState(packet.position()).isCollisionShapeFullBlock(player.level(),packet.position())||!player.level().getBlockState(packet.position()).isFaceSturdy(player.level(),packet.position(),Direction.values()[packet.face()]))return;
             if(old!=null&&(!old.formula().owner().equals(player.getUUID())||!old.formula().id().equals(formula.id())||old.formula().revision()!=formula.revision()))return;
             var occupied=new HashSet<String>();for(var node:formula.nodes())if(node.x()<0||node.y()<0||node.x()>462||node.y()>300||node.x()%154!=0||node.y()%100!=0||!occupied.add(node.x()+":"+node.y()))return;
