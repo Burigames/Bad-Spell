@@ -17,6 +17,7 @@ public final class ModContent {
     public static final Map<String,DeferredItem<Item>> MATERIALS=new LinkedHashMap<>();
     public static final DeferredRegister.Blocks BLOCKS=DeferredRegister.createBlocks(BadSpell.MOD_ID);
     public static final Map<String,DeferredBlock<StationBlock>> STATIONS=new LinkedHashMap<>();
+    public static final DeferredBlock<com.badspell.conduction.FieldCrystalBlock> FIELD_CRYSTAL=BLOCKS.registerBlock("field_crystal",com.badspell.conduction.FieldCrystalBlock::new,p->p.strength(1.5f).noOcclusion().sound(SoundType.AMETHYST));
     public static final DeferredBlock<Block> FIELD_ORE=BLOCKS.registerSimpleBlock("field_crystal_ore",p->p.strength(3).requiresCorrectToolForDrops());
     public static final DeferredBlock<Block> ARCANE_ORE=BLOCKS.registerSimpleBlock("arcane_ore",p->p.strength(4).requiresCorrectToolForDrops());
     public static final DeferredBlock<RotatedPillarBlock> RUNEWOOD=BLOCKS.registerBlock("runewood_log",RotatedPillarBlock::new,p->p.strength(2).sound(SoundType.WOOD));

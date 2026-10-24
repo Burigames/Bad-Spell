@@ -15,10 +15,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 public final class StationBlock extends BaseEntityBlock {
+    public static final net.minecraft.world.level.block.state.properties.EnumProperty<net.minecraft.core.Direction> FACING=net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
     public static final MapCodec<StationBlock> CODEC=simpleCodec(StationBlock::new);
-    public StationBlock(Properties properties){super(properties);}
+    public StationBlock(Properties properties){super(properties);registerDefaultState(stateDefinition.any().setValue(FACING,net.minecraft.core.Direction.SOUTH));}
+    @Override protected void createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder<net.minecraft.world.level.block.Block,BlockState> builder){builder.add(FACING);}
+    @Override public BlockState getStateForPlacement(net.minecraft.world.item.context.BlockPlaceContext context){return defaultBlockState().setValue(FACING,context.getHorizontalDirection().getOpposite());}
     @Override public MapCodec<StationBlock> codec(){return CODEC;}
-    @Override protected net.minecraft.world.phys.shapes.VoxelShape getShape(BlockState state,net.minecraft.world.level.BlockGetter level,BlockPos pos,net.minecraft.world.phys.shapes.CollisionContext context){return StationShapes.shape(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(this).getPath());}
+    @Override protected net.minecraft.world.phys.shapes.VoxelShape getShape(BlockState state,net.minecraft.world.level.BlockGetter level,BlockPos pos,net.minecraft.world.phys.shapes.CollisionContext context){return StationShapes.shape(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(this).getPath(),state.getValue(FACING));}
     @Override public BlockEntity newBlockEntity(BlockPos pos,BlockState state){return new StationBlockEntity(pos,state);}
     @Override protected InteractionResult useItemOn(ItemStack stack,BlockState state,Level level,BlockPos pos,Player player,net.minecraft.world.InteractionHand hand,BlockHitResult hit){return com.badspell.server.ToolActions.utility(stack)?InteractionResult.PASS:super.useItemOn(stack,state,level,pos,player,hand,hit);}
     @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit) {

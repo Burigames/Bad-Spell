@@ -129,7 +129,7 @@ public final class MagicActions {
             if(!GloveFormulas.current(player,glove)){message(player,"conflict");return;}
             if(!GloveFormulas.occupied(glove,GloveFormulas.selected(glove))){message(player,"empty_slot");return;}
             Formula formula=GloveFormulas.read(glove);if(!formula.owner().equals(player.getUUID())){message(player,"owner");return;}
-            var hit=player.pick(12,1,false);BlockPos target=hit instanceof BlockHitResult block?block.getBlockPos().relative(block.getDirection()):BlockPos.containing(hit.getLocation());
+            BlockPos target=com.badspell.magic.SpellTargets.position(player);
             var context=SpellEffects.context(player,target,tick);
             if(clicked!=null){if(clicked.level()!=player.level()||clicked.distanceToSqr(player)>144||!player.hasLineOfSight(clicked))throw new SpellEffects.Failure("target_unavailable");var entity=new Value.Entity(clicked.getUUID(),SpellEffects.position(player.level(),clicked.blockPosition()));var environment=new HashMap<>(context.environment());environment.put("entity:"+entity.id(),entity);environment.put("health:"+entity.id(),new Value.Number((long)clicked.getHealth()));context=new RuneRegistry.Context(context.target(),context.tick(),entity,context.look(),environment);}
             var plan=new FormulaEngine(RUNES).plan(formula,context);

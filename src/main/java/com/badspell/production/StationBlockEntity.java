@@ -30,7 +30,14 @@ public final class StationBlockEntity extends BlockEntity implements WorldlyCont
     private int progress,total,status,recipeHash;
     private String recipeId="";
     private ProcessingRecipe cachedRecipe;
+    private final java.util.List<ItemStack> recipeInputs=new ArrayList<>();
     private boolean powered;
+    private byte[] scheduled=new byte[0];private long startTick,nextTick;private int remaining,interval;
+    public UUID ownerId(){return owner;}
+    public boolean hasAdapter(){return items.get(11).is(ModContent.item("cell_adapter"));}
+    public boolean scheduled(){return scheduled.length>0;}
+    public void cancelSpell(){scheduled=new byte[0];remaining=0;interval=0;status=0;setChanged();}
+
     public final ContainerData data=new ContainerData(){
         public int get(int i){return switch(i){case 0->progress;case 1->total;case 2->charge();case 3->status;case 4->StationMenu.KINDS.indexOf(station());case 5->energyCapacity();default->0;};}
         public void set(int i,int value){switch(i){case 0->progress=value;case 1->total=value;case 3->status=value;default->{}}}
@@ -45,7 +52,7 @@ public final class StationBlockEntity extends BlockEntity implements WorldlyCont
     public int energyCapacity(){return ModItems.cellCapacity(items.get(6));}
     public void changeEnergy(int delta){int next=charge()+delta;if(next<0||next>energyCapacity())throw new IllegalArgumentException("Energy bounds");CustomData.update(DataComponents.CUSTOM_DATA,items.get(6),t->t.putInt("badspell_fl",next));setChanged();}
     private void spend(int amount){if(amount>0)CustomData.update(DataComponents.CUSTOM_DATA,items.get(6),t->t.putInt("badspell_fl",charge()-amount));}
-    private boolean ready(int energy){if(energy>0&&!items.get(11).is(ModContent.item("cell_adapter"))){status=4;return false;}if(charge()<energy){status=2;return false;}return true;}
+    private boolean ready(int energy){if(energy>0&&!items.get(11).is(ModContent.item("cell_adapter"))){status=4;return false;}if(charge()<energy)com.badspell.conduction.CrystalConduction.pull(this,energy);if(charge()<energy){status=2;return false;}return true;}
     private List<ItemStack> outputsAfter(List<ItemStack> outputs) {
         var slots=new ArrayList<ItemStack>();for(int i=7;i<11;i++)slots.add(items.get(i).copy());
         for(var output:outputs){var left=output.copy();for(var dest:slots)if(!dest.isEmpty()&&ItemStack.isSameItemSameComponents(dest,left)){int count=Math.min(left.getCount(),dest.getMaxStackSize()-dest.getCount());dest.grow(count);left.shrink(count);}
@@ -55,15 +62,18 @@ public final class StationBlockEntity extends BlockEntity implements WorldlyCont
     private void commit(int[] used,List<ItemStack> output,int energy){for(int i=0;i<6;i++)items.get(i).shrink(used[i]);spend(energy);for(int i=0;i<4;i++)items.set(7+i,output.get(i));progress=0;status=0;setChanged();}
     public static void tick(Level level,BlockPos pos,BlockState state,StationBlockEntity self) {
         if(!(level instanceof ServerLevel server))return;
-        if(self.station().equals("rune_holder")){boolean now=level.hasNeighborSignal(pos);if(now&&!self.powered)self.activatePlate(server);if(now!=self.powered){self.powered=now;self.setChanged();}return;}
+        if(self.station().equals("rune_holder")){self.tickSpell(server);boolean now=level.hasNeighborSignal(pos);if(now&&!self.powered)self.activatePlate(server);if(now!=self.powered){self.powered=now;self.setChanged();}return;}
         if(level.getGameTime()%5!=0)return;
         if(self.station().equals("engraving_station")&&self.engrave(server))return;
+        boolean inputChanged=self.recipeInputs.size()==6&&java.util.stream.IntStream.range(0,6).anyMatch(slot->!ItemStack.matches(self.items.get(slot),self.recipeInputs.get(slot)));
+        boolean initialized=self.recipeInputs.size()==6;
+        if(inputChanged||!initialized){self.recipeInputs.clear();for(int slot=0;slot<6;slot++)self.recipeInputs.add(self.items.get(slot).copy());if(inputChanged)self.progress=0;}
         RecipeHolder<ProcessingRecipe> chosen=null;
-        if(!self.recipeId.isBlank()){
+        if(initialized&&!inputChanged&&!self.recipeId.isBlank()){
             var old=server.recipeAccess().byKey(ResourceKey.create(Registries.RECIPE,Identifier.parse(self.recipeId)));
             if(old.isPresent()&&old.get().value() instanceof ProcessingRecipe recipe&&recipe.matches(new ProcessingRecipe.Inventory(self,self.station()),level))chosen=new RecipeHolder<>(old.get().id(),recipe);
         }
-        if(chosen==null)chosen=server.recipeAccess().recipeMap().byType(ProductionRegistries.TYPE.get()).stream().filter(r->r.value().matches(new ProcessingRecipe.Inventory(self,self.station()),level)).sorted(Comparator.comparing(r->r.id().identifier().toString())).findFirst().orElse(null);
+        if(chosen==null)chosen=server.recipeAccess().recipeMap().byType(ProductionRegistries.TYPE.get()).stream().filter(r->r.value().matches(new ProcessingRecipe.Inventory(self,self.station()),level)).sorted(Comparator.<RecipeHolder<ProcessingRecipe>>comparingInt(r->r.value().inputs().stream().mapToInt(ProcessingRecipe.Input::count).sum()).reversed().thenComparing(r->r.id().identifier().toString())).findFirst().orElse(null);
         if(chosen==null){if(self.progress!=0)self.setChanged();self.progress=0;self.total=0;self.recipeId="";self.cachedRecipe=null;self.status=1;return;}
         var recipe=chosen.value();String id=chosen.id().identifier().toString();
         if(self.cachedRecipe!=recipe){int hash=ProcessingRecipe.CODEC.codec().encodeStart(server.registryAccess().createSerializationContext(JsonOps.INSTANCE),recipe).getOrThrow().toString().hashCode();if(!id.equals(self.recipeId)||hash!=self.recipeHash)self.progress=0;self.recipeHash=hash;self.recipeId=id;self.cachedRecipe=recipe;}
@@ -89,26 +99,38 @@ public final class StationBlockEntity extends BlockEntity implements WorldlyCont
             total=80;status=0;progress+=5;if(progress>=total){int[] used=new int[6];used[plate]=1;commit(used,slots,energy);}else if(progress%20==0)setChanged();return true;
         }catch(java.io.IOException|IllegalArgumentException|NoSuchElementException error){status=5;return true;}
     }
-    public boolean activatePlate(ServerLevel server) {
+    public boolean activatePlate(ServerLevel server){
         if(owner==null||!(items.get(0).getItem() instanceof RunePlateItem)){status=5;return false;}
-        try {
-            var tag=items.get(0).getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();var bytes=tag.getByteArray("badspell_formula").orElseThrow();if(bytes.length>30000)throw new IllegalArgumentException();
-            var formula=FormulaCodec.decode(bytes);if(!formula.owner().equals(owner)||!new FormulaSnapshot(formula).verifies(tag.getStringOr("badspell_checksum",""))){status=5;return false;}
-            var target=getBlockPos().above();String dimension=server.dimension().identifier().toString();var position=new Value.Position(dimension,target.getX(),target.getY(),target.getZ());
-            var context=new RuneRegistry.Context(position,server.getGameTime());var plan=new FormulaEngine(RuneRegistry.standard()).plan(formula,context);
-            if(!ready((int)plan.fieldCost()))return false;
-            // Device activations draw FL only; FK is reserved for direct player casting.
-            var account=new EnergyAccount(600,Long.MAX_VALUE,charge(),Long.MAX_VALUE);
-            var result=new ActivationService(new FormulaEngine(RuneRegistry.standard())).activate(formula,context,position,100,account,effect->{
-                if(!effect.id().equals("badspell:light")||effect.region().radius()!=0)return null;var p=effect.region().center();var at=new BlockPos(p.x(),p.y(),p.z());
-                if(!p.dimension().equals(dimension)||server.isOutsideBuildHeight(at)||!server.getChunkSource().hasChunk(at.getX()>>4,at.getZ()>>4)||!server.getWorldBorder().isWithinBounds(at)||!server.getBlockState(at).isAir())return null;
-                var fields=LightFields.get(server);if(!fields.canAdd(server,at))return null;return ()->fields.add(server,at,effect.strength(),effect.durationTicks());
-            });
-            if(result==ActivationService.Result.APPLIED){spend(charge()-(int)account.balance().field());status=0;setChanged();return true;}status=5;return false;
-        }catch(java.io.IOException|IllegalArgumentException|NoSuchElementException error){status=5;return false;}
+        try{
+            var tag=items.get(0).getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();var bytes=tag.getByteArray("badspell_formula").orElseThrow();if(bytes.length>30000)throw new IllegalArgumentException();var formula=FormulaCodec.decode(bytes);
+            if(!formula.owner().equals(owner)||!new FormulaSnapshot(formula).verifies(tag.getStringOr("badspell_checksum","")))throw new IllegalArgumentException();
+            var actor=com.badspell.server.DeviceCasters.at(server,owner,worldPosition);long now=server.getGameTime();var context=com.badspell.server.SpellEffects.context(actor,worldPosition.above(),now);var plan=new FormulaEngine(RuneRegistry.standard()).plan(formula,context);
+            var result=executePlate(server,formula,now);boolean applied=result==ActivationService.Result.APPLIED||result==ActivationService.Result.SKIPPED;
+            if(plan.event().remaining()!=0&&(result==ActivationService.Result.WAITING||result==ActivationService.Result.INSUFFICIENT_ENERGY||applied&&plan.event().interval()>0)){
+                scheduled=bytes.clone();startTick=now;interval=plan.event().interval();remaining=plan.event().remaining()<0?-1:plan.event().remaining()-(applied?1:0);nextTick=applied?now+interval:Math.max(now+20,plan.event().tick());if(remaining==0)cancelSpell();else{status=result==ActivationService.Result.INSUFFICIENT_ENERGY?7:6;setChanged();}
+            }else if(applied)cancelSpell();return applied;
+        }catch(java.io.IOException|IllegalArgumentException|IllegalStateException|NoSuchElementException error){status=5;return false;}
     }
-    @Override protected void loadAdditional(ValueInput input){super.loadAdditional(input);ContainerHelper.loadAllItems(input,items);owner=input.read("owner",UUIDUtil.CODEC).orElse(null);progress=Math.max(0,input.getIntOr("progress",0));recipeHash=input.getIntOr("recipe_hash",0);recipeId=input.getStringOr("recipe_id","");powered=input.getBooleanOr("powered",false);}
-    @Override protected void saveAdditional(ValueOutput output){super.saveAdditional(output);ContainerHelper.saveAllItems(output,items);if(owner!=null)output.store("owner",UUIDUtil.CODEC,owner);output.putInt("progress",progress);output.putInt("recipe_hash",recipeHash);output.putString("recipe_id",recipeId);output.putBoolean("powered",powered);}
+    private ActivationService.Result executePlate(ServerLevel server,Formula formula,long start){
+        var actor=com.badspell.server.DeviceCasters.at(server,owner,worldPosition);var context=com.badspell.server.SpellEffects.context(actor,worldPosition.above(),start);var engine=new FormulaEngine(RuneRegistry.standard());var plan=engine.plan(formula,context);
+        if(!ready((int)Math.min(Integer.MAX_VALUE,plan.fieldCost())))return ActivationService.Result.INSUFFICIENT_ENERGY;
+        var origin=com.badspell.server.SpellEffects.position(server,worldPosition);var account=new EnergyAccount(600,Long.MAX_VALUE,charge(),Long.MAX_VALUE);
+        var result=new ActivationService(engine).activate(formula,context,origin,100,account,effect->com.badspell.server.SpellEffects.prepare(actor,effect));
+        if(result==ActivationService.Result.APPLIED||result==ActivationService.Result.SKIPPED){spend(charge()-(int)account.balance().field());status=0;setChanged();}else status=result==ActivationService.Result.WAITING?6:5;return result;
+    }
+    private void tickSpell(ServerLevel server){
+        if(scheduled.length==0||server.getGameTime()<nextTick)return;
+        if(owner==null||!(items.get(0).getItem() instanceof RunePlateItem)){cancelSpell();return;}
+        try{var formula=FormulaCodec.decode(scheduled);if(!formula.owner().equals(owner))throw new IllegalArgumentException();var current=items.get(0).getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getByteArray("badspell_formula").orElseThrow();if(!java.util.Arrays.equals(current,scheduled)){cancelSpell();return;}
+            var result=executePlate(server,formula,startTick);
+            if(result==ActivationService.Result.INSUFFICIENT_ENERGY||result==ActivationService.Result.DENIED||result==ActivationService.Result.UNSTABLE){nextTick=server.getGameTime()+20;status=7;setChanged();return;}
+            if(result==ActivationService.Result.WAITING){nextTick=server.getGameTime()+1;return;}
+            if(result!=ActivationService.Result.APPLIED&&result!=ActivationService.Result.SKIPPED){cancelSpell();return;}
+            if(remaining>0)remaining--;if(remaining==0||interval==0)cancelSpell();else{nextTick=server.getGameTime()+interval;status=6;setChanged();}
+        }catch(java.io.IOException|IllegalArgumentException|IllegalStateException|NoSuchElementException error){cancelSpell();status=5;}
+    }
+    @Override protected void loadAdditional(ValueInput input){super.loadAdditional(input);ContainerHelper.loadAllItems(input,items);owner=input.read("owner",UUIDUtil.CODEC).orElse(null);progress=Math.max(0,input.getIntOr("progress",0));recipeHash=input.getIntOr("recipe_hash",0);recipeId=input.getStringOr("recipe_id","");powered=input.getBooleanOr("powered",false);scheduled=input.read("scheduled",com.mojang.serialization.Codec.BYTE_BUFFER).map(buffer->{if(buffer.remaining()>30000)return new byte[0];byte[] bytes=new byte[buffer.remaining()];buffer.get(bytes);return bytes;}).orElse(new byte[0]);if(scheduled.length>30000)scheduled=new byte[0];startTick=input.getLongOr("spell_start",0);nextTick=input.getLongOr("spell_next",0);remaining=input.getIntOr("spell_remaining",0);interval=input.getIntOr("spell_interval",0);if(remaining< -1||remaining>64||interval<0||interval>1200)scheduled=new byte[0];}
+    @Override protected void saveAdditional(ValueOutput output){super.saveAdditional(output);ContainerHelper.saveAllItems(output,items);if(owner!=null)output.store("owner",UUIDUtil.CODEC,owner);output.putInt("progress",progress);output.putInt("recipe_hash",recipeHash);output.putString("recipe_id",recipeId);output.putBoolean("powered",powered);if(scheduled.length>0){output.store("scheduled",com.mojang.serialization.Codec.BYTE_BUFFER,java.nio.ByteBuffer.wrap(scheduled));output.putLong("spell_start",startTick);output.putLong("spell_next",nextTick);output.putInt("spell_remaining",remaining);output.putInt("spell_interval",interval);}}
     @Override public Component getDisplayName(){return getBlockState().getBlock().getName();}
     @Override public AbstractContainerMenu createMenu(int id,Inventory inventory,Player player){return new StationMenu(id,inventory,this,data);}
     @Override public int getContainerSize(){return 12;}

@@ -1,3 +1,15 @@
+# M1 abgeschlossen – 24.10.2026
+
+- Einheitliche Vanilla-nahe Itemtexturen und neue 3D-Modelle; korrekte Atlas- und Q3-Anzeige.
+- Universeller Runenhalter, Offline-Aufträge und gerichtete Feldkristalle.
+- Luftziele, Besitzererkennung, Mond-Salz-Produktion und Meißel-/Gabelabläufe korrigiert.
+- 45 Kernprüfungen, 49 erforderliche Server-GameTests, 848 reale Produktionsschritte sowie zwei getrennte Clients und Serverneustart geprüft.
+- M1-Abnahme und Grenzen: docs/M1_ACCEPTANCE.md. Die übrige PDF-Roadmap bleibt offen.
+
+**Netzwerkprotokoll 4: Client und Server gemeinsam aktualisieren.** Minecraft 26.2 / NeoForge 26.2.0.93 / Java 25.
+
+SHA256: `4a57aee2e6033533872649392ade23ca097b1b844cc8def28da2def5d8a8ec76`
+
 # Runenwerkstatt und Kodex – 23.10.2026
 
 - Bebilderter DE/EN-Kodex: Taste G, neues herstellbares Buch und Editorhilfe.

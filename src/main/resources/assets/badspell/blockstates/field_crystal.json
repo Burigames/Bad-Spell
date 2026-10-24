@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=south": {
+      "model": "badspell:block/field_crystal"
+    },
+    "facing=north": {
+      "model": "badspell:block/field_crystal",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "badspell:block/field_crystal",
+      "y": 90
+    },
+    "facing=east": {
+      "model": "badspell:block/field_crystal",
+      "y": 270
+    },
+    "facing=up": {
+      "model": "badspell:block/field_crystal",
+      "x": 270
+    },
+    "facing=down": {
+      "model": "badspell:block/field_crystal",
+      "x": 90
+    }
+  }
+}

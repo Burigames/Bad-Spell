@@ -10,6 +10,8 @@ import net.minecraft.world.entity.player.Inventory;
 public final class StationScreen extends AbstractContainerScreen<StationMenu> {
     public StationScreen(StationMenu menu,Inventory inventory,Component title){super(menu,inventory,title,248,218);inventoryLabelY=112;}
     @Override protected void init(){super.init();addRenderableWidget(new SpellButton(leftPos+211,topPos+6,28,16,Component.literal("?"),b->minecraft.gui.setScreen(new StationRecipeScreen(this,menu.kind())),false));}
+    @Override protected void containerTick(){super.containerTick();if(menu.kind().equals("rune_holder")&&!holderControls){holderControls=true;addRenderableWidget(new SpellButton(leftPos+86,topPos+63,37,16,Component.translatable("ui.badspell.run"),b->minecraft.gameMode.handleInventoryButtonClick(menu.containerId,1),true));addRenderableWidget(new SpellButton(leftPos+127,topPos+63,40,16,Component.translatable("ui.badspell.stop"),b->minecraft.gameMode.handleInventoryButtonClick(menu.containerId,0),false));}}
+    private boolean holderControls;
     @Override public void extractBackground(GuiGraphicsExtractor g,int mx,int my,float partial){
         menu.layoutSlots();super.extractBackground(g,mx,my,partial);int x=leftPos,y=topPos;SpellTheme.panel(g,x,y,248,218);g.fill(x,y,x+248,y+25,0xffcbb991);SpellTheme.rule(g,x,y+25,248);
         g.fill(x+9,y+29,x+81,y+84,0xffd5c6a6);g.fill(x+180,y+29,x+235,y+84,0xffd5c6a6);

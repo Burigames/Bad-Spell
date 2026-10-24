@@ -17,8 +17,9 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 /** Paid, finite-duration fields; never load chunks. Expiry and owner survive world saves. */
 public final class SpellFields extends SavedData {
-    public record Field(UUID owner,String effect,List<BlockPos> cells,int strength,long expiry,long started,boolean moving) {
-        static final Codec<Field> CODEC=RecordCodecBuilder.create(i->i.group(UUIDUtil.CODEC.fieldOf("owner").forGetter(Field::owner),Codec.STRING.fieldOf("effect").forGetter(Field::effect),BlockPos.CODEC.sizeLimitedListOf(1024).fieldOf("cells").forGetter(Field::cells),Codec.intRange(1,8).fieldOf("strength").forGetter(Field::strength),Codec.LONG.fieldOf("expiry").forGetter(Field::expiry),Codec.LONG.optionalFieldOf("started",0L).forGetter(Field::started),Codec.BOOL.optionalFieldOf("moving",false).forGetter(Field::moving)).apply(i,Field::new));
+    public record Field(UUID owner,String effect,List<BlockPos> cells,int strength,long expiry,long started,boolean moving,Optional<BlockPos> device) {
+        public Field(UUID owner,String effect,List<BlockPos> cells,int strength,long expiry,long started,boolean moving){this(owner,effect,cells,strength,expiry,started,moving,Optional.empty());}
+        static final Codec<Field> CODEC=RecordCodecBuilder.create(i->i.group(UUIDUtil.CODEC.fieldOf("owner").forGetter(Field::owner),Codec.STRING.fieldOf("effect").forGetter(Field::effect),BlockPos.CODEC.sizeLimitedListOf(1024).fieldOf("cells").forGetter(Field::cells),Codec.intRange(1,8).fieldOf("strength").forGetter(Field::strength),Codec.LONG.fieldOf("expiry").forGetter(Field::expiry),Codec.LONG.optionalFieldOf("started",0L).forGetter(Field::started),Codec.BOOL.optionalFieldOf("moving",false).forGetter(Field::moving),BlockPos.CODEC.optionalFieldOf("device").forGetter(Field::device)).apply(i,Field::new));
     }
     private final List<Field> fields;
     private static final Codec<SpellFields> CODEC=Field.CODEC.sizeLimitedListOf(128).xmap(SpellFields::new,data->List.copyOf(data.fields));
@@ -27,7 +28,8 @@ public final class SpellFields extends SavedData {
     public static SpellFields get(ServerLevel level){return level.getDataStorage().computeIfAbsent(TYPE);}
     public boolean canAdd(){return canAdd(1);}
     public boolean canAdd(int count){return count>=0&&fields.size()+count<=128;}
-    public Field add(UUID owner,Value.Effect effect,long tick){var field=new Field(owner,effect.id(),SpellEffects.positions(effect.region()),effect.strength(),tick+effect.durationTicks(),tick,effect.region().shape()==Value.Shape.PATH);fields.add(field);setDirty();return field;}
+    public Field add(UUID owner,Value.Effect effect,long tick){var field=new Field(owner,effect.id(),SpellEffects.positions(effect.region()),effect.strength(),tick+effect.durationTicks(),tick,effect.region().shape()==Value.Shape.PATH,Optional.empty());fields.add(field);setDirty();return field;}
+    public Field add(net.minecraft.server.level.ServerPlayer actor,Value.Effect effect,long tick){var field=new Field(actor.getUUID(),effect.id(),SpellEffects.positions(effect.region()),effect.strength(),tick+effect.durationTicks(),tick,effect.region().shape()==Value.Shape.PATH,DeviceCasters.isDevice(actor)?Optional.of(DeviceCasters.anchor(actor)):Optional.empty());fields.add(field);setDirty();return field;}
     public static void incoming(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
         if(!(event.getEntity().level() instanceof ServerLevel level)||!(event.getSource().getDirectEntity() instanceof Projectile))return;
         var at=event.getEntity().blockPosition();for(var field:get(level).fields)if(field.effect().equals("badspell:shield")&&field.owner().equals(event.getEntity().getUUID())&&field.expiry()>level.getGameTime()&&(field.cells().contains(at)||field.cells().contains(at.below()))){event.setCanceled(true);return;}
@@ -36,7 +38,7 @@ public final class SpellFields extends SavedData {
         if(!(event.getLevel() instanceof ServerLevel level))return;var self=get(level);long tick=level.getGameTime();
         if(self.fields.removeIf(f->f.expiry()<=tick))self.setDirty();if(tick%10!=0)return;
         for(var field:self.fields) {
-            var owner=level.getServer().getPlayerList().getPlayer(field.owner());if(owner==null||owner.level()!=level)continue;
+            var owner=field.device().isPresent()?DeviceCasters.resolve(level,field.owner(),field.device().get()):level.getServer().getPlayerList().getPlayer(field.owner());if(owner==null||owner.level()!=level)continue;
             advance(level,owner,field,tick);
         }
     }
@@ -49,11 +51,11 @@ public final class SpellFields extends SavedData {
             int minX=cells.stream().mapToInt(BlockPos::getX).min().orElseThrow(),maxX=cells.stream().mapToInt(BlockPos::getX).max().orElseThrow();int minY=cells.stream().mapToInt(BlockPos::getY).min().orElseThrow(),maxY=cells.stream().mapToInt(BlockPos::getY).max().orElseThrow();int minZ=cells.stream().mapToInt(BlockPos::getZ).min().orElseThrow(),maxZ=cells.stream().mapToInt(BlockPos::getZ).max().orElseThrow();
             var box=new AABB(minX,minY,minZ,maxX+1,maxY+2,maxZ+1);var occupied=new HashSet<>(cells);
             if(field.effect().equals("badspell:shield")) {
-                for(var projectile:level.getEntitiesOfClass(Projectile.class,box,p->p.isAlive()&&p.getOwner()!=owner))if(occupied.contains(projectile.blockPosition())||occupied.contains(projectile.blockPosition().below())){projectile.discard();SpellEffects.particles(level,projectile.blockPosition(),ParticleTypes.ENCHANT,3);}
-                for(var target:level.getEntitiesOfClass(LivingEntity.class,box,e->e!=owner&&e.isAlive()))if(SpellEffects.permitted(owner,target)&&(occupied.contains(target.blockPosition())||occupied.contains(target.blockPosition().below()))){double x=target.getX()-(minX+maxX+1)/2.0,z=target.getZ()-(minZ+maxZ+1)/2.0;double length=Math.max(.1,Math.sqrt(x*x+z*z));target.push(x/length*.15*field.strength(),.05,z/length*.15*field.strength());}
+                for(var projectile:level.getEntitiesOfClass(Projectile.class,box,p->p.isAlive()&&(p.getOwner()==null||!p.getOwner().getUUID().equals(owner.getUUID()))))if(occupied.contains(projectile.blockPosition())||occupied.contains(projectile.blockPosition().below())){projectile.discard();SpellEffects.particles(level,projectile.blockPosition(),ParticleTypes.ENCHANT,3);}
+                for(var target:level.getEntitiesOfClass(LivingEntity.class,box,e->!e.getUUID().equals(owner.getUUID())&&e.isAlive()))if(SpellEffects.permitted(owner,target)&&(occupied.contains(target.blockPosition())||occupied.contains(target.blockPosition().below()))){double x=target.getX()-(minX+maxX+1)/2.0,z=target.getZ()-(minZ+maxZ+1)/2.0;double length=Math.max(.1,Math.sqrt(x*x+z*z));target.push(x/length*.15*field.strength(),.05,z/length*.15*field.strength());}
             } else for(var target:level.getEntitiesOfClass(LivingEntity.class,box,e->e.isAlive()))if(SpellEffects.permitted(owner,target)&&(occupied.contains(target.blockPosition())||occupied.contains(target.blockPosition().below()))) {
                 if(field.effect().equals("badspell:cold")){target.clearFire();target.setTicksFrozen(Math.min(140,target.getTicksFrozen()+20*field.strength()));target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS,30,field.strength()-1));}
-                else if(tick%20==0&&target!=owner){target.hurtServer(level,level.damageSources().playerAttack(owner),field.strength());}
+                else if(tick%20==0&&!target.getUUID().equals(owner.getUUID())){target.hurtServer(level,level.damageSources().playerAttack(owner),field.strength());}
             }
             if(tick%20==0)for(int index=0;index<cells.size();index+=Math.max(1,cells.size()/8))SpellEffects.particles(level,cells.get(index),field.effect().equals("badspell:cold")?ParticleTypes.SNOWFLAKE:field.effect().equals("badspell:heat")?ParticleTypes.FLAME:ParticleTypes.ENCHANT,1);
     }

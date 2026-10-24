@@ -1,0 +1,58 @@
+# m1-dedicated-final-phase1.log
+[09:13:28] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE phase=1
+[09:16:04] [Server thread/INFO] [minecraft/PlayerList]: BadSpellQA1[/127.0.0.1:59904] logged in with entity id 1 at (-4.5, -60.0, -4.5)
+[09:16:04] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE login.BadSpellQA1=4b4331c0-5186-306a-9bf4-00b0936a5812
+[09:16:05] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE board_checksum=43def2a0114295624081ef4abd4dafad655196cab33f75fce424ab3c6ae37cad
+[09:16:05] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE owner=4b4331c0-5186-306a-9bf4-00b0936a5812
+[09:16:05] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY harvested 35 units of badspell:runewood_log from 35 real blocks in survival mode
+[09:16:05] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY harvested 151 units of badspell:raw_field_crystal from 72 real blocks in survival mode
+[09:16:05] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY harvested 71 units of badspell:raw_arcane_ore from 47 real blocks in survival mode
+[09:16:05] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY harvested 34 units of badspell:moon_blossom from 34 real blocks in survival mode
+[09:16:05] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY harvested 47 units of badspell:resonance_shard from 28 real blocks in survival mode
+[09:16:05] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY start: 848 finite crafting/processing steps; no seeded Bad Spell intermediates
+[09:16:27] [Server thread/INFO] [minecraft/PlayerList]: BadSpellQA2[/127.0.0.1:54226] logged in with entity id 232 at (9.5, -60.0, -6.5)
+[09:16:27] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE login.BadSpellQA2=d8ea9bfb-32ba-3fb9-94e7-bb7a2650bdc8
+[09:16:27] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE two_real_clients_phase1=PASS
+[09:16:40] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 125/848
+[09:16:59] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 175/848
+[09:17:08] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 200/848
+[09:17:17] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 225/848
+[09:17:25] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 250/848
+[09:17:34] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 275/848
+[09:17:44] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 300/848
+[09:17:55] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 325/848
+[09:18:03] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 350/848
+[09:18:12] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 375/848
+[09:18:33] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 425/848
+[09:18:42] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 450/848
+[09:18:52] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 475/848
+[09:18:59] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 500/848
+[09:19:04] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 525/848
+[09:19:14] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 550/848
+[09:19:23] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 575/848
+[09:19:29] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 600/848
+[09:19:35] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 625/848
+[09:19:50] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 675/848
+[09:19:58] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 700/848
+[09:20:30] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 800/848
+[09:20:41] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY progress 825/848
+[09:20:47] [Server thread/INFO] [co.ba.qa.ProductionJourney/]: M1_JOURNEY PASS: all 18 goals, 848 actual recipe steps, 7 placed stations; 98 residual cells retained without duplication
+[09:20:47] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE survival_material_journey=PASS
+[09:22:11] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE network_book_save=PASS
+[09:27:32] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE paid_field_armed=PASS
+[09:27:32] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE stopped_phase1=clean
+# m1-restart-acceptance.log
+[09:37:28] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE phase=2
+[09:37:28] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE restart_paid_field=PASS
+[09:37:28] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE restart_holder_and_board=PASS
+[09:39:15] [Server thread/INFO] [minecraft/PlayerList]: BadSpellQA1[/127.0.0.1:59824] logged in with entity id 15 at (6.5, 81.0, 9.5)
+[09:39:16] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE login.BadSpellQA1=4b4331c0-5186-306a-9bf4-00b0936a5812
+[09:39:16] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE restart_player=PASS
+[09:39:16] [Server thread/INFO] [minecraft/PlayerList]: BadSpellQA2[/127.0.0.1:60666] logged in with entity id 16 at (8.5, 81.0, 9.5)
+[09:39:16] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE login.BadSpellQA2=d8ea9bfb-32ba-3fb9-94e7-bb7a2650bdc8
+[09:39:17] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE two_real_clients_phase2=PASS
+[10:07:27] [Server thread/INFO] [minecraft/PlayerList]: BadSpellQA2[/127.0.0.1:49292] logged in with entity id 37 at (10.5, 81.0, 8.5)
+[10:07:27] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE login.BadSpellQA2=d8ea9bfb-32ba-3fb9-94e7-bb7a2650bdc8
+[10:07:35] [Server thread/INFO] [minecraft/PlayerList]: BadSpellQA1[/127.0.0.1:48008] logged in with entity id 38 at (6.5, 81.0, 9.5)
+[10:07:35] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE login.BadSpellQA1=4b4331c0-5186-306a-9bf4-00b0936a5812
+[10:07:35] [Server thread/INFO] [co.ba.qa.AcceptanceHarness/]: M1_ACCEPTANCE restart_player=PASS

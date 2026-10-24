@@ -123,7 +123,7 @@ for name in ['moon_blossom','runewood_sapling','glow_moss']:
 im=Image.new('RGBA',(16,16));d=ImageDraw.Draw(im);d.line((4,13,4,3,11,3,11,10,7,10),fill='#e4ddbd',width=2);d.point((12,2),fill='#f0e8d0');save(im,'block','rune_mark')
 # Eight-pixel glyphs form a separate writing atlas; block material textures remain 16×16.
 im=Image.new('RGBA',(64,64));d=ImageDraw.Draw(im)
-for code in range(1,50):
+for code in range(1,51):
  x=(code-1)%8*8;y=(code-1)//8*8;color='#e4ddbd';d.line((x+2,y+1,x+2,y+6,x+4,y+6),fill=color)
  if code&1:d.line((x+2,y+1,x+5,y+1),fill=color)
  if code&2:d.line((x+2,y+3,x+5,y+3),fill=color)

@@ -5,6 +5,10 @@
     {
       "ingredient": "badspell:moon_brew",
       "count": 2
+    },
+    {
+      "ingredient": "minecraft:quartz",
+      "count": 1
     }
   ],
   "outputs": [

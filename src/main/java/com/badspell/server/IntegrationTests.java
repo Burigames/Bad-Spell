@@ -38,7 +38,7 @@ public final class IntegrationTests {
         });
         FUNCTIONS.register("production_recipe_coverage",()->helper->{
             var recipes=helper.getLevel().recipeAccess().recipeMap().byType(com.badspell.production.ProductionRegistries.TYPE.get());
-            helper.assertTrue(recipes.size()==54,"All 54 processing recipes must load, got "+recipes.size());
+            helper.assertTrue(recipes.size()==55,"All 55 processing recipes must load, got "+recipes.size());
             for(var recipe:recipes)for(var output:recipe.value().outputs())helper.assertTrue(!output.create().isEmpty(),"Recipe output must resolve");
             helper.succeed();
         });

@@ -8,6 +8,7 @@ final class ExtendedRunes {
     private static RuneRegistry.Parameter n(long min,long max){return new RuneRegistry.Parameter(NUMBER,min,max);}
     private static long number(Map<String,Value> map,String key){return ((Value.Number)map.get(key)).value();}
     static void register(Map<String,RuneRegistry.Rune> r) {
+        r.put("badspell:origin",new RuneRegistry.Rune(Map.of(),Map.of(),POSITION,(i,p,c)->c.environment().getOrDefault("origin",c.target())));
         r.put("badspell:entity_position",new RuneRegistry.Rune(Map.of("target",ENTITY),Map.of(),POSITION,(i,p,c)->((Value.Entity)i.get("target")).position()));
         r.put("badspell:entity_health",new RuneRegistry.Rune(Map.of("target",ENTITY),Map.of(),NUMBER,(i,p,c)->{var e=(Value.Entity)i.get("target");var health=c.environment().get("health:"+e.id());if(health==null)throw new IllegalArgumentException("Entity health unavailable");return health;}));
         r.put("badspell:has_target",new RuneRegistry.Rune(Map.of(),Map.of(),BOOLEAN,(i,p,c)->new Value.Bool(c.entity()!=null)));

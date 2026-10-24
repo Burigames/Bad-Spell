@@ -24,7 +24,7 @@ Neue Erze/Pflanzen/Bäume erscheinen in neu generierten Chunks. Ihre natürliche
 
 In der Gravurstation eine leere Q1-Runenplatte und das eigene gespeicherte Formelbuch in die Eingänge legen. Die Gravur bewahrt das Buch und erzeugt einen unveränderlichen Snapshot. Kosten: 30 + 4 FL pro Runenknoten, 80 Ticks. Q1 erlaubt bis zu 24 Knoten; mit der aktuellen 100-FL-Zelle sind jedoch nur Formeln bis 17 Knoten gravierbar.
 
-Rechtsklick mit der gravierten Platte importiert sie in einen eigenen Handschuh. Alternativ die Platte in den ersten Eingang eines eigenen Runenhalters legen, Adapter und Zelle ergänzen und eine neue Redstone-Flanke auslösen. Der aktuelle Punktlichtzauber wirkt oberhalb des Halters und kostet 30 FL bei der Starterformel; Maschinen verbrauchen keine Spieler-FK. Andere Effektarten sind noch nicht implementiert.
+Rechtsklick mit der gravierten Platte importiert sie in einen eigenen Handschuh. Alternativ die Platte in den ersten Eingang eines eigenen Runenhalters legen, Adapter und Zelle ergänzen und eine neue Redstone-Flanke auslösen. Der Halter nutzt dieselbe Formelauswertung wie der Handschuh: Licht, Flächen und kombinierte Effekte sind möglich. Die Rune Ursprung bezeichnet den Gerätepunkt; Selbst ist lebenden Zaubernden vorbehalten. Die Starterformel kostet 30 FL; Geräte verbrauchen keine Spieler-FK. Start/Stop steuert gespeicherte Aufträge, auch bei abgemeldetem Besitzer. Gerichtete Feldkristalle übertragen bedarfsgerecht bis zu 80 FL/s je Kristall zwischen eigenen Stationen mit Adapter und Zelle.
 
 ## Ausführbare Stationsrezepte
 

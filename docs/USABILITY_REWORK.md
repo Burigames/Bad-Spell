@@ -34,11 +34,11 @@ Bündeln unterstützt bis zu acht flache Kampf-/Licht-/Leereffekte. Kosten werde
 
 Die sieben Stationen haben zur Aufgabe passende Arbeitszonen und Prozessgrafiken; mindestens fünf unterschiedliche Slot-Anordnungen. Container- und Netzwerk-Slotindizes bleiben erhalten, damit Shift-Klick und serverseitige Inventarregeln gleich bleiben. Stationsart und Zellkapazität werden synchronisiert.
 
-Das Stations-**?** zeigt eine Rezeptansicht mit Itembildern, Mengen, FL und Dauer. Die 54 Verarbeitungsrezepte werden aus denselben JSON-Dateien in eine nur lesende Clientanzeige generiert. Besondere Buchgravur/Runenhalter-Aktionen werden im Kodex erklärt; sie sind keine erfundenen JSON-Rezepte. Der Runenhalter bleibt auf Punktlicht begrenzt.
+Das Stations-**?** zeigt eine Rezeptansicht mit Itembildern, Mengen, FL und Dauer. Die 55 Verarbeitungsrezepte werden aus denselben JSON-Dateien in eine nur lesende Clientanzeige generiert. Besondere Buchgravur/Runenhalter-Aktionen werden im Kodex erklärt; sie sind keine erfundenen JSON-Rezepte. Der Runenhalter verwendet jetzt die gemeinsame Wirkungslogik einschließlich Flächen und kombinierten Effekten; gespeicherte Aufträge überstehen Weltneustarts.
 
 ## Grenzen
 
-Diese Überarbeitung schließt weder M1 noch die Gesamtmod ab. Weitere Weltinhalte, Forschung, universelle Maschinensteuerung und Mehrspieler-Abnahme bleiben offen. Exakte Validierungsergebnisse und grafisch geprüfte Abläufe stehen in TESTING.md. Beide Seiten benötigen den neuen Build: Netzwerkprotokoll 3.
+Der anschließende M1-Abschluss umfasst jetzt auch Geräteausführung und die Mehrspieler-/Neustart-Abnahme. Weitere Weltinhalte und das vollständige Forschungssystem bleiben späteren Meilensteinen zugeordnet. Exakte Validierungsergebnisse und grafisch geprüfte Abläufe stehen in TESTING.md und docs/M1_ACCEPTANCE.md. Beide Seiten benötigen den neuen Build: Netzwerkprotokoll 4.
 
 ## Geprüfte Bildschirmansichten
 

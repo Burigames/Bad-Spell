@@ -109,7 +109,7 @@ process('conductive_paste',AT,[('crystal_dust',2),('minecraft:redstone',1),('run
 process('precision_coil',AW,[('minecraft:copper_ingot',2),('conductive_paste',2),('field_crystal_shard',1)],[('precision_coil',1)],40)
 process('crystal_core',AT,[('raw_crystal_core',1),('pure_water',1)],[('crystal_core',1),('minecraft:glass_bottle',1)],100,25)
 process('moon_brew',AT,[('moon_blossom',2),('pure_water',1)],[('moon_brew',2),('minecraft:glass_bottle',1)],160,15)
-process('moon_salt',AT,[('moon_brew',2)],[('moon_salt',1)],240,20)
+process('moon_salt',AT,[('moon_brew',2),('minecraft:quartz',1)],[('moon_salt',1)],240,20)
 process('moon_essence',AT,[('moon_brew',2)],[('moon_essence',1)],200,20)
 process('aether_solution',AT,[('moon_blossom',2),('crystal_dust',1),('pure_water',1)],[('aether_solution',1),('minecraft:glass_bottle',1)],120,20)
 process('rune_ink',AT,[('crystal_dust',2),('moon_brew',1),('minecraft:ink_sac',1),('minecraft:glass_bottle',1)],[('rune_ink',1)],100,10)

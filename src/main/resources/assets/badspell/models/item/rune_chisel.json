@@ -3,7 +3,7 @@
   "render_type": "minecraft:cutout",
   "textures": {
     "wood": "badspell:block/workshop_wood",
-    "metal": "badspell:block/workshop_metal",
+    "metal": "badspell:block/equipment_tool_steel",
     "gold": "badspell:block/workshop_metal",
     "glass": "badspell:block/workshop_glass",
     "crystal": "badspell:block/workshop_crystal",
@@ -82,7 +82,7 @@
       ],
       "to": [
         9,
-        17,
+        16,
         9
       ],
       "faces": {

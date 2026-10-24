@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "badspell:block/crystal_grinder"
+    "facing=south": {
+      "model": "badspell:block/crystal_grinder",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "badspell:block/crystal_grinder",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "badspell:block/crystal_grinder",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "badspell:block/crystal_grinder",
+      "y": 270
     }
   }
 }

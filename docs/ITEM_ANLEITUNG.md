@@ -134,7 +134,7 @@ Um einen zweiten Slot zu belegen:
 
 Ein leerer Slot wirkt keinen Ersatzzauber. Die Auswahl verbraucht keine Energie. Fremde private Formeln können nicht einfach von einem anderen Spieler genutzt werden.
 
-Aktuell unterstützt die Spielanbindung ausschließlich **Punktlicht**, auch wenn der Editor weitere logische Bausteine anbietet. Ein syntaktisch gültiger Graph mit einer Kreisregion wird beim Wirken derzeit abgewiesen.
+Die Spielanbindung unterstützt unter anderem Licht, Feuer, Frost, Heilung, Bewegung, Schutz, Bedingungen und kombinierte Effekte. Form und Ziel müssen zu den typisierten Eingängen passen. Der Kodex (G) enthält Beispiele und die Runenhilfe erklärt Ein-/Ausgänge.
 
 ## 3. Start-Feldzelle – Energie für Zauber
 
@@ -173,7 +173,7 @@ Ein Flakon wird verbraucht und der Buchvorrat auf **64 Punkte** gesetzt. Bei tei
 | **Leerer Formelslot** | Im Buch in genau diesen Slot exportieren oder zum belegten Slot wechseln. |
 | **Eine Start-Feldzelle wird benötigt** | Eine Feldzelle ins Inventar legen. |
 | **Zu wenig FL oder FK** | Zellladung prüfen; eine erschöpfte Zelle ersetzen oder auf FK-Erholung warten. |
-| **Ziel gesperrt oder nicht unterstützt** | Näher an einen freien Luftblock vor einer Blockoberfläche zielen. Aktive Lichtpositionen nicht überlagern. Nur Punktlicht verwenden. |
+| **Ziel gesperrt oder nicht unterstützt** | Näher an einen freien Luftblock vor einer Blockoberfläche zielen. Aktive Lichtpositionen nicht überlagern. Zieltyp und Reichweite prüfen; die Diagnose nennt konkrete Ablehnungen. |
 | **Ziel außer Reichweite** | Näher herangehen; höchstens zwölf Blöcke Abstand. |
 | **Formelbudget überschritten** | Stärke oder Dauer reduzieren. Die Startvorlage besitzt ein Budget von 100 FL. |
 | **Unvereinbare Porttypen** | Nur typgleiche Aus- und Eingänge verbinden; zum Einstieg die Startverbindungen verwenden. |

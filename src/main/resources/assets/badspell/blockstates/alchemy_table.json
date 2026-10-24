@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "badspell:block/alchemy_table"
+    "facing=south": {
+      "model": "badspell:block/alchemy_table",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "badspell:block/alchemy_table",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "badspell:block/alchemy_table",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "badspell:block/alchemy_table",
+      "y": 270
     }
   }
 }

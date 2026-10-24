@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "badspell:block/engraving_station"
+    "facing=south": {
+      "model": "badspell:block/engraving_station",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "badspell:block/engraving_station",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "badspell:block/engraving_station",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "badspell:block/engraving_station",
+      "y": 270
     }
   }
 }

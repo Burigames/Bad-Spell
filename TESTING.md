@@ -1,172 +1,37 @@
-# Tests und Abnahme
+# Tests und Qualitätssicherung
 
-## Runenwerkstatt/Kodex: aktuelle Prüfung
+## Aktueller M1-Stand – 24.10.2026
 
-`./gradlew --offline --no-daemon build runGameTestServer --max-workers=2`: **erfolgreich; 45 Kerntests und 38 erforderliche Server-GameTests**. Protokoll: [USABILITY_VALIDATION.log](docs/USABILITY_VALIDATION.log). Zusätzlich 67 JSON-Rezepte strukturell erreichbar; alle 90 registrierten Runen besitzen DE/EN-Namen, Beschreibungen und gültige Glyphencodes.
+- Gradle-Build erfolgreich, einschließlich Ressourcen- und 26.2-Atlasprüfung.
+- **45 Kernprüfungen und 49 erforderliche Server-GameTests bestanden.**
+- **848 echte Rezeptschritte**, sieben Stationen und alle 18 Zielgegenstände aus endlichen Rohstoff-/Vanilla-Fixtures. Mod-Rohstoffe wurden über Survival-Drops gewonnen; keine vorgegebenen Mod-Zwischenprodukte.
+- Zwei echte Clients mit installierter JAR auf einem dedizierten Entwicklungsserver, Client-Buchrevision, Handschuhexport und belegter Slotwechsel.
+- Nach sauberem Stopp/Neustart: Geräteauftrag, bezahltes Feld, Oberflächengraph, Handschuh-Snapshot und aktiver Slot geprüft.
+- Fremder Stationszugriff tatsächlich im zweiten Client abgewiesen. Meißel-Editor, Gabelaktivierung, Monokelanzeige und Kompassbindung im Besitzerclient bedient.
+- In der korrigierten JAR keine Meldungen `Unable to bake item model`, `Missing item model` oder `Multiple atlases`.
 
-Neue Regressionen prüfen Selbstheilung und kostenfreie Ablehnung bei voller Gesundheit, Entity-Raycasts vor/hinter einer Wand, direkte Entity-Interaktion mit dem Handschuh, echte kombinierte Kälte/Bewegung einschließlich sofortiger Kältewirkung, Vorabablehnung eines fehlerhaften Effekts ohne Weltmutation, bedingte Gesundheitslogik, fehlende optionale Ziele, Rechen-/Bündelgrenzen und unterschiedliche sichere Stations-Slotlayouts.
+Abnahmeumfang und Reproduktion: [M1_ACCEPTANCE.md](docs/M1_ACCEPTANCE.md). Nachweise: [M1_CLOSURE_VALIDATION.log](docs/M1_CLOSURE_VALIDATION.log), [M1_ACCEPTANCE_EVENTS.log](docs/M1_ACCEPTANCE_EVENTS.log) und [M1_ACCEPTANCE.properties](docs/M1_ACCEPTANCE.properties).
 
-Grafischer Entwicklungsclient: Kodex per G, Runensuche nach Entity, Alchemietisch und dessen Rezeptansicht geöffnet. Screenshots und weiterer Bedienungsumfang: [USABILITY_REWORK.md](docs/USABILITY_REWORK.md). Getrennte echte Mehrspielerclients, alle Auflösungen/Stationen und ein vollständiger Survivaldurchlauf bleiben offen. Kein vollständiger M1-Abschluss.
+## Relevante Regressionen
 
-## M1-Entwicklungsstand vom 23.10.2026
+Formelprüfung, Typfehler, Zyklen, begrenzte Auswertung, Modulbesitz/Schachtelung, Lazy-Branches, deterministische Kosten und Snapshot-Codec. Tatsächliche Weltwirkungen für Licht, Kälte, Hitze, Schild, Heilung und Stoß. Eigenes Selbst und Entity-Raycasts, Wandverdeckung, sichere leere Zweige, freies Luftziel innerhalb der Reichweite, gleichzeitige Kälte vor einem Stoß und Ablehnung ohne Teilausführung/Energiekosten.
 
-Dieser Abschnitt ersetzt widersprechende Angaben älterer Fortschrittsnotizen weiter unten. M1 ist noch **nicht vollständig abgenommen**. Die neue Clientdarstellung und ein vollständiger Survival-/Mehrspieler-Durchlauf sind offen.
+Geräte werden mit derselben Auswertung geprüft: Kugellicht, Kombinationen, Offline-Feldticks, gespeicherte Verzögerung, Stop-Rechte und NBT-Laderunde. Leitertests prüfen reale Zellgutschrift und -abzug, 80-FL/s-Budget, Richtung, Besitzer und Unterbrechung. Ein weiterer Test prüft die Gabelreparatur ohne erneute Formelplatte.
 
-- Typisierte Vektor-, Text-, Entity-, Ereignis- und Regionswerte; verschachtelte Snapshot-Module, benannte Eingaben, typisierte Rückgaben, Bedingungen, Vergleich und begrenzte Auswertung.
-- Lichtfelder einschließlich Kugel/Pfad, Heilung, Stoß, Hitze, Kälte, Schild und Zielinformation; verzögerte/begrenzte/periodische Aktivierung mit Energieprüfung je Ausführung. Endliche Felder und Spieleraufträge werden gespeichert.
-- Private Formel-Bibliothek mit Suche, Tags und neun komponierten Vorlagen. Eigene Formelmodule lassen sich als Knoten einfügen. Oberflächengravur ist auf 16 Runen je Blockseite begrenzt; nur Glyphen werden öffentlich übertragen.
-- Runenmeißel, Resonanzgabel, Feldkompass/Q3, Monokel sowie Q2/Q3-Handschuhe, Zellen und Platten. Handschuhe besitzen 4/8/12 Slots, Zellen 100/300/600 FL. Zellladungen im Inventar werden zusammen verwendet.
-- Lokale Bindungen, versiegelte Blöcke sowie begrenzte Item-/Energieübertragung. Offizielle Interaktionsereignisse können Weltaktionen verweigern.
-- 54 datengetriebene Verarbeitungsrezepte plus 12 Vanilla-Rezepte. Sieben eigene Stationsmodelle, überarbeitete 16px-Texturen und 3D-Werkzeuge/Zellen. Stilregeln: [ASSET_STYLE.md](docs/ASSET_STYLE.md).
+Die Mondsalz-Prüfung beginnt mit Mondessenz auf derselben Station und setzt danach Quarz hinzu. Die Station muss den alten Rezeptcache verwerfen, Mondsalz statt Essenz produzieren und beide Kosten exakt abbuchen.
 
-**Grenzen:** Der Runenhalter führt weiterhin nur Punktlicht aus. Umfangreiche Maschinensteuerung, Forschung, Mobs, Bosse, Dimensionen und vollständige Weltgenerierung sind nicht fertig. Kompatibilität mit einzelnen Schutzmods und echte Netzwerkclients sind mit den neuen Abläufen noch nicht geprüft. Keine Behauptung einer vollständigen Umsetzung aller PDF-Features.
-
-
-Stand: 23. Oktober 2026. Ziel ausschließlich Minecraft 26.2 / NeoForge 26.2.0.93 / JDK 25.
-
-## Korrektur des früheren Lichtnachweises
-
-Nach einer Fehlermeldung mit sinkenden FL/FK ohne sichtbare Wirkung wurde ein Fehler reproduziert: Die bisherigen Tests prüften nur den Auxiliary-Light-Eintrag. Vanilla-Luft liest diesen Eintrag nicht als eigene Emission; die behauptete Lichtwirkung war damit nicht ausreichend nachgewiesen. Der neue Test gegen `LightLayer.BLOCK` schlug vor der Korrektur fehl. Kostenanzeigen und die früheren Screenshots beweisen allein keine tatsächliche Beleuchtung.
-
-Die Korrektur ergänzt eine auf die geprüften 26.2-Klassen begrenzte Mixin-Anbindung an den Blocklichtrechner, einen threadsicheren Quellenindex und die Behandlung leerer Sections. Es werden keine Lichtblöcke platziert. Beim Laden eines beobachteten Chunks werden aktive Quellen nachgesendet; beim Client-Unload wird der abgeleitete Index bereinigt. Eine erfolgreiche Aktivierung erzeugt zusätzlich einen kurzen Vanilla-Partikeleffekt.
-
-Ergebnis des aktuellen Gradle-Laufs: **Build erfolgreich; 28 Kerntests und 12 eigene GameTests plus ein Vanilla-Test bestanden**. Die drei neuen GameTests prüfen tatsächliche Helligkeit, Nachbarlicht, Erlöschen, vollständig leere Sections sowie den vollständigen Handschuh-Itemaufruf mit exakt 30 FL und 5 FK. Der schnell laufende GameTestServer lässt seinem asynchronen Lichtworker dabei je Prüfversuch 1 ms Rechenzeit und wartet auf dessen Abschluss; diese Wartehilfe ist ausschließlich Testcode.
-
-## Reproduzierbare Befehle
+## Automatisierung
 
 ```bash
-cd /workspace/Bad-Spell
-source scripts/cloud-env.sh
-./scripts/test-core.sh
-./gradlew --no-daemon build runGameTestServer --max-workers=2
+./gradlew build runGameTestServer
+python3 scripts/check-recipe-reachability.py
+python3 scripts/plan-m1-acceptance.py
 ```
 
-`install-cloud.sh` reproduziert die geprüfte JDK-/Proxy-/Truststore-Einrichtung, bei Bedarf die virtuelle Anzeige, und baut das Projekt. Es verändert keine Quelldateien. Alle Downloadprüfungen bleiben aktiv.
+Der strukturelle Rezeptcheck ersetzt keine Energiebilanz oder Spielprüfung. Der zusätzliche Materialplan wird unabhängig mit einem Bestandszähler nachgerechnet, damit geschachtelte Rezepte keine bereits reservierten Zutaten verbrauchen. Der QA-Lauf prüft danach registrierte Vanilla-Rezepte und lässt Modstationen mit echten Welt-Ticks arbeiten. Zur Beschleunigung wird die Tickrate im Test zeitweise auf 200 erhöht und anschließend auf 20 zurückgestellt. Vanilla-Ofenlaufzeit wird nicht separat nachgespielt; dessen registriertes Rezept und Zutaten/Ergebnis werden geprüft.
 
-## Automatisierte Ergebnisse
+## Umgebungsgrenzen
 
-| Prüfung | Ergebnis | Tatsächlicher Umfang |
-|---|---|---|
-| Java-Kern | 28/28 bestanden | Eigener JavaExec-Runner, Java 25, `-Xlint:all -Werror` |
-| Gradle-Build | Bestanden | Gemeinsame und Clientklassen, Mod-Metadaten, Ressourcen und Mod-JAR |
-| Ressourcen | Bestanden | Vier Itemdefinitionen, Modelle, 16×16-Texturen; identische DE/EN-Schlüssel (51) |
-| Minecraft-GameTests | 12/12 Bad Spell bestanden | Zusätzlich 1 Vanilla-Test; Runner meldet insgesamt 13 bestandene erforderliche Tests |
-| Grafischer Client | Gestartet und bedient | Minecraft 26.2 mit Software-OpenGL, Xvfb und integriertem Server |
+Clienttests liefen mit Software-Rendering auf einem virtuellen Display, GUI-Skalierung 2 und reduzierter Sichtweite. Der lokale Offline-Test benötigt keine Mojang-Anmeldung; fehlende Services-Schlüssel betreffen dort Authentifizierung/Chat und wurden nicht als Modfehler gewertet. Xvfb kann einmal eine nicht verfügbare Standard-Cursorform melden; die getesteten Oberflächen blieben bedienbar.
 
-Die Standardaufgaben `test` melden **NO-SOURCE** und zählen nicht als bestandene Tests. Die 28 tatsächlichen Kerntests laufen als `:core:coreTest` über `:core:check`. Eine anfängliche falsche Zuordnung zum Standard-Test-SourceSet wurde korrigiert, ohne Assertions oder die No-Test-Erkennung abzuschalten.
-
-Die Core-Suite prüft Determinismus über 100 Auswertungen, konkrete Lichtkosten, Port-/Parameterfehler, Zyklen, Limits, fehlende/duplizierte/verwaiste Knoten, Ressourcenunterdeckung, ST-Schwellen, Rechteablehnung, Reichweite, Formelbudget, atomare FL/FK-Abbuchung auch unter Konkurrenz, Fehler vor Commit, bedingte Effektauswahl, Snapshot-Unveränderlichkeit, Codec-Roundtrip und beschädigte Eingaben, Dateispeicherung/Besitzer/Revisionskonflikte, parametrisierte Module und maximale Tiefe, Outputkapazität, idempotenten Maschinenabschluss sowie transitive Produktionsmengen und Chargenreste.
-
-Die eigenen GameTests sind:
-
-- `badspell:registered_items`: tatsächliche Registrierung und Stacklimits.
-- `badspell:light_lifecycle`: Aktivierung in einer echten Serverwelt, Auxiliary Light gesetzt, kein Weltblock ersetzt, exakte Energie und Entfernung nach Ablauf.
-- `badspell:item_snapshot_persistence`: Graph-Roundtrip in einer echten Itemkomponente.
-- `badspell:book_server_workflow`: Buch-ID/Autor, Revision, echter Tintenverbrauch, Vorgängerrevision, Export, unabhängige Handschuhkopie, abgewiesene veraltete Revision und tatsächlicher Tinten-Itemverbrauch beim Nachfüllen.
-- `badspell:book_rejects_forgery`: abweichender Autor und negative Stärke ändern weder Buch noch Tinte.
-
-Die letzten beiden Tests nutzen NeoForge-FakePlayer für Serveraktionen. Die Testwelt liegt ausschließlich unter `run/gametestserver`. Der Testlauf lädt den Mod im echten Serverkontext; die gepackte Hotfix-JAR wurde zusätzlich im separaten Mods-Ordner getestet (siehe Abschlussabschnitt). Ein Endnutzer-Launcher-Test bleibt offen.
-
-## Tatsächlicher Clienttest
-
-Der erste Start ohne Anzeige scheiterte erwartungsgemäß an `glfwInit`. Das wurde durch eine lokal installierte virtuelle Anzeige behoben. Xvfb stammt aus dem signierten Debian-Security-Repository, Version `2:21.1.16-1.3+deb13u4`; `xdotool`/`libxdo3` haben Version `1:3.20160805.1-5.1`. Keine Systempakete wurden überschrieben. Grafik läuft mit Software-OpenGL; Audio wurde auf den Null-Backend gestellt, weil kein physisches Audiogerät existiert.
-
-```bash
-source scripts/cloud-env.sh
-source scripts/cloud-display.sh
-./gradlew --no-daemon runClient --max-workers=2
-```
-
-Für die vorhandene, ausschließlich zur QA erzeugte Creative-Welt ist auch `./gradlew runClient -PqaWorld=BadSpell-QA` möglich. Diese aus der Testwelt kopierte Welt ist kein Survival-Abnahmeweltstand. Die virtuelle Anzeige wird pro neuer Cloud-Task erneut gestartet; Prozesse gehören nicht zum Snapshot.
-
-Im echten Client mit integriertem Server geprüft:
-
-1. Die vier eigenen Itemtexturen wurden korrekt im Inventar und in der Hand dargestellt.
-2. Das Formelbuch öffnete über die registrierte Clientbound-Nachricht den Canvas.
-3. Runen hinzufügen und Undo, Zoom/Pan sowie die Anordnungsfunktion wurden bedient. Der visuelle Test deckte überlappende Startknoten auf; Vorlage und Einpassen wurden korrigiert.
-4. Eine inkompatible EVENT→REGION-Verbindung zeigte „Incompatible port types“; eine typgerechte Verbindung blieb gültig.
-5. Die Lichtstärke wurde im Eigenschaftsfeld von 3 auf 4 erhöht, der geänderte Graph gespeichert und an den Handschuh exportiert. Nach Anordnung plus Parameteränderung zeigte das Buch 60 statt 64 Schreibpunkte.
-6. Der unveränderte Startzauber verbrauchte 30 FL und 5 FK: Anzeige **70 FL / 95 FK**.
-7. Die editierte Stärke-4-Formel verbrauchte 40 FL und 5 FK: Anzeige **60 FL / 95 FK**. Damit ist die Wirkung nicht nur ein fest verdrahteter Kostenwert für den Buchnamen.
-8. Nach regulärem „Save and Quit to Title“ und erneutem Laden derselben Welt blieben Buch/Handschuh und verbleibende Zellladung erhalten. Erneutes Wirken der geänderten Formel reduzierte 60 auf **20 FL**, FK stand danach bei 95.
-
-Evidenz: [Formelbuch](docs/screenshots/formula-book.png), [editierter Zauber](docs/screenshots/edited-cast.png), [Zustand nach Weltneuladen](docs/screenshots/reloaded-cast.png). Die letzte kleine Änderung aktualisiert die Eigenschaftsbuttons nach einem Typfehler sofort; sie wurde nach dem manuellen Durchlauf erneut kompiliert und mit den automatisierten Prüfungen gebaut.
-
-## Nicht ausgeführt oder noch offen
-
-- Kein durchgehender Survivalpfad: Worldgen, Materialien, Stationsrezepte und Produktionsstationen fehlen noch.
-- Kein vollständiger Runenkatalog oder vollständiges Formelbuch: Module nur im Core, Q2/Q3-Handschuhslots fehlen, keine fünf vollständigen Buchansichten.
-- Kein Mehrclient-Test auf einem normalen dedizierten Server, kein Claim-Mod-/PvP-/Modpack-Test.
-- Kein Hard-Crash-, Stromausfall-, Chunk-Unload-/Reload- oder allgemeiner Datenmigrationsnachweis. Reguläres Weltneuladen ersetzt diese Tests nicht.
-- Keine Last-, Fünf-Personen-UX- oder vollständige Accessibility-Abnahme, keine physische Audioabnahme.
-- Keine Prüfung aller Übersetzungen in einer tatsächlich auf Deutsch umgestellten Client-Sitzung; Schlüsselgleichheit wurde automatisch geprüft.
-- Der 100-Schritte-Undo- und 20-Revisions-Grenzfall wurde noch nicht vollständig im Client gestresst.
-- Unter Xvfb können nichtkritische X11-Cursorwarnungen auftreten. Die Entwicklungsanmeldung meldet fehlende Services-Chat-Schlüssel; der lokale Spieltest funktionierte. Keine zusätzlichen Anmeldedaten wurden angefordert.
-
-## Konkrete Fortsetzung
-
-Zuerst Buchbibliothek, dynamische Parameter/Module, Rechte und Q2/Q3-Handschuhupgrades mit 8/12 Slots vervollständigen. Vier Q1-Slots und der Archivbrowser sind inzwischen implementiert. Dann den in docs/FEATURE_DEPENDENCIES.md beschriebenen Survival-Bootstrap samt echten Rohstoffquellen, Inventaren, Rezeptserializern, Prozesszeiten und Feldversorgung implementieren. Danach die übrigen Mechaniken der vollständigen Checkliste schrittweise integrieren. Die Mod ist trotz erfolgreichem Build ausdrücklich noch nicht vollständig oder produktionsreif.
-
-## Fortsetzung dieser Sitzung: vier Slots und Revisionsbrowser
-
-Erneut ausgeführt: `./gradlew --offline --no-daemon build runGameTestServer --max-workers=2`. Ergebnis: Build erfolgreich, 28 Kerntests, 51 identische Übersetzungsschlüssel, neun eigene GameTests plus ein Vanilla-Test erfolgreich. Die Offline-Option verwendet bereits zuvor tatsächlich aufgelöste offizielle Abhängigkeiten. Online-Maven-Metadaten wurden in dieser Sitzung erneut abgerufen: letzte veröffentlichte 26.2-Version weiterhin 26.2.0.93. Die Deprecation-Warnung zur vorhandenen Tooltip-Override bleibt; kein Compilerfehler.
-
-Neue Serverprüfungen:
-
-- `glove_slots`: Export in getrennte Slots, kein Fallback bei Leerstand, unveränderlicher erster Snapshot, Wraparound und unabhängige Itemkopie.
-- `glove_legacy_and_security`: verlustfreie Übernahme alter Ein-Slot-Daten; Besitzerprüfung auch bei leerem ausgewähltem Slot; abgewiesener Fremdimport und ungültige Richtung verändern nichts.
-- `glove_server_intents`: ungültige Hand/Richtung, maximal ein Wechsel pro Tick, kein FL/FK-Verbrauch bei leerem Slot und keine Initialisierung falscher Items als Buch.
-- `book_history_restore`: Archiv lesen kostet nichts, Wiederherstellung erhält die aktuelle Identität, erhöht die Revision, bezahlt normale Tinte und archiviert die ersetzte Fassung.
-
-Im echten grafischen Minecraft-26.2-Client mit integriertem Server erneut bedient: Buchhistorie geöffnet, Revision 1 gewählt, als Entwurf geladen, gespeichert und danach Revisionen 2 und 1 weiterhin im Archiv gesehen. Umschalt+Mausrad wählte Slot 2/4 mit Leerstand; Export aus dem Buch wurde bestätigt, Zurückwechseln zeigte weiterhin Lichtfunke in Slot 1/4. Screenshots: `docs/screenshots/revision-history.png`, `revision-restored.png`, `glove-slot-selection.png`, `glove-slot-return.png`.
-
-Nicht zusätzlich geprüft: Archivpaginierung auf kleinem Fenster, 20-Revisions-Grenzfall, neue Daten nach Hard-Crash, Slotbedienung in Nebenhand und Mehrclientbetrieb. Diese früheren manuellen Durchläufe betreffen die Development-Klassen; der Mods-Ordner-Test der gepackten Hotfix-JAR steht im Abschlussabschnitt. Frühere Clientnachweise oben stammen aus dem bereits vorhandenen Stand.
-
-## Test der gepackten Hotfix-JAR im Mods-Ordner
-
-Zusätzlich zu den Development-Tests wurde die tatsächlich gebaute JAR in einen separaten Ordner `work/packaged-client/mods` kopiert. Der Minecraft-26.2-/NeoForge-26.2.0.93-Client wurde mit den vorhandenen offiziellen Laufzeitbibliotheken gestartet, aber ohne `fml.modFolders` und ohne die Bad-Spell-/Core-Klassenverzeichnisse oder Core-JAR im Klassenpfad. Der Loadernachweis lautet `badspell (jar(mods/badspell-0.1.0-alpha.jar))`.
-
-In einer Kopie der Creative-QA-Welt wurde die unveränderte Lichtfunke-Formel aus dem Buch exportiert und mit frischer Zelle im vollständig geschlossenen dunklen Steinraum gewirkt. Bestätigt: Partikel, sichtbare Bodenbeleuchtung und Anzeige `Activated | FL 70 | FK 95`. Nach Ablauf erlosch das Licht. Ein unveränderter Bodenbereich außerhalb von Partikeln, Hand und HUD wechselte von mittlerem RGB 11,63/11,63/11,63 auf 24,21/23,34/21,13 und nach Ablauf exakt zurück auf 11,63/11,63/11,63. Dies ergänzt die physikalischen Helligkeitsassertions des Servers um tatsächliche Clientdarstellung.
-
-Unveränderte Screenshots: `docs/screenshots/light-before.png`, `light-after.png`, `light-expired.png`. Der frühere fehlende Nachweis der gepackten JAR wurde damit für diesen lokalen Mods-Ordner-Test nachgeholt. Ein separater Start über einen normalen Endnutzer-Launcher, fremde Shader/Lichtengines und mehrere externe Clients auf einem dedizierten Server bleiben ungetestet.
-
-## UI-/Produktionserweiterung 23.10.2026
-
-Erster Prüflauf: `./gradlew --offline --no-daemon build runGameTestServer --max-workers=2` erfolgreich, 18 erforderliche GameTests inklusive Vanilla-Test bestanden. 28 Coretests weiter erfolgreich. Neue Tests prüfen: alle 36 Stationsrezepte tatsächlich geladen (nicht nur syntaktisch vorhandene JSONs), Max-Flow bei überlappenden Zutaten, Schleifer mit echten Ticks, pausierter voller Ausgang und fehlender Adapter, exakt einmalige Eingangs-/FL-Entnahme.
-
-Die Ressourcenprüfung folgt jetzt sämtlichen Itemmodellen, Blockmodell-Parentreferenzen und Originaltexturen und gleicht beide Sprachdateien ab. Während der Entwicklung fiel ein Rezeptladefehler auf, der trotz erfolgreichem Gradle-Prozess alle neuen Rezepte deaktivierte. Korrigiert durch ItemStackTemplate und explizite Rezeptanzahl-Prüfung.
-
-Noch offen: grafische Prüfung des neu gestalteten Editors und aller Maschinenmenüs, echte Verteilung der neuen Weltgenquellen, vollständiger Survival-Durchlauf, Maschinen-Neuladen/Chunk-Unload, mehrere echte Spieler, Hopper-/Claim-Integration. Frühere Licht-Screenshots belegen den vorherigen Licht-Hotfix und ersetzen keine Prüfung der neuen Oberfläche. Neue Mobs/Dimensionen existieren noch nicht.
-
-Zweiter Prüflauf: **19 erforderliche GameTests bestanden**, einschließlich Gravur→Runenhalter→echtes Licht sowie keiner zusätzlichen FL-Entnahme bei abgewiesener Wiederholung. Im grafischen Development-Client Editor geöffnet, Layout/Fit/Speichern bedient. Kristallschleifer über reguläres Menü geöffnet und mit echten Inventaren verarbeitet: drei Splitter und 80 FL Restladung. Kleine UI-Überlappungen gefunden und korrigiert; finale Screenshots folgen nach erneutem Start. Im virtuellen X11 fehlt eine Standard-Cursorform (GLFW 65547); kein Minecraft-Absturz.
-
-Eine statische Erreichbarkeitsprüfung aller Bad-Spell-Rezepte fand keine zyklisch unerreichbaren Ausgaben, ausgehend von Vanilla-Ressourcen und den neuen natürlichen Rohstoffen. Dies prüft keine Mengenbalance, Fundhäufigkeit oder vollständige Spielprogression.
-
-### Prüfung der aktuellen gepackten JAR
-
-SHA-256 `f468b9aa1af2596fa2b544185eb8edbeb75116f18b04fa03427e3fce0fd3e80c`. Getrennte Instanz unter `/workspace/work/production-packaged`, ausschließlich `mods/badspell-0.1.0-alpha.jar`, keine Bad-Spell-/Core-Entwicklungsklassen und kein `fml.modFolders`. Loader bestätigt `badspell (jar(mods/badspell-0.1.0-alpha.jar))`.
-
-- Gespeicherte Testwelt geladen: Schleifer enthält weiterhin drei Splitter, Adapter und Zelle mit 80 FL. Das belegt reguläres Speichern/Laden dieses abgeschlossenen Jobs; unterbrochene Jobs und Stromausfall-Crashs nicht geprüft.
-- Finale Maschinenansicht mit beschrifteten Adapter-/Zellslots und innenliegender Diagnose geöffnet.
-- Finaler Editor in kleiner und größerer Fenstergröße geöffnet. Keine frühere Überlappung der Runenliste mehr. Zahleneingabe Stärke 3→4, Speichern mit Tintenausgabe 52→51, bestätigte Kosten 40 FL/5 FK/30 Sekunden. Canvasposition und Zoom bleiben erhalten.
-- Screenshots: [Editor](docs/screenshots/formula-editor.png), [Details](docs/screenshots/formula-details.png), [Schleifer nach Neuladen](docs/screenshots/crystal-grinder.png).
-
-Reproduzierbare strukturelle Rezeptprüfung: `python3 scripts/check-recipe-reachability.py` → 48 Rezepte erreichbar unter den dokumentierten Rohstoffannahmen. Kein Ersatz für den noch offenen Survival-Durchlauf.
-
-## Aktuelle Prüfung: M1-Entwicklungsstand
-
-`./gradlew --offline --no-daemon build runGameTestServer --max-workers=2`: erfolgreich; 39 Kerntests und 33 erforderliche GameTests bestanden. Vollständiges Protokoll: [docs/M1_VALIDATION.log](docs/M1_VALIDATION.log). Testuhr für periodischen Hitzeschaden korrekt ausgerichtet; Beleuchtungstest wartet bis zu 1000 Ticks auf asynchrone Lichtberechnung, unveränderte Helligkeitsassertion.
-
-Die neuen GameTests prüfen echte Serverwelt-/Inventaraktionen, nutzen jedoch FakePlayer und teilweise manuell ausgelöste Scheduler-/Feldschritte. Sie ersetzen keinen Test mit verbundenen Clients. Neue UI, Glyphenrenderer, Modelle, kompletter Survivalpfad, Client-Neuverbindung und Serverneustart mit aktiven Feldern bleiben manuell zu prüfen. Alte Screenshots zeigen den vorherigen Build.
-
-Strukturelle Rezeptprüfung: alle 66 JSON-Rezepte erreichbar unter Annahme verfügbarer Vanilla-/Weltdrops. Der Prüfer modelliert zusätzlich die echte Buch-/Leerplatten-Gravur als Stationsoperation; Komponenten, Mengen, Schutzrechte und Survival-Fundorte werden dabei nicht simuliert.
-
-## Grafischer Kurztest des M1-Builds
-
-Am 23.10.2026 wurde der Entwicklungsclient mit denselben kompilierten Klassen/Ressourcen gestartet und die bestehende QA-Welt geladen. Formelbuch und Bibliothek geöffnet; Stoß-Vorlage über die Bibliothek angelegt und als Graph zurück in den Editor geladen; Schreibpunkte sanken von 52 auf 47. Die Canvas-Funktion „Fit view“ ließ sich auslösen. Ein vorhandener 3D-Schleifer und die Feldzelle wurden dargestellt. Das prüft weder sämtliche Modelle noch Oberflächenglyphen oder alle Clientinteraktionen. Dieser Kurztest verwendet die Entwicklungsumgebung, nicht eine separat installierte JAR.
-
-Im Xvfb-Client wurde einmal `X11: Standard cursor shape unavailable` gemeldet; die UI ließ sich anschließend weiter bedienen. Ein Produktionsclient-Test bleibt offen.
-
-### Abschließender grafischer Test der Runenwerkstatt
-
-Aktueller Entwicklungsclient: Typfilter über eine Eingangszeile, Suche nach Selbst und automatisches Verbinden mit Heilung geprüft. Neu eingefügte Knoten werden frei platziert und sichtbar zentriert. Der absichtlich unvollständige Entwurf wurde nicht gespeichert. Kodex-Schaubild für zwei kombinierte Effekte kontrolliert. Abschließendes `build` nach der Layoutkorrektur erfolgreich; die davor ausgeführten 45 Kern-/38 Serverprüfungen betreffen denselben unveränderten Spielkern. Separate Produktionsinstallation und vollständige Mehrspieler-Abnahme bleiben offen.
+Keine bekannte kritische Blockade innerhalb des definierten M1-Umfangs. Dies ist keine Zusage für alle Drittanbieter-Mods, sämtliche Auflösungen, natürliche Erzverteilung, große Netze oder noch nicht implementierte PDF-Inhalte. Historische Prüfprotokolle bleiben im Repository, sind aber nicht der aktuelle Abnahmestand.

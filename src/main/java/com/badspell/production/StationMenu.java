@@ -30,12 +30,13 @@ public final class StationMenu extends AbstractContainerMenu {
         for(int i=0;i<12;i++){
             int x,y;
             if(i<6){x=18+i%3*18;y=38+i/3*18;
-                switch(kind){case 1->{x=22+i%2*18;y=30+i/2*18;}case 2->{x=14+i%3*22;y=46+i/3*20;}case 3->{x=22+i%2*18;y=30+i/2*18;}case 4->{x=16+i%3*18;y=38+i/3*18;}case 5->{x=i<2?22+i*32:14+(i-2)*18;y=i<2?36:65;}case 6->{x=i==0?114:14+(i-1)*18;y=i==0?32:66;}default->{}}
+                switch(kind){case 1->{x=22+i%2*18;y=30+i/2*18;}case 2->{x=14+i%3*22;y=46+i/3*20;}case 3->{x=22+i%2*18;y=30+i/2*18;}case 4->{x=16+i%3*18;y=38+i/3*18;}case 5->{x=i<2?22+i*32:14+(i-2)*18;y=i<2?36:65;}case 6->{x=i==0?114:14+(i-1)%3*18;y=i==0?32:40+(i-1)/3*18;}default->{}}
             }else if(i==6){x=94;y=90;}else if(i==11){x=116;y=90;}else{x=190+(i-7)%2*18;y=38+(i-7)/2*18;}
             final int slotId=i;var slot=new Slot(station,i,x,y){@Override public boolean mayPlace(ItemStack stack){return slotId==6?ModItems.isCell(stack):slotId==11?stack.is(ModContent.item("cell_adapter")):slotId<7;}};slot.index=i;slots.set(i,slot);
         }
     }
     public int value(int index){return data.get(index);}
+    @Override public boolean clickMenuButton(Player player,int action){if(!(player instanceof net.minecraft.server.level.ServerPlayer server)||!(station instanceof StationBlockEntity block)||!block.station().equals("rune_holder")||!stillValid(player))return false;if(action==0){block.cancelSpell();return true;}if(action==1){block.activatePlate(server.level());return true;}return false;}
     @Override public boolean stillValid(Player player){return station.stillValid(player);}
     @Override public ItemStack quickMoveStack(Player player,int index) {
         var slot=slots.get(index);if(!slot.hasItem())return ItemStack.EMPTY;var stack=slot.getItem();var copy=stack.copy();

@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "badspell:block/arcane_smelter"
+    "facing=south": {
+      "model": "badspell:block/arcane_smelter",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "badspell:block/arcane_smelter",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "badspell:block/arcane_smelter",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "badspell:block/arcane_smelter",
+      "y": 270
     }
   }
 }

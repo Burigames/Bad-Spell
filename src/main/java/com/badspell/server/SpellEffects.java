@@ -19,7 +19,7 @@ public final class SpellEffects {
         var level=player.level();String dim=level.dimension().identifier().toString();var look=player.getLookAngle();
         var hit=player.pick(12,1,false);var entityHit=com.badspell.magic.SpellTargets.entity(player);
         Value.Entity entity=entityHit==null?null:new Value.Entity(entityHit.getEntity().getUUID(),position(level,entityHit.getEntity().blockPosition()));
-        Map<String,Value> environment=new HashMap<>();var observed=followLook&&hit instanceof BlockHitResult block?block.getBlockPos():target;
+        Map<String,Value> environment=new HashMap<>();var observed=followLook&&hit.getType()==HitResult.Type.BLOCK?((BlockHitResult)hit).getBlockPos():target;
         environment.put("measurement_position",position(level,observed));
         level.getEntitiesOfClass(LivingEntity.class,player.getBoundingBox().inflate(16),e->e.isAlive()).stream().sorted(Comparator.comparing(e->e.getUUID().toString())).limit(64).forEach(e->{environment.put("entity:"+e.getUUID(),new Value.Entity(e.getUUID(),position(level,e.blockPosition())));environment.put("health:"+e.getUUID(),new Value.Number((long)e.getHealth()));});
         if(entity!=null){environment.put("entity:"+entity.id(),entity);environment.put("health:"+entity.id(),new Value.Number((long)((LivingEntity)entityHit.getEntity()).getHealth()));}environment.put("entity:"+player.getUUID(),new Value.Entity(player.getUUID(),position(level,player.blockPosition())));
@@ -29,6 +29,8 @@ public final class SpellEffects {
         if(level.getBlockEntity(observed) instanceof com.badspell.production.StationBlockEntity station&&station.canUse(player))environment.put("field",new Value.Number(station.data.get(2)));
         environment.put("light",new Value.Number(level.getMaxLocalRawBrightness(observed)));environment.put("rain",new Value.Number(level.isRainingAt(observed)?1:0));environment.put("sky",new Value.Number(level.canSeeSky(observed)?1:0));
         environment.put("health",new Value.Number((long)player.getHealth()));environment.put("focus",new Value.Number(player.getPersistentData().getIntOr("badspell_focus",100)));environment.put("stability",new Value.Number(100));
+        environment.put("origin",position(level,DeviceCasters.isDevice(player)?DeviceCasters.anchor(player).above():player.blockPosition()));
+        if(DeviceCasters.isDevice(player)){environment.remove("self");environment.remove("entity:"+player.getUUID());environment.remove("health:"+player.getUUID());environment.put("focus",new Value.Number(0));}
         return new RuneRegistry.Context(position(level,target),level.getGameTime(),entity,new Value.Vector((int)(look.x*1000),(int)(look.y*1000),(int)(look.z*1000)),environment);
     }
     public static Value.Position position(ServerLevel level,BlockPos at){return new Value.Position(level.dimension().identifier().toString(),at.getX(),at.getY(),at.getZ());}
@@ -61,7 +63,7 @@ public final class SpellEffects {
         if(!effect.region().center().dimension().equals(level.dimension().identifier().toString()))return null;
         var positions=positions(effect.region());if(positions.isEmpty()||positions.size()>1024)return null;
         for(var at:positions)if(level.isOutsideBuildHeight(at)||!level.getChunkSource().hasChunk(at.getX()>>4,at.getZ()>>4)||!level.getWorldBorder().isWithinBounds(at)||!MagicPermissions.mayUse(player,at,Direction.UP)||at.distSqr(player.blockPosition())>256)return null;
-        if(effect.id().equals("badspell:light")&&effect.region().shape()==Value.Shape.PATH){var fields=SpellFields.get(level);if(!fields.canAdd()||positions.stream().anyMatch(at->!level.getBlockState(at).isAir()))return null;return ()->fields.add(player.getUUID(),effect,level.getGameTime());}
+        if(effect.id().equals("badspell:light")&&effect.region().shape()==Value.Shape.PATH){var fields=SpellFields.get(level);if(!fields.canAdd()||positions.stream().anyMatch(at->!level.getBlockState(at).isAir()))return null;return ()->fields.add(player,effect,level.getGameTime());}
         if(effect.id().equals("badspell:light")) {
             var fields=LightFields.get(level);if(positions.size()>1024||fields.count()+positions.size()>1024)return null;
             if(positions.stream().anyMatch(at->!level.getBlockState(at).isAir()||!fields.canAdd(level,at)))return null;
@@ -69,7 +71,7 @@ public final class SpellEffects {
         }
         if(List.of("badspell:bind","badspell:seal","badspell:transfer","badspell:transfer_energy").contains(effect.id()))return WorldBindings.prepare(player,effect);
         if(effect.target()!=null) {
-            var raw=effect.target().id().equals(player.getUUID())?player:level.getEntity(effect.target().id());if(!(raw instanceof LivingEntity target)||!target.isAlive()||!permitted(player,target)||target.distanceToSqr(player)>256||(target!=player&&!player.hasLineOfSight(target)))throw new Failure("target_unavailable");
+            var raw=level.getEntity(effect.target().id());if(raw==null&&!DeviceCasters.isDevice(player)&&effect.target().id().equals(player.getUUID()))raw=player;if(!(raw instanceof LivingEntity target)||!target.isAlive()||!permitted(player,target)||target.distanceToSqr(player)>256||(target!=player&&!player.hasLineOfSight(target)))throw new Failure("target_unavailable");
             if(effect.id().equals("badspell:heal")) {
                 if(target.getHealth()>=target.getMaxHealth())throw new Failure("full_health");
                 if(target.hasEffect(MobEffects.REGENERATION)||level.getGameTime()-target.getPersistentData().getLongOr("badspell_last_heal",-1000)<60)throw new Failure("heal_cooldown");
@@ -85,7 +87,7 @@ public final class SpellEffects {
         }
         if(List.of("badspell:heat","badspell:cold","badspell:shield").contains(effect.id())) {
             var fields=SpellFields.get(level);if(!fields.canAdd())return null;
-            return ()->{var field=fields.add(player.getUUID(),effect,level.getGameTime());if(effect.id().equals("badspell:cold"))SpellFields.advance(level,player,field,level.getGameTime());};
+            return ()->{var field=fields.add(player,effect,level.getGameTime());if(effect.id().equals("badspell:cold"))SpellFields.advance(level,player,field,level.getGameTime());};
         }
         return null;
     }

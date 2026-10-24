@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "badspell:block/rune_holder"
+    "facing=south": {
+      "model": "badspell:block/rune_holder",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "badspell:block/rune_holder",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "badspell:block/rune_holder",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "badspell:block/rune_holder",
+      "y": 270
     }
   }
 }

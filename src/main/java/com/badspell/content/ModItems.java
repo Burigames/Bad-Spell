@@ -45,7 +45,7 @@ public final class ModItems {
         InfoItem(Properties properties){super(properties);}
         @Override public void appendHoverText(ItemStack stack,Item.TooltipContext context,net.minecraft.world.item.component.TooltipDisplay display,java.util.function.Consumer<Component> text,TooltipFlag flag) {
             var data=stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.EMPTY).copyTag();
-            if(isCell(stack))text.accept(Component.translatable("tooltip.badspell.cell",Math.clamp(data.getIntOr("badspell_fl",cellCapacity(stack)),0,cellCapacity(stack))));
+            if(isCell(stack))text.accept(Component.translatable("tooltip.badspell.cell",Math.clamp(data.getIntOr("badspell_fl",cellCapacity(stack)),0,cellCapacity(stack)),cellCapacity(stack)));
             if(stack.is(FORMULA_BOOK.get()))text.accept(Component.translatable("tooltip.badspell.ink",data.getIntOr("badspell_ink",64)));
             if(isGlove(stack))text.accept(Component.translatable("tooltip.badspell.slots",com.badspell.item.GloveFormulas.selected(stack)+1,com.badspell.item.GloveFormulas.capacity(stack)));
             var payload=data.getByteArray("badspell_formula");

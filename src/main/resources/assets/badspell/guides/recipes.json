@@ -620,6 +620,32 @@
     "station": "arcane_workbench",
     "inputs": [
       {
+        "ingredient": "badspell:field_crystal_shard",
+        "count": 4
+      },
+      {
+        "ingredient": "badspell:conductive_paste",
+        "count": 1
+      },
+      {
+        "ingredient": "minecraft:copper_ingot",
+        "count": 1
+      }
+    ],
+    "outputs": [
+      {
+        "id": "badspell:field_crystal",
+        "count": 1
+      }
+    ],
+    "ticks": 100,
+    "energy": 20
+  },
+  {
+    "type": "badspell:processing",
+    "station": "arcane_workbench",
+    "inputs": [
+      {
         "ingredient": "badspell:resonance_fork",
         "count": 1
       },
@@ -744,6 +770,10 @@
       {
         "ingredient": "badspell:moon_brew",
         "count": 2
+      },
+      {
+        "ingredient": "minecraft:quartz",
+        "count": 1
       }
     ],
     "outputs": [

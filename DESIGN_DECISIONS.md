@@ -1,55 +1,16 @@
 # Designentscheidungen
 
-## Neue Runenwerkstatt und bebilderter Kodex
+Stand: 24.10.2026. Das Design-PDF bleibt die Basis; diese Datei beschreibt konkretisierte Regeln der implementierten M1-Systeme.
 
-Aktuelle Bedienung: [USABILITY_REWORK.md](docs/USABILITY_REWORK.md). Runenauswahl mit Beschreibungs-/Port-/Typsuche, kompatible Quellen direkt aus Eingangszeilen, stationsspezifische Arbeitszonen und Rezeptansichten, gemeinsamer Workshop-Assetstil. G oder Arkaner Kodex öffnet neun bebilderte Tutorialkapitel.
-
-Neue Runen: Wesenposition, Wesen-Gesundheit, Ziel vorhanden, Versatz, Addieren, Subtrahieren, Multiplizieren, Effekte bündeln. Neue Vorlagen: Eigenlicht, Froststoß, Wachsamer Schutz. Direktinteraktion mit Kreaturen wird als Handschuhzauber behandelt; Heilablehnungen werden konkret erklärt. Netzwerkprotokoll 3 erfordert denselben Build auf Client und Server. Die Gesamtmod und M1 bleiben unvollständig.
-
-## M1-Entwicklungsstand vom 23.10.2026
-
-Dieser Abschnitt ersetzt widersprechende Angaben älterer Fortschrittsnotizen weiter unten. M1 ist noch **nicht vollständig abgenommen**. Die neue Clientdarstellung und ein vollständiger Survival-/Mehrspieler-Durchlauf sind offen.
-
-- Typisierte Vektor-, Text-, Entity-, Ereignis- und Regionswerte; verschachtelte Snapshot-Module, benannte Eingaben, typisierte Rückgaben, Bedingungen, Vergleich und begrenzte Auswertung.
-- Lichtfelder einschließlich Kugel/Pfad, Heilung, Stoß, Hitze, Kälte, Schild und Zielinformation; verzögerte/begrenzte/periodische Aktivierung mit Energieprüfung je Ausführung. Endliche Felder und Spieleraufträge werden gespeichert.
-- Private Formel-Bibliothek mit Suche, Tags und neun komponierten Vorlagen. Eigene Formelmodule lassen sich als Knoten einfügen. Oberflächengravur ist auf 16 Runen je Blockseite begrenzt; nur Glyphen werden öffentlich übertragen.
-- Runenmeißel, Resonanzgabel, Feldkompass/Q3, Monokel sowie Q2/Q3-Handschuhe, Zellen und Platten. Handschuhe besitzen 4/8/12 Slots, Zellen 100/300/600 FL. Zellladungen im Inventar werden zusammen verwendet.
-- Lokale Bindungen, versiegelte Blöcke sowie begrenzte Item-/Energieübertragung. Offizielle Interaktionsereignisse können Weltaktionen verweigern.
-- 54 datengetriebene Verarbeitungsrezepte plus 12 Vanilla-Rezepte. Sieben eigene Stationsmodelle, überarbeitete 16px-Texturen und 3D-Werkzeuge/Zellen. Stilregeln: [ASSET_STYLE.md](docs/ASSET_STYLE.md).
-
-**Grenzen:** Der Runenhalter führt weiterhin nur Punktlicht aus. Umfangreiche Maschinensteuerung, Forschung, Mobs, Bosse, Dimensionen und vollständige Weltgenerierung sind nicht fertig. Kompatibilität mit einzelnen Schutzmods und echte Netzwerkclients sind mit den neuen Abläufen noch nicht geprüft. Keine Behauptung einer vollständigen Umsetzung aller PDF-Features.
-
-
-1. Die direkten technischen Nutzervorgaben überschreiben die versionsoffene Plattformempfehlung der PDF: ausschließlich Minecraft 26.2, NeoForge, Java/JDK 25, Gradle/ModDevGradle. Kein Forge-/Fabric-Fallback und kein Versionswechsel.
-2. Die PDF bleibt Designquelle; ihr abschließendes „Demo-Ziel“ reduziert den Auftrag nicht. Alle 161 Konzepte plus Anhänge bleiben offen, bis ihre Gameplayfunktionen tatsächlich implementiert und geprüft sind.
-3. Die erste implementierte Schicht ist ein von Minecraft unabhängiger, servergeeigneter Domänenkern. So konnten Typregeln, Kosten und Fehlerfälle während der anfänglichen Mojang-Sperre geprüft werden. Nach Behebung des Zugriffs wurden echte 26.2-Adapter implementiert und serverseitig getestet. Der Core ersetzt weiterhin keine vollständige Ingame-Abnahme.
-4. Kernwerte verwenden Ganzzahlen; FL/FK werden zusammen gebucht. ST unter 25 blockiert, ST 25–49 kostet ceil(1,25 × FL). Unterversorgung verändert keinen der beiden Kontostände.
-5. Für Licht kollidieren allgemeine Unterhaltsrichtwerte der PDF mit dem konkreten Referenzzauber (Stärke 3, 30 s, insgesamt 30 FL). Der aktuelle Planer priorisiert das konkrete Beispiel: `ceil(Stärke × DauerTicks / 60) × (1 + Radius)` FL, mindestens 1, und 5 FK. Nur der Punktzauber ist als Referenzkostenfall abgenommen. Dieses vorläufige allgemeine Skalierungsmodell muss vor Freigabe weiterer Lichtzauber durch datengetriebene Kostenprofile ersetzt/ergänzt werden; Ruheglanz und Wächterlampe sind nicht implementiert.
-6. Alle Graphzyklen werden zunächst abgelehnt. Zeitrunen sollen später fortgesetzte Ausführung als begrenzte Schedulerereignisse abbilden, nicht Rekursion auf dem Serverstack. Zeitrunen sind derzeit nicht vorhanden.
-7. Module werden vor Ausführung expandiert. Erste Version: konstante benannte Bindungen, ein Effektausgang, maximal acht Verschachtelungen und 128 expandierte Knoten. Dynamisch typisierte Modulports und unabhängige Moduleingänge sind noch offen, keine aufgegebene Anforderung.
-8. Positions-/Zahl-/Bool-Parameter besitzen ein geschlossenes binäres Format mit Schema-Version. Minecraft-Itemkomponenten sind angebunden; JSON-Datapacks und weitere Datenadapter stehen aus. Die neutralen JSON-Beispiele der PDF werden nicht ungeprüft als Minecraft-Rezepte eingebunden.
-9. Rezeptplanung verlangt explizit deklarierte Rohstoffe und konkrete Rezeptalternativen. Q-Stufen müssen in der ersten Adapterversion unterschiedliche aufgelöste Material-IDs bekommen; eine stillschweigende Q0/Q3-Substitution ist verboten.
-10. Kein Dummy-Inhalt, keine beliebigen neuen Rezepte und keine als „fertig“ registrierten Effektplatzhalter. Die Einstiegsklasse registriert ausschließlich die real existierenden Core-Dienste, Items und Adapter. Inzwischen sind auch konkrete Stations-/Worldgenblöcke mit Verarbeitung und Rohstoffgewinnung hinzugefügt; nicht implementierte Effekte werden weiterhin nicht als fertig registriert.
-11. Die Client-/Server- und Lichtadapter basieren auf den tatsächlich heruntergeladenen und durch ModDevGradle erzeugten 26.2-Quellen. Für temporäres Licht wird NeoForge Auxiliary Light verwendet, für die Oberfläche die 26.2-API GuiGraphicsExtractor. Keine alte Render-/Input-API als Ersatz.
-12. JDK- und Gradle-Downloads wurden mit veröffentlichten SHA-256-Summen geprüft. TLS-/Signaturprüfung bleibt eingeschaltet. Die Cloudinitialisierung nutzt den vorhandenen Proxy und den System-Truststore; keine CA- oder Netzwerksperre wird umgangen.
-
-13. Q1-Handschuhe besitzen vier unabhängige Slots. Die Modifikatortaste für den spezifizierten Mausradwechsel ist Umschalt. Q2/Q3-Spulen und 8/12 Slots bleiben offen. Altbestände werden bei der nächsten erfolgreichen Schreibaktion in Slot 0 übernommen. Eine neue Buchrevision verändert vorhandene Importe nicht.
-14. Die ursprünglichen vier Items haben inzwischen mehrstufige Stationsrezepte. Der Creative-Tab dient weiter der Entwicklungsprüfung; der vollständige Survival-Durchlauf steht noch aus.
-15. Formularpositionen sind Editor-Koordinaten; bestätigte typisierte Kanten steuern die Ausführung. Räumliche Nachbarschaftsoperatoren fehlen noch. Wiederverwendbare Module sind im Core verfügbar, aber noch nicht im Canvas oder Netzwerkformat verfügbar.
-16. Private Bücher und importierte Handschuhformeln werden auf Server-Seite an den Autor gebunden. Kopierfreigaben, Team-ACLs und kontrollierte Besitzerwechsel sind noch nicht vorhanden; standardmäßig wird fremde Nutzung verweigert.
-
-17. Die Cloud-Anzeige nutzt lokal extrahierte, signatur-/prüfsummenverifizierte Debian-Pakete und Software-OpenGL. Der Null-Audiotreiber dient nur der Cloudprüfung und ändert keine Spielmechanik. Der eigentliche Client konnte damit bedient werden.
-
-18. Eine archivierte Buchrevision wird als Entwurf mit der aktuellen Revisionsnummer geöffnet. Erst reguläres Speichern erzeugt eine weitere Revision und verbraucht Tinte. Die ersetzte Revision bleibt im Archiv; optimistische Konfliktprüfung und Undo bleiben wirksam. Vor Archivöffnung verlangt der Editor einen gespeicherten Stand, damit keine Änderungen verloren gehen.
-
-19. Fehlerkorrektur: Ein Eintrag im NeoForge-Auxiliary-Light-Manager genügt bei einem unveränderten Luftblock nicht für Lichtemission. Die tatsächlichen 26.2-Quellen wurden geprüft; zwei begrenzte Mixins ergänzen Feldemission und halten Sections mit Feldquellen im Lichtrechner aktiv. Vanilla-Blockemission bleibt per Maximum erhalten. Keine Platzhalterblöcke, kein Austausch von Luft und keine Änderung der FL/FK-Kosten. Die Indexdaten sind threadsicher, pro Welt schwach referenziert und aus SavedData/Servernachrichten rekonstruierbar. Fremde Lichtengine-Ersetzungen und Shader benötigen weiterhin eigene Kompatibilitätstests.
-20. Die serverseitige Zielabfrage verwendet den aktuellen Simulationszustand (`partialTick=1`) statt der vorherigen Position. Der neue Handschuh-GameTest überprüft die tatsächliche Item-Aktivierung und nicht nur einen direkt aufgerufenen Effekt-Callback.
-
-## Erste Produktionsketten
-
-- Der Vanilla-Ofen besitzt einen Eingang. Deshalb wird die mehrteilige frühe Arkanmischung vorher an der Werkbank hergestellt; Leuchtmoos wird als Dreierbündel zu zwei Fasern verarbeitet.
-- Ein zusätzlicher Startzellenadapter ermöglicht die frühen Maschinen vor dem noch fehlenden Kabelnetz. Gehäuse enthalten Kupfer und Glas; verbrauchte Zellen lassen sich in Gehäuse umwandeln und neu befüllen. Diese Übergangslösung ersetzt das spätere Netz nicht.
-- Sechs Ressourcenquellen werden zunächst in passenden Vanilla-Biomen generiert, bis die spezifizierten eigenen Biome implementiert sind. Dies ändert nicht das Ziel der eigenen Biome.
-- Gravuren sind unabhängige Buch-Snapshots; der Runenhalter hat einen festen Zielpunkt über sich und aktiviert auf steigender Redstone-Flanke.
-- Alle neuen Texturen sind einfache selbst erzeugte 16×16-Assets. Vanilla-Geometrie wird ausschließlich über aktuelle Modellvorlagen/Parentreferenzen eingebunden.
-- Das vorhandene MC-26.2-ItemStack.CODEC ist während Rezeptreload vor Komponenteninitialisierung ungeeignet. Wie die offiziellen Rezepte verwendet der neue Typ deshalb ItemStackTemplate.CODEC.
+1. **Plattform unverändert:** Minecraft Java 26.2, ausschließlich NeoForge 26.2.0.93, Java 25. Keine Forge-/Fabric-Implementierung und kein eigenständiger Versionswechsel.
+2. **Ein Interpreter:** Tragbare und stationäre Formeln verwenden dieselben typisierten Operatoren und Wirkungsadapter. Fertige Vorlagen sind Graphen, keine Sonderbehandlung nach Zaubernamen.
+3. **Geräte sind keine Wesen:** `Ursprung` liefert den freien Geräteausgang. `Selbst` bleibt ein lebendes Wesen beim persönlichen Wirken. Geräte kosten FL statt Spielerfokus; ihre Berechtigungen stammen von der Besitzer-UUID. Der Besitzer muss für Gerätefelder nicht eingeloggt sein.
+4. **Begrenzte Leitung:** Der M1-Feldkristall ist ein gerichteter passiver Leiter, maximal 16 Kristalle und 80 FL/s pro Kristall. Er speichert oder erzeugt nichts. Endpunkte müssen demselben Besitzer gehören und über Zelle/Adapter verfügen. Umfangreiche Kabel-, Frequenz-, Funk- und Speichernetze folgen später.
+5. **Deterministische Produktion:** Bei mehreren passenden Rezepten gewinnt die spezifischere Zutatenmenge, danach die ID. Eingangsänderungen verwerfen den Rezeptcache. Mondsalz benötigt zusätzlich Quarz als Kristallisationskeim, damit es gegenüber Mondessenz gezielt herstellbar ist.
+6. **Bündel statt freiem Code:** Bis zu acht vorbereitete Kampf-/Licht-/Leereffekte können gemeinsam wirken. Kosten werden addiert, Ablehnung eines Teils verhindert die ganze Ausführung. Bindungen/Transfers werden nicht gebündelt. Kälte wirkt bei Erzeugung sofort, damit ein gleichzeitiger Stoß das Ziel nicht vor dem ersten Kältetick wegbewegt.
+7. **Zeitaufträge:** Jede tatsächliche Ausführung prüft erneut und zahlt erneut. Mangelnde Energie pausiert ohne Durchlaufverlust. Geräte speichern einen Auftrag; persönliche Handschuhe erlauben bis zu vier. Die Begrenzung verhindert unbeschränkte Ticklast. Entfernen/Ändern einer Geräteplatte beendet deren Auftrag.
+8. **Blocktreffer und freie Luft unterscheiden:** Nur ein echter Blocktreffer wird auf seine angrenzende freie Zelle verschoben. Ein MISS wird innerhalb der zulässigen Blockreichweite gehalten. Dadurch schlagen freie Luftzauber nicht allein durch einen zusätzlichen Blockversatz fehl.
+9. **Physische Schrift:** M1 verwendet ein 4×4-Feld auf festen Blockseiten. Nur bestätigte neue/geänderte Runen kosten Meißelhaltbarkeit. Die volle Bibliothek, Module und lange Graphen gehören ins Formelbuch. Beobachter sehen Glyphen, nicht den Editorgraphen.
+10. **Lesbarkeit und Assets:** Eigene 16px-Materialien, zurückhaltende Farben, klare Rohling-/Qualitätsunterschiede und einfache 3D-Modelle. Bücher unterscheiden sich durch Einband, Zellen durch Fassungen/Ringe. Modelle dürfen keine für 26.2 inkompatiblen gemischten Atlanten verwenden. Der Kodex ist zusätzlich zum herstellbaren Buch mit G zugänglich.
+11. **Prüfumfang transparent:** Der Herstellungslauf benutzt endliche Rohstofffixtures und Vanilla-Komponenten. Mod-Rohstoffe werden mit echten Survival-Drops abgebaut; alle Mod-Zwischenprodukte werden gefertigt. Vanilla-Crafting-/Kochrezepte werden gegen das registrierte Rezept geprüft; Modstationen laufen mit echten Ticks, während die QA-Tickrate zeitweise auf 200 erhöht wird. Dies ersetzt keine Prüfung der natürlichen Verteilung sämtlicher Ressourcen/Biome.
+12. **M1 ist ein abgegrenzter Meilenstein:** Die 161 PDF-Konzepte bleiben einzeln dokumentiert. Forschung, weitere Ausrüstung, Rituale, große Netze, Mobs, Bosse und Dimensionen werden nicht durch einen M1-Abschluss als fertig markiert.

@@ -96,7 +96,7 @@ public final class Packets {
         public Type<OpenCodex> type(){return TYPE;}
     }
     public static void register(RegisterPayloadHandlersEvent event) {
-        var registrar=event.registrar("3");
+        var registrar=event.registrar("4");
         registrar.playToClient(OpenCodex.TYPE,OpenCodex.CODEC);
         registrar.playToServer(MonocleToggle.TYPE,MonocleToggle.CODEC,(p,c)->{if(c.player() instanceof net.minecraft.server.level.ServerPlayer player)com.badspell.server.ToolActions.toggleMonocle(player);});
         registrar.playToClient(BoardMarks.TYPE,BoardMarks.CODEC);

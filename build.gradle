@@ -74,6 +74,21 @@ tasks.register('validateResources') {
                         if (png.length < 24 || java.nio.ByteBuffer.wrap(png, 16, 4).getInt() != 16 || java.nio.ByteBuffer.wrap(png, 20, 4).getInt() != 16) throw new GradleException("Invalid 16x16 texture: ${texture}")
                     }
                 }
+                // Minecraft 26.2 cuboid item models require all baked faces on one atlas.
+                def atlases = [] as Set
+                (model.elements ?: []).each { element ->
+                    (element.faces ?: [:]).values().each { face ->
+                        def texture = face.texture
+                        def visitedTextures = [] as Set
+                        while (texture?.startsWith('#') && visitedTextures.add(texture)) texture = (model.textures ?: [:])[texture.substring(1)]
+                        if (texture && texture.contains(':')) {
+                            def path = texture.substring(texture.indexOf(':') + 1)
+                            if (path.startsWith('block/')) atlases.add('blocks')
+                            if (path.startsWith('item/')) atlases.add('items')
+                        }
+                    }
+                }
+                if (atlases.size() > 1) throw new GradleException("Mixed Minecraft 26.2 atlases in cuboid model: ${modelId}")
                 modelId = model.parent
             }
         }
@@ -81,3 +96,31 @@ tasks.register('validateResources') {
     }
 }
 tasks.named('check') { dependsOn 'validateResources' }
+
+// Opt-in acceptance harness. Its classes are deliberately excluded from the distributed mod JAR.
+sourceSets {
+    acceptance {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+}
+if (project.hasProperty('qaM1')) {
+    neoForge.mods.badspell.sourceSet(sourceSets.acceptance)
+    neoForge.runs.server.gameDirectory = file('run/m1-acceptance-server')
+    neoForge.runs.server.systemProperty 'badspell.acceptance.phase', project.findProperty('qaPhase') ?: '1'
+    tasks.named('prepareServerRun') { dependsOn tasks.named('acceptanceClasses') }
+}
+
+// Export an official prepared runtime for actual packaged-JAR clients, without dev mod folders.
+tasks.register('writeAcceptanceClientCommand') {
+    dependsOn 'prepareClientRun', 'jar'
+    doLast {
+        def run = tasks.named('runClient').get()
+        def excluded = [layout.buildDirectory.dir('classes').get().asFile.toPath(), layout.buildDirectory.dir('resources').get().asFile.toPath(), project(':core').layout.buildDirectory.get().asFile.toPath()]
+        def files = run.classpathProvider.files.findAll { file -> !excluded.any { file.toPath().startsWith(it) } }
+        def command = [run.javaLauncher.get().executablePath.asFile.absolutePath, '@' + layout.buildDirectory.file('moddev/clientRunVmArgs.txt').get().asFile.absolutePath,
+            '-Dfile.encoding=UTF-8', '-Duser.language=en', '-cp', files.collect { it.absolutePath }.join(File.pathSeparator),
+            'net.neoforged.devlaunch.Main', '@' + layout.buildDirectory.file('moddev/clientRunProgramArgs.txt').get().asFile.absolutePath]
+        layout.buildDirectory.file('acceptance-client-command.json').get().asFile.text = groovy.json.JsonOutput.toJson(command)
+    }
+}
